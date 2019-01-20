@@ -23,8 +23,8 @@ WRF_HYDRO-R2/
 ```bash            
 git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repo
 cd WRF_HYDRO-R2                                              # go into repo
+source scripts/env_nwm_r2.sh                                 # source r2 environment
 make sub                                                     # init/update submodules
-make r2_env                                                  # source r2 environment
 make build                                                   # build NWM-offline exe
 ```
 If you received a 'BUILD UNSUCCESSFUL' message from the `make build` step (assuming the preceding steps were successful), try these
@@ -43,7 +43,6 @@ A successful build should display a 'BUILD SUCCESSFUL!!!' message.
 ```bash                        
 make                    # default, calls targets: sub, r2_env
 make sub                # initializes and updates submodule NWM
-make r2_env             # sources r2 environment with mod loads + env var exports
 make build              # builds the NoahMP/NWM-Offline exe
 make clean              # calls the 'make clean' target in NWM build dir
 ```

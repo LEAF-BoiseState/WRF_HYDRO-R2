@@ -4,16 +4,15 @@ NWM_BUILD=wrf_hydro_nwm_public/trunk/NDHMS
 
 
 # default
-all:    sub r2_env
+all:    sub
 
 
-# environment
+
+# submodules
 sub:
 	git submodule init
 	git submodule update
 
-r2_env:
-	source ./scripts/env_nwm_r2.sh
 
 
 # build
@@ -21,6 +20,7 @@ build_nwm:
 	./scripts/build_nwm_r2.sh
 
 build:  build_nwm
+
 
 
 

@@ -69,13 +69,22 @@ make build                                                   # build NWM-offline
 ```
 <br>
 
+
+## Run Test Case: Croton NY
+The example test case for Croton, NY<sup>[3](#3)</sup> will be downloaded, set up, and 
+submitted as a batch job using the command
+```bash
+make test
+```
+<br>
+
                                                              
 ## Make Target Reference
 ```bash                        
 make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM
 make build              # builds the NoahMP/NWM-Offline exe
-make test               # gets and runs croton_NY`<sup>[3](#3)</sup>` test case
+make test               # gets and runs croton_NY test case
 make clean              # calls the 'make clean' target in NWM build dir
 ```
                                                                              

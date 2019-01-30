@@ -22,6 +22,9 @@ build_nwm:
 build:  build_nwm
 
 
+# test case
+test:
+	./scripts/croton_ny_testcase.sh
 
 
 .PHONY: clean

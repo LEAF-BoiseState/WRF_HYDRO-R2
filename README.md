@@ -27,6 +27,39 @@ source scripts/env_nwm_r2.sh                                 # source r2 environ
 make sub                                                     # init/update submodules
 make build                                                   # build NWM-offline exe
 ```
+
+Sample output at the end of a successful build by username, `auser`, looks like the following:
+```bash
+...
+make[3]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP/run'
+make[2]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP'
+make[1]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS'
+
+*****************************************************************
+Make was successful
+
+*****************************************************************
+The environment variables used in the compile:
+HYDRO_D=0
+NCEP_WCOSS=0
+NETCDF=/cm/shared/apps/netcdf/intel/64/4.4.1
+OLDPWD=/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS
+PWD=/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run
+SPATIAL_SOIL=1
+WHL=/home/auser/LEAF/WRF_HYDRO-R2
+WHR=https://github.com/LEAF-BoiseState/WRF_HYDRO-R2
+WH=WRF_HYDRO-R2
+WRF_HYDRO=1
+WRF_HYDRO_NUDGING=1
+WRF_HYDRO_RAPID=0
+WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+
+	** BUILD SUCCESSFUL!!! **
+	Log file: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
+	Returning to initial directory, /home/auser/LEAF/WRF_HYDRO-R2.
+```
+
 If you received a 'BUILD UNSUCCESSFUL' message from the `make build` step (assuming the preceding steps were successful), try these
 steps to troubleshoot.  First, assess what went wrong from looking at the build log file, the path will be given just below the
 UNSUCCESSFUL message.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue
@@ -35,7 +68,6 @@ the build command, e.g. (assuming you are back in the top-level dir, WRF_HYDRO-R
 make clean                                                   # calls make clean in build dir
 make build                                                   # build NWM-offline exe
 ```
-A successful build should display a 'BUILD SUCCESSFUL!!!' message.
 <br>
 
                                                              

@@ -25,11 +25,14 @@ LOG=WH_R2_noahMP_compile.log
 echo -e "\nSourcing environment script, $SCRIPTS_DIR/$ENV_R2.."
 source $SCRIPTS_DIR/env_nwm_r2.sh
 
-
-# build
+# set WRF-Hydro options
 echo -e "\nChange directory to build dir, $BUILD_DIR.."
 cd $BUILD_DIR
-cp -v $BUILD_DIR/template/setEnvar.sh .      
+cp -v $BUILD_DIR/template/setEnvar.sh .
+sed -i 's/SPATIAL_SOIL=0/SPATIAL_SOIL=1/g'           setEnvar.sh  # SPATIAL_SOIL=1
+sed -i 's/WRF_HYDRO_NUDGING=0/WRF_HYDRO_NUDGING=1/g' setEnvar.sh  # WRF_HYDRO_NUDGING=1 
+
+# build
 echo "$WH_CONFIG" | ./configure                    # send choice, call config
 cp -v macros macros.orig                        
 sed -i 's/mpif90/mpiifort -heap-arrays/g' macros   # edit macros for mpiifort
@@ -37,15 +40,13 @@ sed -i 's/mpif90/mpiifort -heap-arrays/g' macros   # edit macros for mpiifort
 callstatus="$?"
 successmsg=$(grep 'Make was successful' $LOG)
 if [[ $callstatus -ne 0 ]] || [[ ! $successmsg ]]; then
-    echo -e "\n\n** BUILD UNSUCCESSFUL **"
+    echo -e "\n\n\t** BUILD UNSUCCESSFUL **"
     echo -e "\tReview log file: $BUILD_DIR/$LOG"
     echo -e "\tExiting."
-    echo -e "************************\n"
     exit $callstatus
 else
-    echo -e "\n\n** BUILD SUCCESSFUL!!! **"
+    echo -e "\n\n\t** BUILD SUCCESSFUL!!! **"
     echo -e "\tLog file: $BUILD_DIR/$LOG"
-    echo -e "************************\n"
 fi
 
 

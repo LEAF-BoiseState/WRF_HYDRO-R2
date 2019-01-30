@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#SBATCH -p leaf                  # queue=partition
+#SBATCH -t queuetime             # requested runtime (hh:mm:ss)
+#SBATCH -n numcores              # cores
+#SBATCH -J jobname
+#SBATCH -o jobname.out           # output
+#SBATCH -e jobname.err           # error 
+
+# parameters
+RUN_DIR=rundir
+WH_ENV=rundir/env_nwm_r2.sh
+
+# sources/exports
+if [ ! -f "$WH_ENV" ]; then
+  echo -e "\nNo WRF environment script, $WH_ENV, found. Check WRF_HYDRO-R2/scripts.\n"
+  exit 2
+fi
+echo "Sourcing WRF-Hydro environment:  $WH_ENV"
+cat $WH_ENV
+source $WH_ENV
+module list
+
+cd $RUN_DIR
+echo "In run directory: $(pwd)"
+
+# run mpi job
+mpirun ./wrf_hydro_NoahMP.exe &> ./jobname.log
+
+run_status=$?
+if [ $run_status -ne 0 ]; then
+  exit $run_status
+fi

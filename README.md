@@ -75,7 +75,7 @@ make build                                                   # build NWM-offline
 make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM
 make build              # builds the NoahMP/NWM-Offline exe
-make test               # gets and runs croton_NY<sup>[3](#3)</sup> test case
+make test               # gets and runs croton_NY`<sup>[3](#3)</sup>` test case
 make clean              # calls the 'make clean' target in NWM build dir
 ```
                                                                              

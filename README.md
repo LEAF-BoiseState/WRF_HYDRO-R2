@@ -9,14 +9,16 @@ This container uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</su
 
 ## Manifest
 ```bash
-WRF_HYDRO-R2/                   
-├── LICENSE                      
-├── Makefile                      # top level makefile
-├── README.md                    
-├── scripts                      
+WRF_HYDRO-R2/
+├── LICENSE
+├── Makefile
+├── README.md
+├── scripts
 │   ├── build_nwm_r2.sh           # build script
-│   └── env_nwm_r2.sh             # environment script
-└── wrf_hydro_nwm_public/         # nwm sub repo
+│   ├── croton_ny_testcase.sh     # get/run croton_NY test
+│   ├── env_nwm_r2.sh             # environment script
+│   └── submit.sh.template        # SLURM batch template
+└── wrf_hydro_nwm_public
 ```
 
 ## Build
@@ -31,9 +33,9 @@ make build                                                   # build NWM-offline
 Sample output at the end of a successful build by username, `auser`, looks like the following:
 ```bash
 ...
-make[3]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP/run'
-make[2]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP'
-make[1]: Leaving directory `/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS'
+make[3]: Leaving directory '/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP/run'
+make[2]: Leaving directory '/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Land_models/NoahMP'
+make[1]: Leaving directory '/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS'
 
 *****************************************************************
 Make was successful
@@ -46,9 +48,6 @@ NETCDF=/cm/shared/apps/netcdf/intel/64/4.4.1
 OLDPWD=/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS
 PWD=/home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run
 SPATIAL_SOIL=1
-WHL=/home/auser/LEAF/WRF_HYDRO-R2
-WHR=https://github.com/LEAF-BoiseState/WRF_HYDRO-R2
-WH=WRF_HYDRO-R2
 WRF_HYDRO=1
 WRF_HYDRO_NUDGING=1
 WRF_HYDRO_RAPID=0
@@ -73,12 +72,15 @@ make build                                                   # build NWM-offline
                                                              
 ## Make Target Reference
 ```bash                        
-make                    # default, calls targets: sub, r2_env
+make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM
 make build              # builds the NoahMP/NWM-Offline exe
+make test               # gets and runs croton_NY<sup>[3](#3)</sup> test case
 make clean              # calls the 'make clean' target in NWM build dir
 ```
                                                                              
 ## Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
+* <sup><a name="3">3</a></sup> [WRF-Hydro Testcases](https://ral.ucar.edu/projects/wrf_hydro/testcases) - See 'Croton New York Test Case'
+

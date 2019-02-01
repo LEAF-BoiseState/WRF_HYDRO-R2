@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -p leaf                  # queue=partition
+#SBATCH -p queuename             # queue=partition
 #SBATCH -t queuetime             # requested runtime (hh:mm:ss)
 #SBATCH -n numcores              # cores
 #SBATCH -J jobname

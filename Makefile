@@ -11,10 +11,12 @@ RM=rm -f
 # default
 all:    sub
 
+
 # submodules
 sub:
 	git submodule init
 	git submodule update
+
 
 
 # build
@@ -24,12 +26,14 @@ build_nwm:
 build:  build_nwm
 
 
+
 # test case
 test:
 	./scripts/croton_ny_setup.sh
 
 run:
 	sbatch $(TESTCASE_RUN_DIR)/submit
+
 
 
 .PHONY: clean

@@ -98,6 +98,8 @@ options.
 <br><br>
                                                              
 ## V. Make Target Reference
+A GNU Make command is composed of the `make` invocation (possibly) followed by a '*target*', such as
+`sub`, `build`, etc. seen below.
 ```bash                        
 make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM

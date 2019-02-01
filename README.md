@@ -1,13 +1,23 @@
 # WRF_HYDRO-R2
-*Wrapper repository to automate build + run + vis for WRF-Hydro v5 / NWM on R2*
+*Wrapper repository to automate build + run + visualize WRF-Hydro v5 / NWM on R2*
+<br><br><br><br>
+
+
+## Contents
+* [I. Overview](#I-Overview) - *brief description of repository*
+* [II. Manifest](#II-Manifest) - *main repository structure*
+* [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
+* [IV. Test Case: Croton NY](#IV-Test-Case-Croton-NY) - *steps to setup + run the test case Croton, NY*
+* [V. Make Target Reference](#V-Make-Target-Reference) - *reference list of all supported `make` commands*
+* [VI. Links](#VI-Links) - *links to external references*
 <br>
 
-## Objective
-This container uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repos as submodules.
-<br>
 
+## I. Overview
+This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> (*rwrfhydro support coming soon*) repositories as submodules. The *GNU Make*<sup>[3](#3)</sup> utility is used to automate core tasks and reduce them to a single command. The `make` commands must be issued from the repository root directory, `WRF_HYDRO-R2/`.
+<br><br>
 
-## Manifest
+## II. Manifest
 ```bash
 WRF_HYDRO-R2/
 ├── LICENSE
@@ -15,20 +25,22 @@ WRF_HYDRO-R2/
 ├── README.md
 ├── scripts
 │   ├── build_nwm_r2.sh           # build script
-│   ├── croton_ny_testcase.sh     # get/run croton_NY test
+│   ├── croton_ny_testcase.sh     # download + setup croton_NY test case
 │   ├── env_nwm_r2.sh             # environment script
 │   └── submit.sh.template        # SLURM batch template
-└── wrf_hydro_nwm_public
+└── wrf_hydro_nwm_public/         # WRF-Hydro v5 / NWM repository
 ```
+<br>
 
-## Build
+## III. Build
 ```bash            
-git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repo
-cd WRF_HYDRO-R2                                              # go into repo
+git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
+cd WRF_HYDRO-R2                                              # go into repository
 source scripts/env_nwm_r2.sh                                 # source r2 environment
-make sub                                                     # init/update submodules
-make build                                                   # build NWM-offline exe
+make sub                                                     # initialize / update submodules
+make build                                                   # build NWM-offline executable
 ```
+<br>
 
 Sample output at the end of a successful build by username, `auser`, looks like the following:
 ```bash
@@ -55,38 +67,37 @@ WRFIO_NCD_LARGE_FILE_SUPPORT=1
 
 
 	** BUILD SUCCESSFUL!!! **
-	Log file: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
-	Returning to initial directory, /home/auser/LEAF/WRF_HYDRO-R2.
+	-------------------------
+	Executable: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run/wrf_hydro_NoahMP.exe
+	Log file:   /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
 ```
 
-If you received a 'BUILD UNSUCCESSFUL' message from the `make build` step (assuming the preceding steps were successful), try these
-steps to troubleshoot.  First, assess what went wrong from looking at the build log file, the path will be given just below the
-UNSUCCESSFUL message.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue
-the build command, e.g. (assuming you are back in the top-level dir, WRF_HYDRO-R2):
+
+*NOTE: both the build log and executable location are listed at the end of the build output.* If you received a 'BUILD UNSUCCESSFUL' message from the `make build` step (assuming the preceding steps were successful), try these steps to troubleshoot.  First, assess what went wrong from looking at the build log file.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue the build command, e.g. (assuming you are back in the top-level directory, WRF_HYDRO-R2):
+
 ```bash
-make clean                                                   # calls make clean in build dir
-make build                                                   # build NWM-offline exe
+make clean                                                   # calls make clean in build directory
+make build                                                   # build NWM-offline executable
 ```
 <br>
 
-
-## Run Test Case: Croton NY
-The example test case for Croton, NY<sup>[3](#3)</sup> will be downloaded, set up, and 
+## IV. Test Case: Croton NY
+The example test case for Croton, NY<sup>[4](#4)</sup> will be downloaded, set up, and 
 submitted as a batch job using the commands
 ```bash
 make test               # setup test, must be run after 'make build'
 make run                # run the test case, croton_NY 
 ```
-At the end of the output of `make test`, the run directory full path is displayed.
+At the end of the output of `make test`, the run directory full path is displayed where you will find
+all the output files generated from the run.
 After `make test` and `make run` have been issued, you can use `make clean_test`
-to clean all the run output from test run directory.  You can then do another run by 
-with the same setup test directory by issuing `make run` again, possibly after
+to remove the run output files from test run directory.  You can then do another run using 
+that same setup test directory by issuing `make run` again, possibly after
 editting the namelists in the displayed run directory to experiment with different
 options.
-<br>
-
+<br><br>
                                                              
-## Make Target Reference
+## V. Make Target Reference
 ```bash                        
 make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM
@@ -96,9 +107,13 @@ make run                # run the croton_NY test case
 make clean_test         # cleans all run output from croton_NY test
 make clean              # calls the 'make clean' target in NWM build dir
 ```
+<br>
                                                                              
-## Links
+## VI. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
-* <sup><a name="3">3</a></sup> [WRF-Hydro Testcases](https://ral.ucar.edu/projects/wrf_hydro/testcases) - See 'Croton New York Test Case'
+* <sup><a name="3">3</a></sup> [GNU Make manual](https://www.gnu.org/software/make/manual/)
+* <sup><a name="4">4</a></sup> [WRF-Hydro Testcases](https://ral.ucar.edu/projects/wrf_hydro/testcases) - See '*Croton New York Test Case*'
+<br>
 
+[Return to top](#WRF_HYDRO-R2)

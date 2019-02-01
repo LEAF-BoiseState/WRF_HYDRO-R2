@@ -4,8 +4,8 @@
 #SBATCH -t queuetime             # requested runtime (hh:mm:ss)
 #SBATCH -n numcores              # cores
 #SBATCH -J jobname
-#SBATCH -o jobname.out           # output
-#SBATCH -e jobname.err           # error 
+#SBATCH -o rundir/jobname.out    # output
+#SBATCH -e rundir/jobname.err    # error 
 
 # parameters
 RUN_DIR=rundir

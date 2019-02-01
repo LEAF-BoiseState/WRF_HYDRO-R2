@@ -72,10 +72,17 @@ make build                                                   # build NWM-offline
 
 ## Run Test Case: Croton NY
 The example test case for Croton, NY<sup>[3](#3)</sup> will be downloaded, set up, and 
-submitted as a batch job using the command
+submitted as a batch job using the commands
 ```bash
-make test
+make test               # setup test, must be run after 'make build'
+make run                # run the test case, croton_NY 
 ```
+At the end of the output of `make test`, the run directory full path is displayed.
+After `make test` and `make run` have been issued, you can use `make clean_test`
+to clean all the run output from test run directory.  You can then do another run by 
+with the same setup test directory by issuing `make run` again, possibly after
+editting the namelists in the displayed run directory to experiment with different
+options.
 <br>
 
                                                              
@@ -84,7 +91,9 @@ make test
 make                    # default, calls target sub
 make sub                # initializes and updates submodule NWM
 make build              # builds the NoahMP/NWM-Offline exe
-make test               # gets and runs croton_NY test case
+make test               # get and setup croton_NY test case
+make run                # run the croton_NY test case
+make clean_test         # cleans all run output from croton_NY test
 make clean              # calls the 'make clean' target in NWM build dir
 ```
                                                                              

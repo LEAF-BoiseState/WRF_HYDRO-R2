@@ -36,10 +36,12 @@ WRF_HYDRO-R2/
 ```bash            
 git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
-source scripts/env_nwm_r2.sh                                 # source r2 environment
+source scripts/env_nwm_r2.sh                                 # source r2 environment script
 make sub                                                     # initialize / update submodules
 make build                                                   # build NWM-offline executable
 ```
+**NOTE: Make sure to source the environment script as shown above.  This loads the correct modules as well as 
+exports needed `PATH` variables.**
 <br>
 
 Sample output at the end of a successful build by username, `auser`, looks like the following:

@@ -1,20 +1,21 @@
 #!/bin/bash
 
 # *****************************************************************************
-# FILE:     croton_ny_testcase.sh
+# FILE:     croton_ny_setup.sh
 # AUTHOR:   Matt Masarik      (MM) 
 # VERSION:  0     2019-01-29   MM    Base version
 #
-# PURPOSE:  Retrieves the Croton_NY testcase and runs it.  The wrf_hydro.exe
-#           must already be built.
-#
-# USAGE:    ./croton_ny_testcase.sh
+# PURPOSE:  Retrieves the Croton_NY testcase and sets up a test run.  The 
+#           wrf_hydro.exe must already be built.  
+#           
+# USAGE:    ./croton_ny_setup.sh
 # *****************************************************************************
 
 # USER PARAMETERS - CHANGE ME!
-QUEUE_TIME='00:10:00'           # runtime:   hh:mm:ss  [00:10:00  default]
 NUM_CORES=4                     # mpi tasks: 1-28      [4         default]
-JOB_NAME='whcroton'             # jobname:   8 chars
+QUEUE_TIME='00:10:00'           # runtime:   hh:mm:ss  [00:10:00  default]
+QUEUE_NAME=defq                 # queue:               [defq      default]
+JOB_NAME='whcroton'             # jobname:   8 chars only
 # --------------------------------------------------------------------------- #
 
 
@@ -43,12 +44,17 @@ cp -v $SCRIPTS_DIR/env_nwm_r2.sh .
 cp -v $SCRIPTS_DIR/submit.sh.template .
 cp -v submit.sh.template submit
 nwm_run_dir_sed_safe=${NWM_EXAMPLE_RUN_DIR////'\/'}
-sed -i "s/queuetime/$QUEUE_TIME/g"          submit
-sed -i "s/numcores/$NUM_CORES/g"            submit
-sed -i "s/jobname/$JOB_NAME/g"              submit
+sed -i "s/queuename/$QUEUE_NAME/g"           submit
+sed -i "s/queuetime/$QUEUE_TIME/g"           submit
+sed -i "s/numcores/$NUM_CORES/g"             submit
+sed -i "s/jobname/$JOB_NAME/g"               submit
 sed -i "s/rundir/$nwm_run_dir_sed_safe/g"    submit
 
-# submit batch job
-sbatch submit
+# display
+echo -e "\n\n\t** Croton_NY Testcase setup finished. **"
+echo -e     "\t----------------------------------------"
+echo -e     "\tRun directory: $NWM_EXAMPLE_RUN_DIR"
+echo -e     "\tRun command:   make run\n"
+
 
 exit

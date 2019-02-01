@@ -46,12 +46,14 @@ if [[ $callstatus -ne 0 ]] || [[ ! $successmsg ]]; then
     exit $callstatus
 else
     echo -e "\n\n\t** BUILD SUCCESSFUL!!! **"
-    echo -e "\tLog file: $BUILD_DIR/$LOG"
+    echo -e     "\t-------------------------"
+    echo -e "\tExecutable: $BUILD_DIR/Run/wrf_hydro_NoahMP.exe"
+    echo -e "\tLog file:   $BUILD_DIR/$LOG"
 fi
 
 
-# return home
-echo -e "\tReturning to initial directory, $START_DIR."
-cd $START_DIR
+# # return home
+# echo -e "\tReturning to initial directory, $START_DIR."
+# cd $START_DIR
 
 exit

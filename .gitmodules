@@ -1,3 +1,6 @@
 [submodule "wrf_hydro_nwm_public"]
 	path = wrf_hydro_nwm_public
 	url = https://github.com/NCAR/wrf_hydro_nwm_public
+[submodule "rwrfhydro"]
+	path = rwrfhydro
+	url = https://github.com/NCAR/rwrfhydro

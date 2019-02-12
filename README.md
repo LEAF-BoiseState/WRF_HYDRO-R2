@@ -14,7 +14,7 @@
 
 
 ## I. Overview
-This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> (*rwrfhydro support coming soon*) repositories as submodules. The *GNU Make*<sup>[3](#3)</sup> utility is used to automate core tasks and reduce them to a single command. The `make` commands must be issued from the repository root directory, `WRF_HYDRO-R2/`.
+This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. The *GNU Make*<sup>[3](#3)</sup> utility is used to automate core tasks and reduce them to a single command. The `make` commands must be issued from the repository root directory, `WRF_HYDRO-R2/`.
 <br><br>
 
 ## II. Manifest
@@ -22,13 +22,20 @@ This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>
 WRF_HYDRO-R2/
 ├── LICENSE
 ├── Makefile
+├── post_processing               # vis scripts for rwrfhydro
+│   ├── CrotonEvalQ.png
+│   ├── evalQ.r
+│   ├── MultiNc.png
+│   ├── MutliNC.r
+│   └── snotelRwrfhydro.R
 ├── README.md
+├── rwrfhydro/                    #   rwrfhydro repository
 ├── scripts
 │   ├── build_nwm_r2.sh           # build script
-│   ├── croton_ny_testcase.sh     # download + setup croton_NY test case
+│   ├── croton_ny_setup.sh        # download + setup croton_NY test case
 │   ├── env_nwm_r2.sh             # environment script
 │   └── submit.sh.template        # SLURM batch template
-└── wrf_hydro_nwm_public/         # WRF-Hydro v5 / NWM repository
+└── wrf_hydro_nwm_public/         #   WRF-Hydro v5 / NWM repository
 ```
 <br>
 

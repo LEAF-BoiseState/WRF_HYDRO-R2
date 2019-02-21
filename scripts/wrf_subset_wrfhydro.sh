@@ -42,14 +42,16 @@
 #          * Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINNC,I_RAINNC,SWDOWN,GLW
 # ******************************************************************************
 
-# parameters
+# Parameters
+# ----------
 RAINNC_BUCKET_FLAG=true     # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
-SFC_VARS="Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINNC,I_RAINNC,SWDOWN,GLW"
+LSM_VARS="Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINNC,I_RAINNC,SWDOWN,GLW"
 ENV_SCRIPT=/home/$USER/LEAF/WRF_HYDRO-R2/scripts/env_nwm_r2.sh
 
 
-# environment
+# Environment
+# -----------
 if [ ! -f $ENV_SCRIPT ]; then
     echo -e "\nNo environment script found, $ENV_SCRIPT. Exiting.\n\n"
     exit 1
@@ -57,31 +59,40 @@ fi
 source $ENV_SCRIPT
 
 
+# User input
+# ----------
+if [ ! $# -eq 2 ]; then
+  echo -e "\nUsage: $0 <wrfout_file> <output_dir>\n"
+  exit 1
+fi
+wrfout_file=$1
+output_dir=$2
 
 
+# Main
+# ----
+# check wrfout file exists
+if [ ! -f $wrfout_file ]; then
+  echo -e "\nThe wrfout file, $wrfout_file, was not found. Exiting.\n\n"
+  exit 1
+fi
 
+# check output directory exists
+if [ ! -d $output_dir ]; then
+  echo -e "\nThe output directory, $output_dir, was not found. Exiting.\n\n"
+  exit 1
+fi
 
-# -----------------------------------------------------------------------------
-
-# (3.3.1) RAINNC / I_RAINNC block (1 of 2): modify subset variable list
-# ---------------------------------------------------------------------
-# check RAINNC and I_RAINNC are variables to be extracted
-local rainnc_flag=$(echo $var_list | grep -i 'RAINNC' | wc -l)
-local i_rainnc_flag=$(echo $var_list | grep -i 'I_RAINNC' | wc -l)
-
-# test that both were found above, and that conversion from buckets is desired
-if [ "$rainnc_flag" -ne 0 ] && [ "$i_rainnc_flag" -ne 0 ] && \
-   [ "$bucket_flag" = "true" ]; then
-
-  # remove 'RAINNC,' and 'I_RAINNC,' from variable contain extraction variables
-  # note: include the comma's as shown..
-  var_list=${var_list/'RAINNC,'/''}
-  var_list=${var_list/'I_RAINNC,'/''}
+# check rain bucket flag
+if [ $RAINNC_BUCKET_FLAG != "true" ]; then
+    var_list=${LSM_VARS/'I_RAINNC,'/''}
 fi
 
 
-# (3.3.2) Extract subset variables
-# --------------------------------
+####
+####
+
+
 # call ncks to extract listed variables (-a = do not alphabetize fields)
 echo -e "ncks -a -v $var_list $in_file $out_file"
 sleep 1
@@ -119,35 +130,6 @@ fi
 
 
 
-# User input
-# ----------
-if [ ! $# -eq 2 ]; then
-  echo -e "\nUsage: $0 <wrfout_file> <output_dir>\n"
-  exit 1
-fi
-wrfout_file=$1
-output_dir=$2
-
-
-
-# Main
-# ----
-# check wrfout file exists
-if [ ! -f $wrfout_file ]; then
-  echo -e "\nThe wrfout file, $wrfout_file, was not found. Exiting.\n\n"
-  exit 1
-fi
-
-# check output directory exists
-if [ ! -d $output_dir ]; then
-  echo -e "\nThe output directory, $output_dir, was not found. Exiting.\n\n"
-  exit 1
-fi
-
-
-# display wrfout directory and variable info
-echo -e   "Output Directory:  $output_dir"
-sleep 4
 
 
 

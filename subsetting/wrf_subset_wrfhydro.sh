@@ -39,8 +39,6 @@
 # NOTE:   Formula for rain buckets, bucket value is 100.0 mm.
 #          * RAINNC = RAINNC + I_RAINNC * 100.0
 #
-#
-#          * Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINNC,I_RAINNC,SWDOWN,GLW
 # ******************************************************************************
 
 # Parameters
@@ -93,14 +91,15 @@ fi
 
 # Main
 # ----
-# Name for output file
-out_file="testy.nc"
+# Name for output files
+tmp_outfile=${wrfout_file%*_00:00:00}_tmp
+day_outfile=${wrfout_file%*_00:00:00}
 
 
 # Extract listed variables
-echo -e "ncks -a -v $var_list $wrfout_file $out_file"
+echo -e "ncks -a -v $var_list $wrfout_file $tmp_outfile"
 sleep 1
-ncks -a -v $var_list $wrfout_file $out_file
+ncks -a -v $var_list $wrfout_file $output_dir/$tmp_outfile
 status="$?"
 if [ $status -ne 0 ]; then
     exit $status
@@ -111,23 +110,47 @@ if [ $RAINNC_BUCKET_FLAG = "true" ]; then
 
     # Combine RAINNC + I_RAINNC
     rainnc_equation="RAINNC = RAINNC + I_RAINNC * 100.0"
-    echo "ncap2 -A -v -s \"$rainnc_equation\" $out_file $out_file"
+    echo "ncap2 -A -v -s \"$rainnc_equation\" $tmp_outfile $tmp_outfile"
     sleep 1
-    ncap2 -A -v -s "$rainnc_equation" $out_file $out_file
+    ncap2 -A -v -s "$rainnc_equation" $output_dir/$tmp_outfile $output_dir/$tmp_outfile
     status="$?"
     if [ $status -ne 0 ]; then
 	exit $status
     fi
 
     # Remove I_RAINNC
-    echo -e "ncks -x -v I_RAINNC $out_file $out_file"
+    echo -e "ncks -x -v I_RAINNC $tmp_outfile $day_outfile"
     sleep 1
-    ncks -x -v I_RAINNC $out_file $out_file
+    ncks -x -v I_RAINNC $output_dir/$tmp_outfile $output_dir/$day_outfile
     status="$?"
     if [ $status -ne 0 ]; then
 	exit $status
     fi
 fi
+
+
+# De-aggregate from day -> to -> hourly files
+time_pat='Time = UNLIMITED'
+let num_steps=$(ncdump -h $wrfout_file | grep "$time_pat" | grep -oP '[0-9]+')
+let t
+for (( t=0; t<=$num_steps-1; t++ ))
+do
+    # 0-pad hour
+    t_pad="$t"
+    if [ $t -lt 10 ]; then 
+        t_pad="0$t"
+    fi
+
+    # Extract each hour
+    hour_outfile=${day_outfile}_${t_pad}:00:00
+    ncks -d Time,$t,$t $output_dir/$day_outfile $output_dir/$hour_outfile
+done
+
+
+# Clean up
+rm -f $output_dir/$tmp_outfile
+rm -f $output_dir/$day_outfile
+
 
 
 exit

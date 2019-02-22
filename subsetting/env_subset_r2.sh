@@ -18,9 +18,10 @@ module purge
 module load shared
 module load git/64/2.12.2
 module load slurm/17.11.8
+module load gcc/6.4.0
 module load intel/compiler/64/2017/17.0.7
 module load intel/mkl/64/2017/7.259
-module load hdf5_18/intel/1.8.20
+module load hdf5_18/1.8.20
 module load netcdf/intel/64/4.4.1
 module load udunits/intel/64/2.2.24
 module load gsl/intel/2.3

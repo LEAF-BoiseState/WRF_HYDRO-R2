@@ -29,8 +29,8 @@ source $SCRIPTS_DIR/env_nwm_r2.sh
 echo -e "\nChange directory to build dir, $BUILD_DIR.."
 cd $BUILD_DIR
 cp -v $BUILD_DIR/template/setEnvar.sh .
-sed -i 's/SPATIAL_SOIL=0/SPATIAL_SOIL=1/g'           setEnvar.sh  # SPATIAL_SOIL=1
-sed -i 's/WRF_HYDRO_NUDGING=0/WRF_HYDRO_NUDGING=1/g' setEnvar.sh  # WRF_HYDRO_NUDGING=1 
+###sed -i 's/SPATIAL_SOIL=0/SPATIAL_SOIL=1/g'           setEnvar.sh  # SPATIAL_SOIL=1
+###sed -i 's/WRF_HYDRO_NUDGING=0/WRF_HYDRO_NUDGING=1/g' setEnvar.sh  # WRF_HYDRO_NUDGING=1 
 
 # build
 echo "$WH_CONFIG" | ./configure                    # send choice, call config

@@ -8,8 +8,9 @@
 * [II. Manifest](#II-Manifest) - *main repository structure*
 * [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
 * [IV. Test Case: Croton NY](#IV-Test-Case-Croton-NY) - *steps to setup + run the test case Croton, NY*
-* [V. Make Target Reference](#V-Make-Target-Reference) - *reference list of all supported `make` commands*
-* [VI. Links](#VI-Links) - *links to external references*
+* [V. Idaho NWM Cut-outs](#V-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
+* [VI. Make Target Reference](#VI-Make-Target-Reference) - *reference list of all supported `make` commands*
+* [VII. Links](#VII-Links) - *links to external references*
 <br>
 
 
@@ -153,20 +154,56 @@ that same setup test directory by issuing `make run` again, possibly after
 editting the namelists in the displayed run directory to experiment with different
 options.
 <br><br>
+
+
+
+## V. Idaho NWM Cut-outs
+Currently provided cut-outs from the National Water Model and their reference numbers can be displayed 
+by calling
+
+```bash
+make list_cutout
+```
+
+```bash
+	NUM:   Gauge ID  -  Description
+	----------------------------------------------------
+          1:   13139510  -  Big Wood River at Hailey ID
+          2:   13168500  -  Bruneau River near Hot Springs ID
+          3:   13185000  -  Boise River near Twin Springs ID
+          4:   13186000  -  SF Boise River near Featherville ID
+	  5:   13235000  -  SF Payette River at Lowman ID
+          6:   13237920  -  MF Payette River near Crouch ID
+          7:   13258500  -  Weiser River near Cambridge ID
+          8:   13316500  -  Little Salmon River at Riggins ID
+```
+<br>
+
+From here you can make a copy of a cut-out run directory by calling `make copy_cutout NUM=<num>` where 
+<num> specifies the number ID of the basin [1-8].  For example, to create a copy of the MF Payette River
+near Cambridge ID (13237920), the call would be
+```bash
+make copy_cutout NUM=6
+```
+
+
                                                              
-## V. Make Target Reference
+## VI. Make Target Reference
 ```bash                        
-make                    # default, calls target sub
-make sub                # initializes and updates submodule NWM
-make build              # builds the NoahMP/NWM-Offline exe
-make test               # get and setup croton_NY test case
-make run                # run the croton_NY test case
-make clean_test         # cleans all run output from croton_NY test
-make clean              # calls the 'make clean' target in NWM build dir
+make                        # default, calls target sub
+make help                   # display make target reference list
+make sub                    # initializes and updates submodule NWM
+make build                  # builds the NoahMP/NWM-Offline exe
+make test                   # get and setup croton_NY test case
+make run                    # run the croton_NY test case
+make list_cutout            # display reference list of cut-outs with number ID's
+make copy_cutout NUM=<num>  # create a copy of cutout directory for number ID <num> 
+make clean_test             # cleans all run output from croton_NY test
+make clean_nwm              # calls the 'make clean' target in NWM build dir
 ```
 <br>
                                                                              
-## VI. Links
+## VII. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [GNU Make manual](https://www.gnu.org/software/make/manual/)

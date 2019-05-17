@@ -57,7 +57,7 @@ run:
 
 
 # cut-out test cases
-list_cutouts:
+list_cutout:
 	@echo -e "\n\tNUM:   Gauge ID  -  Description"
 	@echo -e "\t----------------------------------------------------"
 	@echo -e "\t  1:   13139510  -  Big Wood River at Hailey ID"
@@ -69,7 +69,7 @@ list_cutouts:
 	@echo -e "\t  7:   13258500  -  Weiser River near Cambridge ID"
 	@echo -e "\t  8:   13316500  -  Little Salmon River at Riggins ID\n\n"
 
-cutout_dir:
+copy_cutout:
 ifndef NUM
 	@echo -e "\n\tNo cut-out ID provided."
 	@echo -e "\tTry 'make list_cutouts' for listing of cut-out IDs.\n"
@@ -125,6 +125,19 @@ endif
 
 
 
+help:
+	@echo -e "\n\t\t* WRF_HYDRO-R2 make reference list *"
+	@echo -e   "\t\t===================================="
+	@echo -e "\t  make help                  #  display this reference list"
+	@echo -e "\t  make sub                   #  initialize and update submodules (NWM,rwrfhydro)"
+	@echo -e "\t  make build                 #  builds the NoahMP/NWM-Offline executable"
+	@echo -e "\t  make test                  #  download and setup croton_NY test case"
+	@echo -e "\t  make run                   #  run the croton_NY test case"
+	@echo -e "\t  make list_cutout           #  display reference list of cut-outs with number ID's"
+	@echo -e "\t  make copy_cutout NUM=<num> #  create a copy of cutout directory for number ID <num>"
+	@echo -e "\t  make clean_test            #  cleans all run output from croton_NY test"
+	@echo -e "\t  make clean_nwm             #  calls the 'make clean' target in NWM build directory"
+	@echo -e "\n"
 
 
 

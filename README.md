@@ -177,15 +177,14 @@ make list_cutout
           7:   13258500  -  Weiser River near Cambridge ID
           8:   13316500  -  Little Salmon River at Riggins ID
 ```
-<br>
 
-From here you can make a copy of a cut-out run directory by calling `make copy_cutout NUM=<num>` where 
-<num> specifies the number ID of the basin [1-8].  For example, to create a copy of the MF Payette River
+You can then make a copy of a cut-out run directory by calling `make copy_cutout NUM=<num>`, 
+where `<num>` specifies the number ID of the basin [1-8].  For example, to create a copy of the MF Payette River
 near Cambridge ID (13237920), the call would be
 ```bash
 make copy_cutout NUM=6
 ```
-
+<br>
 
                                                              
 ## VI. Make Target Reference

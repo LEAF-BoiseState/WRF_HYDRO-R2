@@ -1,2 +1,5 @@
-#.gitignore
+# .gitignore
 Makefile.cs430
+upper_boise/
+upper_boise_bak/
+

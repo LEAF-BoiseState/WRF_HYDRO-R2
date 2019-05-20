@@ -18,22 +18,25 @@
 #                 <output_dir>    = directory for output files
 #
 # VARS:    Variables needed by Noah-MP LSM
-#           NEEDED      WRF        DESC                    UNITS
-#           ======      ====       ====                    =====
-#           SWDOWN      SWDOWN     short-wave rad down     W/m^2
-#           LWDOWN      GLW        long-wave rad down      W/m^2
-#           Q2D         Q2         specific humidity       kg/kg
-#           T2D         T2         air temperature         K
-#           PSFC        PSFC       surface pressure        Pa
-#           U2D         U10        u-wind (zonal) 10-m     m/s
-#           V2D         V10        v-wind (merid.) 10-m    m/s
-#           RAINRATE    RAINNC     precipitation rate      mm/s
-#                       I_RAINNC   precip bucket, 100.0    mm
+#           NEEDED      WRF        DESC                            UNITS
+#           ======      ====       ====                            =====
+#           SWDOWN      SWDOWN     short-wave rad down             W/m^2
+#           LWDOWN      GLW        long-wave rad down              W/m^2
+#           Q2D         Q2         specific humidity               kg/kg
+#           T2D         T2         air temperature                 K
+#           PSFC        PSFC       surface pressure                Pa
+#           U2D         U10        u-wind (zonal) 10-m             m/s
+#           V2D         V10        v-wind (merid.) 10-m            m/s
+#           RAINRATE    RAINNC     precipitation rate (non-conv)   mm/s
+#                       I_RAINNC   precip bucket, 100.0            mm
+#                       RAINC      precipitation rate (conv)       mm/s
+#                       VEGFRA     vegetation fraction             NA
+#                       LAI        leaf area index                 m^2/m^2
 #
-#                       HGT        terrain height          m
-#                       XLAT       latitude wrf grid       degree_north
-#                       XLONG      longitude wrf grid      degree_east
-#                       Times      time steps              date/time
+#                       HGT        terrain height                  m
+#                       XLAT       latitude wrf grid               degree_north
+#                       XLONG      longitude wrf grid              degree_east
+#                       Times      time steps                      date/time
 #
 # 
 # NOTE:   Formula for rain buckets, bucket value is 100.0 mm.
@@ -45,7 +48,7 @@
 # ----------
 RAINNC_BUCKET_FLAG="true"   # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
-LSM_VARS="Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINNC,I_RAINNC,SWDOWN,GLW"
+LSM_VARS="Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI"
 ENV_SCRIPT=/home/$USER/LEAF/WRF_HYDRO-R2/subsetting/env_subset_r2.sh
 
 

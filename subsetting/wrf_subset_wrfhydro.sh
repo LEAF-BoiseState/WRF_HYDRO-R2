@@ -4,6 +4,8 @@
 # FILE:    wrf_subset_wrfhydro.sh
 # AUTHOR:  Matt Masarik   (MM)
 # VERSION: 0  2019-02-21   MM Initial version
+#          1  2019-05-20   MM Added: RAINC, LAI, VEGFRA
+#
 #
 # PURPOSE: Create hourly files with surface variables needed by WRF-Hydro, by
 #          extracting variables from WRF wrfout's and putting in new netCDF 

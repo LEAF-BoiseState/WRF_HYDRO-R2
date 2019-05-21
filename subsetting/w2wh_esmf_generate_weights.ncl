@@ -1,8 +1,8 @@
 ; ============================================================================== ;
 ;                                                                                ;
+; FILE:    w2wh_esmf_generate_weights.ncl                                        ;
 ; PURPOSE: generate weights for regridding from WRF to WRF-Hydro.                ;
-;                                                                                ;
-; USAGE:  ncl WRF2WRFHydro_generate_weights.ncl <src_grid_file> <dest_grid_file> ;
+; USAGE:   ncl w2wh_esmf_generate_weights.ncl <src_grid_file> <dest_grid_file>   ;
 ;                                                                                ;
 ; Matt Masarik - May 20, 2019 (See below for original documentation)             ;
 ;                                                                                ;

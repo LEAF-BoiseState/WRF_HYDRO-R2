@@ -26,6 +26,7 @@ module load netcdf/intel/64/4.4.1
 module load udunits/intel/64/2.2.24
 module load gsl/intel/2.3
 module load nco/64/4.6.2
+module load ncl/64/6.4
 
 # export netCDF env variable
 export NETCDF=/cm/shared/apps/netcdf/intel/64/4.4.1

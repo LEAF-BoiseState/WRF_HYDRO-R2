@@ -2,7 +2,7 @@
 ;                                                                                ;
 ; FILE:    w2wh_esmf_regrid_w_weights.ncl                                        ;
 ; PURPOSE: Use weight file to regrid input from a source grid (WRF) to a         ;
-;          a destination grid (WRF-Hydro).
+;          a destination grid (WRF-Hydro).                                       ;
 ; USAGE:   ncl w2wh_esmf_generate_weights.ncl <src_grid_file> <dest_grid_file>   ;
 ;                                                                                ;
 ; Matt Masarik - May 20, 2019 (See below for original documentation)             ;
@@ -13,23 +13,9 @@
 ;                                                                                ;
 ; Remarks:  (1) Assumes that wrfout files are hourly output. Important for       ;
 ;               computing rainrate.                                              ;
-;           (2) ESMF regridding performed with "conserve" option for             ;
+;       !!    (2) ESMF regridding performed with "conserve" option for             ;
 ;               precipitation and SWE. All other variables use bilinear option   ;
 ;               for remapping.                                                   ;
-;                                                                                ;
-; Usage: ncl 'RUNNAME="BASELINE"' 'wrf_domain_name="d03"' \                      ;
-;            'srcfilename="wrfout_d03*"'                  \                      ;
-;            WRF_HYDRO_sub_domain_forcing_regridder_ESMFregrid.ncl               ;
-;                                                                                ;
-; *  RUNNAME = name of wrf run.  This is used for the input path and the         ;
-;              weight filename.                                                  ;
-; *  wrf_domain_name = domain name (d01, d02, d03) which is used to identify     ;
-;                      the weight file.                                          ;
-; *  srcfilename = filename pattern of the souce wrfout files. Should have       ;
-;                  matching domain number.                                       ;
-;                  e.g., "wrfout_d01_2007-09-01_00_00_00.nc",                    ;
-;                        "wrfout_d01_2007*.nc",                                  ;
-;                        "wrfout_d01_2007-09-0[1-3].nc"                          ;
 ;                                                                                ;
 ;--------------------------------------------------------------------------------;
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
@@ -43,16 +29,13 @@ begin
 ;--------------------------------------------------------------------------------
 ; Parameters
 ;--------------------------------------------------------------------------------
-srcGridFile     = "wrfout_d02_2010-06-02_01:00:00"
-dstGridFile     = "geo_em.d01.nc"
-out_file         = ""
+;;;srcGridFile          = "wrfout_d02_2010-06-02_01:00:00"
+;;;dstGridFile          = "geo_em.d01.nc"
+;;;wgtFileName          = wgtFileName_bilinear
+;;;outputDir            = "./output_files" 
 
-
-;--------------------------------------------------------------------------------
-; Weight filenames for regridding                               
-;--------------------------------------------------------------------------------
+;;wgtFileName_bilinear = "./WRF2WRFHydro_weight_bilinear.nc"
 ;wgtFileName_conserve = "./RAP2WRFHydro_weight_conserve.nc"
-wgtFileName_bilinear = "./WRF2WRFHydro_weight_bilinear.nc"
 
 
 ;--------------------------------------------------------------------------------
@@ -82,23 +65,37 @@ dims            = dimsizes(dlat2d)
 
 
 ;--------------------------------------------------------------------------------
-; Open source data files to be regridded...
+; Open new output file for regridded data
 ;--------------------------------------------------------------------------------
-out_dir         = "./output_files" 
-if(.not. isfilepresent(out_dir)) then
-   system("mkdir "+out_dir)
+; check for output + 'FORCING' dir, make if not present
+outputDir = outputDir + "/" + "FORCING"
+outdir_exists = systemfunc("test -d "+outputDir+"; echo $?")
+if      (outdir_exists .eq. 0) then
+    system("echo")    
+    print("Output directory: "+outputDir+", exists.")  
+else if (outdir_exists .eq. 1) then
+    system("echo")
+    print("Output directory: "+outputDir+", does NOT exist.")  
+    print("Making output directory: "+outputDir+".")
+    system("mkdir -p "+outputDir)
 end if
-    
-out_file        = out_dir + "/" + srcGridFile +".nc"
+end if
+
+
+
+
+; get output file name
+srcName       = systemfunc("echo $(basename "+srcGridFile+")")
+out_file      = outputDir + "/" + srcName +".nc"
 if (isfilepresent(out_file)) then
    system ("/bin/rm "+out_file)
 end if
 
-ncdf            = addfile(out_file,"c")
-print(ncdf)
-filedimdef(ncdf, "Time", -1, True)
-ncdf->lat = dlat2d   ;output lat
-ncdf->lon = dlon2d   ;output lon
+; create/open output file
+ncout         = addfile(out_file,"c")
+filedimdef(ncout, "Time", -1, True)
+ncout->lat    = dlat2d   ;output lat
+ncout->lon    = dlon2d   ;output lon
 
 
 ;--------------------------------------------------------------------------------
@@ -106,50 +103,39 @@ ncdf->lon = dlon2d   ;output lon
 ;--------------------------------------------------------------------------------
 do v=1,11
    if (v.eq.1) then
-      var = datfile->$T_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$T_varname$
    end if
    if (v.eq.2) then
-      var = datfile->$Q_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$Q_varname$
    end if
    if (v.eq.3) then
-      var = datfile->$U_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$U_varname$
    end if
    if (v.eq.4) then
-      var = datfile->$V_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$V_varname$
    end if
    if (v.eq.5) then
-      var = datfile->$P_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$P_varname$
    end if
    if (v.eq.6) then
-      var = datfile->$PCP_varname$
-      wgtFileName = wgtFileName_bilinear 
+      var = src_file->$PCP_varname$
    end if
    if (v.eq.7) then
-      var = datfile->$PCP2_varname$
-      wgtFileName = wgtFileName_bilinear 
+      var = src_file->$PCP2_varname$
    end if
    if (v.eq.8) then
-      var = datfile->$DSWR_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$DSWR_varname$
    end if
    if (v.eq.9) then
-      var = datfile->$DLWR_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$DLWR_varname$
    end if
    if (v.eq.10) then
-      var = datfile->$VEGFRA_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$VEGFRA_varname$
    end if
    if (v.eq.11) then
-      var = datfile->$LAI_varname$
-      wgtFileName = wgtFileName_bilinear
+      var = src_file->$LAI_varname$
    end if
-   printVarSummary(var)      
+   ;;printVarSummary(var)      
 
 
    ;-----------------------------------------------------------------------------
@@ -157,7 +143,7 @@ do v=1,11
    ;-----------------------------------------------------------------------------
    ntimes = 1  ; for WRF, there is only one time step in each file
    loop_field_var = new((/ntimes(0), dims(0), dims(1)/),"double")
-   printVarSummary(loop_field_var)
+   ;;printVarSummary(loop_field_var)
 
 
    ;---Options to pass to ESMF_regrid--------------------------------------------
@@ -165,8 +151,8 @@ do v=1,11
    Opt@WgtFileName    = wgtFileName
    Opt@CopyVarAtts    = True
    Opt@CopyVarCoords  = False
-   Opt@PrintTimings   = True ;---Debug information
-   Opt@Debug          = True ;---Debug information
+   ;;Opt@PrintTimings   = True ;---Debug information
+   ;;Opt@Debug          = True ;---Debug information
 
 
    ;-----------------------------------------------------------------------------
@@ -179,6 +165,7 @@ do v=1,11
        exit
    end if
 
+   ; The call
    loop_field_var     = ESMF_regrid_with_weights(var, wgtFileName, Opt)
    delete(Opt)
 
@@ -190,29 +177,29 @@ do v=1,11
    loop_field_var!0 = "Time"
    loop_field_var!1 = "south_north"
    loop_field_var!2 = "west_east"
-   printVarSummary(loop_field_var)
+   ;;printVarSummary(loop_field_var)
    if      (v.eq.1)  then
-	  ncdf->T2     = loop_field_var
+	  ncout->T2     = loop_field_var
    else if (v.eq.2)  then
-	  ncdf->Q2     = loop_field_var
+	  ncout->Q2     = loop_field_var
    else if (v.eq.3)  then
-	  ncdf->U10    = loop_field_var
+	  ncout->U10    = loop_field_var
    else if (v.eq.4)  then
-	  ncdf->V10    = loop_field_var
+	  ncout->V10    = loop_field_var
    else if (v.eq.5)  then
-	  ncdf->PSFC   = loop_field_var
+	  ncout->PSFC   = loop_field_var
    else if (v.eq.6)  then
-	  ncdf->RAINC  = loop_field_var
+	  ncout->RAINC  = loop_field_var
    else if (v.eq.7)  then
-	  ncdf->RAINNC = loop_field_var
+	  ncout->RAINNC = loop_field_var
    else if (v.eq.8)  then
-	  ncdf->SWDOWN = loop_field_var
+	  ncout->SWDOWN = loop_field_var
    else if (v.eq.9)  then
-	  ncdf->GLW    = loop_field_var
+	  ncout->GLW    = loop_field_var
    else if (v.eq.10) then
-	  ncdf->VEGFRA = loop_field_var
+	  ncout->VEGFRA = loop_field_var
    else if (v.eq.11) then
-	  ncdf->LAI    = loop_field_var
+	  ncout->LAI    = loop_field_var
    end if
    end if
    end if
@@ -225,9 +212,12 @@ do v=1,11
    end if
    end if
 
-   delete([/var, loop_field_var, wgtFileName/])
+   delete([/var, loop_field_var/])
 end do 
-   
 
+; display location of regridded files
+system("echo")
+print("Regridded output written to directory: "+outputDir+".")   
+system("echo")
 
 end

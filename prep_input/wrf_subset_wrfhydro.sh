@@ -50,7 +50,7 @@
 # ----------
 RAINNC_BUCKET_FLAG="true"   # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
-LSM_VARS="Times,XLAT,XLONG,HGT,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI"
+LSM_VARS="Times,XLAT,XLONG,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI,HGT"
 ENV_SCRIPT=/home/$USER/LEAF/WRF_HYDRO-R2/subsetting/env_subset_r2.sh
 
 

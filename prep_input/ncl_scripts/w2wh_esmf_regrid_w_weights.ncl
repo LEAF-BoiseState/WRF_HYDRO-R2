@@ -1,11 +1,21 @@
 ; ============================================================================== ;
 ;                                                                                ;
 ; FILE:    w2wh_esmf_regrid_w_weights.ncl                                        ;
+;                                                                                ; 
 ; PURPOSE: Use weight file to regrid input from a source grid (WRF) to a         ;
 ;          a destination grid (WRF-Hydro).                                       ;
-; USAGE:   ncl w2wh_esmf_generate_weights.ncl <src_grid_file> <dest_grid_file>   ;
 ;                                                                                ;
-; Matt Masarik - May 20, 2019 (See below for original documentation)             ;
+; USAGE:   ncl 'srcGridFile="<src_grid_file>"' 'dstGridFile="<dst_grid_file>"' \ ; 
+;              'wgtFileName="<weight_file>"'   'outputDir="<output_dir>"'      \ ;
+;               w2wh_esmf_generate_weights.ncl                                   ;     
+;                                                                                ;
+;            where,                                                              ;
+;                   <src_grid_file>  = [SRC] wrfout (WRF grid) file name         ;
+;                   <dst_grid_file>  = [DST] geogrid (WRF-Hydro grid) file name  ;
+;                   <weight_file>    = file w weights to convert WRF->WRF-Hydro  ;
+;                   <output_dir>     = directory for output files                ;
+;                                                                                ;
+; Matt Masarik - May 20, 2019 (adapted from K. FitzGerald, see below)            ;
 ;                                                                                ;
 ; ============================================================================== ;
 ;                                                                                ;
@@ -13,7 +23,7 @@
 ;                                                                                ;
 ; Remarks:  (1) Assumes that wrfout files are hourly output. Important for       ;
 ;               computing rainrate.                                              ;
-;       !!    (2) ESMF regridding performed with "conserve" option for             ;
+;       !!    (2) ESMF regridding performed with "conserve" option for           ;
 ;               precipitation and SWE. All other variables use bilinear option   ;
 ;               for remapping.                                                   ;
 ;                                                                                ;
@@ -29,10 +39,12 @@ begin
 ;--------------------------------------------------------------------------------
 ; Parameters
 ;--------------------------------------------------------------------------------
+; user input
 ;;;srcGridFile          = "wrfout_d02_2010-06-02_01:00:00"
 ;;;dstGridFile          = "geo_em.d01.nc"
 ;;;wgtFileName          = wgtFileName_bilinear
 ;;;outputDir            = "./output_files" 
+
 
 ;;wgtFileName_bilinear = "./WRF2WRFHydro_weight_bilinear.nc"
 ;wgtFileName_conserve = "./RAP2WRFHydro_weight_conserve.nc"
@@ -52,6 +64,7 @@ DSWR_varname    = "SWDOWN"
 DLWR_varname    = "GLW"
 VEGFRA_varname  = "VEGFRA"
 LAI_varname     = "LAI"
+HGT_varname     = "HGT"
   
 
 ;--------------------------------------------------------------------------------
@@ -101,7 +114,7 @@ ncout->lon    = dlon2d   ;output lon
 ;--------------------------------------------------------------------------------
 ;  Processing...no further mods should be required...
 ;--------------------------------------------------------------------------------
-do v=1,11
+do v=1,12
    if (v.eq.1) then
       var = src_file->$T_varname$
    end if
@@ -135,6 +148,9 @@ do v=1,11
    if (v.eq.11) then
       var = src_file->$LAI_varname$
    end if
+   if (v.eq.12) then
+      var = src_file->$HGT_varname$
+   end if
    ;;printVarSummary(var)      
 
 
@@ -151,8 +167,8 @@ do v=1,11
    Opt@WgtFileName    = wgtFileName
    Opt@CopyVarAtts    = True
    Opt@CopyVarCoords  = False
-   ;;Opt@PrintTimings   = True ;---Debug information
-   ;;Opt@Debug          = True ;---Debug information
+   ;;Opt@PrintTimings   = True        ; DEBUG
+   ;;Opt@Debug          = True        ; DEBUG
 
 
    ;-----------------------------------------------------------------------------
@@ -200,6 +216,9 @@ do v=1,11
 	  ncout->VEGFRA = loop_field_var
    else if (v.eq.11) then
 	  ncout->LAI    = loop_field_var
+   else if (v.eq.12) then
+	  ncout->HGT    = loop_field_var
+   end if
    end if
    end if
    end if

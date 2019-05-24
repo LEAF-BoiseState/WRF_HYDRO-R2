@@ -2,9 +2,12 @@
 ;                                                                                ;
 ; FILE:    w2wh_esmf_generate_weights.ncl                                        ;
 ; PURPOSE: generate weights for regridding from WRF to WRF-Hydro.                ;
-; USAGE:   ncl w2wh_esmf_generate_weights.ncl <src_grid_file> <dest_grid_file>   ;
 ;                                                                                ;
-; Matt Masarik - May 20, 2019 (See below for original documentation)             ;
+; USAGE:   ncl 'srcGridFile="<srcgrid_file>"' 'dstGridFile="<dstgrid_file>"'  \  ;
+;              'outputDir="<output_dir>"'  w2wh_esmf_generate_weights.ncl        ;
+;                                                                                ;
+;                                                                                ;
+; Matt Masarik - May 20, 2019 (adapted from below, K. FitzGerald)                ;
 ;                                                                                ;
 ; ============================================================================== ;
 ; NCAR WRF-Hydro Team                                                            ;
@@ -17,7 +20,6 @@
 ;           curvilinear WRF model grid to a WRF-Hydro model domain, a            ;
 ;           curvilinear grid specified in a geo_em.d0x.nc file.                  ;
 ;                                                                                ;
-;                                                                                ;
 ;           Steps:                                                               ;
 ;             1) Use curvilinear_to_SCRIP to create a SCRIP (convention) file    ;
 ;                from a file describing the source curvilinear grid.             ;
@@ -25,12 +27,6 @@
 ;                from a file describing the destination (WRF-Hydro) grid.        ;
 ;             3) Use ESMF_regrid_gen_weights to generate a weight file using a   ;
 ;                remapping option specified in the command line.                 ;
-;                                                                                ;
-;                                                                                ;
-; Example Usage: ncl 'interp_opt="bilinear"'                                     ;
-;                    'srcGridFile="input_data/rap.t14z.awp130bgrbf02.grib2"'     ;
-;                    'dstGridFile="geo_em.d01.nc"'                               ;
-;                    RAP2WRFHydro_generate_weights.ncl                           ;
 ;                                                                                ;
 ;  *  interp_opt = conserve / bilinear                                           ;
 ;  *  srcGridFile = name of file that contains source (WRF) grid                 ;
@@ -57,13 +53,17 @@ begin
 ;--------------------------------------------------------------------------------
 ; Set parameters
 ;--------------------------------------------------------------------------------
-srcGridFile  = "wrfout_d02_2010-06-02_00:00:00"
-srcGridName  = "L1D2"                              ;; L1D2 := LEAF 1, Domain 2
-dstGridFile  = "geo_em.d01.nc"
-dstGridName  = "cutout-gid"
-interp_opt   = "bilinear"
-wgtFileName  = "./WRF2WRFHydro_weight_"+srcGridName+"_"+interp_opt+"_"+dstGridName+".nc"
+;;srcGridFile
+;;dstGridFile
+;;outputDir
 
+interp_opt   = "bilinear"
+wgtFileName  = "w2wh_spatialweight_"+interp_opt+".nc"
+wgtFile      = outputDir+"/"+wgtFileName
+
+;;srcGridName  = ""                              ;; L1D2 := LEAF 1, Domain 2
+;;dstGridName  = ""                              ;; cut-out ID
+;;;wgtFileName  = "spatialweight_"+srcGridName+"_"+interp_opt+"_"+dstGridName+".nc"
 
 ;--------------------------------------------------------------------------------
 ; Check for source and destination grid files                    
@@ -102,13 +102,14 @@ end if
 Opt                = True
 Opt@SrcRegional    = True
 Opt@ForceOverwrite = True
-Opt@PrintTimings   = True
+;Opt@PrintTimings   = True     ; DEBUG
 Opt@Title          = "WRF"
 Opt@CopyVarAtts    = True
 Opt@CopyVarCoords  = False
 
 src_SCRIP_filename   = "SCRIP_WRF_"+interp_opt+".nc"
-curvilinear_to_SCRIP(src_SCRIP_filename, src_lat, src_lon, Opt)
+src_SCRIP_file       = outputDir+"/"+src_SCRIP_filename
+curvilinear_to_SCRIP(src_SCRIP_file, src_lat, src_lon, Opt)
 delete(Opt)
 
 
@@ -130,11 +131,12 @@ end if
 Opt                = True
 Opt@DstRegional    = True
 Opt@ForceOverwrite = True
-Opt@PrintTimings   = True
+;Opt@PrintTimings   = True               ; DEBUG
 Opt@Title          = dstGridFile
 
 dst_SCRIP_filename     = "SCRIP_WRFHydro_"+interp_opt+".nc"
-curvilinear_to_SCRIP(dst_SCRIP_filename, dst_lat, dst_lon,Opt)
+dst_SCRIP_file         = outputDir+"/"+dst_SCRIP_filename
+curvilinear_to_SCRIP(dst_SCRIP_file, dst_lat, dst_lon,Opt)
 delete(Opt)
 
 
@@ -146,11 +148,18 @@ Opt@InterpMethod         = interp_opt
 Opt@SrcRegional          = True
 Opt@DstRegional          = True
 Opt@ForceOverwrite       = True
-Opt@PrintTimings         = True
-Opt@Debug                = True
+;Opt@PrintTimings         = True              ; DEBUG
+;Opt@Debug                = True              ; DEBUG
 
-ESMF_regrid_gen_weights(src_SCRIP_filename, dst_SCRIP_filename, wgtFileName, Opt)
+; The call
+ESMF_regrid_gen_weights(src_SCRIP_file, dst_SCRIP_file, wgtFile, Opt)
 delete(Opt)
+
+
+; display location of spatial weight file
+system("echo")
+print("Spatial weight file written to location: "+wgtFile+".")   
+system("echo")
 
 
 end

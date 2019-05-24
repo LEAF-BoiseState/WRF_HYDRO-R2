@@ -55,15 +55,21 @@ echo -e     "\t4) output dir:    $output_dir\n\n"
 # -----------------------------------------------------------------------------
 # (3) Main
 # -----------------------------------------------------------------------------
+start_dir=$(pwd)
+
+# go to output dir
+cd $output_dir
+
+# format args for call
 arg1=\'srcGridFile=\"$wrfout_file\"\'
 arg2=\'dstGridFile=\"$geogrid_file\"\'
 arg3=\'wgtFileName=\"$weight_file\"\'
 arg4=\'outputDir=\"$output_dir\"\'
 
-
-# call ncl regrid routine
+# The call: ncl regrid routine
 ##echo eval ncl $arg1 $arg2 $arg3 $arg4 $REGRID_SCRIPT    # DEBUG
 eval ncl $arg1 $arg2 $arg3 $arg4 $REGRID_SCRIPT
 
+cd $start_dir
 
 exit

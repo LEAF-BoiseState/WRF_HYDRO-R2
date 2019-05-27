@@ -34,7 +34,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 SUBSET_SCRIPT=$DIR/wrf_subset_wrfhydro.sh
 GEN_WEIGHT_SCRIPT=$DIR/wrf_gen_weights_wrfhydro.sh
 REGRID_SCRIPT=$DIR/wrf_regrid_wrfhydro.sh
+INPUT_PREP_ENV=$DIR/env_subset_r2.sh
 DST_PREFIX=geo_em
+SRC_PREFIX=wrfout
+
+# source environment script
+if [ -f "$INPUT_PREP_ENV" ]; then
+    source $INPUT_PREP_ENV
+else
+    echo -e "\nNo environment script, $INPUT_PREP_ENV, found."
+    echo -e "Exiting.\n\n"
+    exit 2
+fi
 
 
 
@@ -67,11 +78,14 @@ fi
 # check valid set of input
 # ------------------------
 # i)   wrfout - dir or file? exists?
+input_dir=""
 WRFOUT_DIR_FLAG=""
 if   [ -d "$wrfout_input" ]; then
     WRFOUT_DIR_FLAG=true
+    input_dir=$wrfout_input
 elif [ -f "$wrfout_input" ]; then
     WRFOUT_DIR_FLAG=false
+    input_dir=$(dirname $wrfout_input)
 else
     echo -e "\nNo valid wrfout input, $wrfout_input."
     echo -e "Exiting.\n"
@@ -87,7 +101,7 @@ if [[ ! -f "$geogrid_file" ]] || [[ "$geo_prefix" != "DST_PREFIX" ]]; then
     exit 2
 fi
 
-# iii) output dir - exisits?
+# iii) output dir - exisits? also, check if output dir == input dir
 if [ ! -d "$output_dir" ]; then
     echo -e "\nNo output directory, $output_dir, found."
     echo -e "Creating directory, $output_dir."
@@ -98,6 +112,14 @@ if [ ! -d "$output_dir" ]; then
         exit 2
     fi
 fi
+if [ "$input_dir" == "$output_dir" ]; then
+    echo -e "\nInput directory and output directory must be distinct."
+    echo -e "Input Dir == Output Dir == $input_dir."
+    echo -e "Exiting.\n\n"
+    exit 2
+fi
+
+
 
 # *iv) weights file - exitists?
 if [[ "$WEIGHT_FLAG" == "true" ]] && [[ ! -f "$weight_file" ]]; then
@@ -131,9 +153,49 @@ start_dir=$(pwd)
 cd $output_dir
 
 
+# get file list for dir input
+num_wrfout_files=""
+list_wrfout_files=""
+if [ "$WRFOUT_DIR_FLAG" == "true" ]; then
+num_wrfout_files=$(ls -1 $input_dir/$SRC_PREFIX* 2> /dev/null | wc -l)
+    if [ $num_wrfout_files -ge 1 ]; then
+        list_wrfout_files="$(ls $input_dir/$SRC_PREFIX*)"
+    else
+        echo -e "\nNo valid input (wrfout) files found in, $input_dir."
+        echo -e "Exiting.\n\n"
+        exit 2
+    fi
+fi
+
+
+
+
+
+
+
+# ** MAIN PROCESSING **
+# =====================
 
 # (1) Subset
 # ----------
+if [ "$WRFOUT_DIR_FLAG" == "false" ]; then
+    $SUBSET_SCRIPT $wrfout_input $output_dir
+    if [ "$?" -ne 0 ]; then
+        echo -e "\nNon-zero exit status in process: subsetting."
+        echo -e "Exiting.\n\n"
+        exit 2
+    fi
+else
+    for wo in $list_wrfout_files;
+    do
+        $SUBSET_SCRIPT $wo $output_dir        
+	if [ "$?" -ne 0 ]; then
+	    echo -e "\nNon-zero exit status in process: subsetting."
+	    echo -e "Exiting.\n\n"
+	    exit 2
+	fi
+    done
+fi
 
 
 

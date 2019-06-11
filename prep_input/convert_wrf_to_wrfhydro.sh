@@ -7,10 +7,10 @@
 #
 # PURPOSE: Orchestrating script for converting WRF output (wrfout files) to
 #          the format needed for input to WRF-Hydro.  In particular, the
-#          wrfout's are subset (in time and variables), as well as spatially
-#          regridded to the WRF-Hydro grid.  Spatial weights are generated
-#          for the regridding if a spatialweights file is not supplied as the
-#          optional argument.
+#          wrfout's are subset (in time and field variables), as well as
+#          spatially regridded (domain extent and resolution) to the WRF-Hydro
+#          grid.  Spatial weights are generated for the regridding if a
+#          spatialweights file is not supplied as the optional argument.
 #          
 #
 # USAGE:   ./convert_wrf_to_wrfhydro.sh  <wrfout_input>  <geogrid_file>  \
@@ -37,6 +37,7 @@ REGRID_SCRIPT=$DIR/wrf_regrid_wrfhydro.sh
 INPUT_PREP_ENV=$DIR/env_subset_r2.sh
 DST_PREFIX=geo_em
 SRC_PREFIX=wrfout
+WEIGHTS_PREFIX=w2wh_spatialweights
 
 # source environment script
 if [ -f "$INPUT_PREP_ENV" ]; then
@@ -149,8 +150,13 @@ echo -e "\n\n"
 # -----------------------------------------------------------------------------
 start_dir=$(pwd)
 
-# go to output dir
-cd $output_dir
+# FORCING dir in output dir
+output_forcing=$output_dir/FORCING
+if [ -d $output_forcing ]; then
+    rm -rf $output_forcing
+fi
+mkdir -p $output_forcing
+cd $output_forcing
 
 
 # get file list for dir input
@@ -179,20 +185,22 @@ fi
 # (1) Subset
 # ----------
 if [ "$WRFOUT_DIR_FLAG" == "false" ]; then
-    $SUBSET_SCRIPT $wrfout_input $output_dir
-    if [ "$?" -ne 0 ]; then
-        echo -e "\nNon-zero exit status in process: subsetting."
+    $SUBSET_SCRIPT $wrfout_input $output_forcing
+    subset_status=$?
+    if [ $subset_status -ne 0 ]; then
+        echo -e "\nNon-zero exit status in subsetting, $wrfout_input."
         echo -e "Exiting.\n\n"
-        exit 2
+        exit $subset_status
     fi
 else
     for wo in $list_wrfout_files;
     do
-        $SUBSET_SCRIPT $wo $output_dir        
-	if [ "$?" -ne 0 ]; then
-	    echo -e "\nNon-zero exit status in process: subsetting."
+        $SUBSET_SCRIPT $wo $output_forcing        
+        subset_status=$?
+	if [ $subset_status -ne 0 ]; then
+	    echo -e "\nNon-zero exit status in subsetting, $wo."
 	    echo -e "Exiting.\n\n"
-	    exit 2
+	    exit $subset_status
 	fi
     done
 fi
@@ -202,6 +210,40 @@ fi
 # *(2) Generate Weights [optional]
 # --------------------------------
 
+spatial_weights=""
+if [ "$WEIGHT_FLAG" == "false" ]; then
+    spatial_weights_file_count=$(ls -1 $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
+    if [ $spatial_weights_file_count -ge 1 ]; then 
+        spatial_weights="$(ls $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null)"
+        echo -e "\nNon-declared weight file(s) found in, $output_forcing."
+        echo -e "Removing $spatial_weights_file_count non-declared weight file(s), $spatial_weights..."
+        rm -fv $spatial_weights
+    fi
+    first_wrfout=$(ls -1 $output_forcing/$SRC_PREFIX* 2> /dev/null | head -1)
+
+    # generate weight file call
+    $GEN_WEIGHT_SCRIPT $first_wrfout $geogrid_file $output_forcing
+    gen_weight_status=$?
+    if [ $gen_weight_status -ne 0 ]; then
+        echo -e "\nNon-zero exit status in generating weights, src: $first_wrfout, dst: $geogrid_file."
+        echo -e "Exiting.\n\n"
+        exit $gen_weight_status
+    fi
+fi
+
+# locate new or provide weight file
+spatial_weights_count=$(ls -1 $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
+if [ $spatial_weights_count -gt 1 ]; then
+    echo -e "\nMore than 1 spatial weight files found, $spatial_weights_count, only 1 allowed."
+    echo -e "Exiting.\n\n"
+    exit 2
+elif [ $spatial_weights_count -eq 1 ]; then
+    spatial_weights=$(ls $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null)
+else
+    echo -e "\nNo spatial weight file."
+    echo -e "Exiting.\n\n"
+    exit 2
+fi
 
 
 # (3) Regrid

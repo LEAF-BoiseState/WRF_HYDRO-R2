@@ -10,7 +10,9 @@
 * [IV. Test Case: Croton NY](#IV-Test-Case-Croton-NY) - *steps to setup + run the test case Croton, NY*
 * [V. Idaho NWM Cut-outs](#V-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
 * [VI. Make Target Reference](#VI-Make-Target-Reference) - *reference list of all supported `make` commands*
-* [VII. Links](#VII-Links) - *links to external references*
+* [VII. Appendix](#VII-Appendix) - *links to extended, internal documentation*
+* [VIII. Links](#VIII-Links) - *links to external references*
+
 <br>
 
 
@@ -201,8 +203,13 @@ make clean_test             # cleans all run output from croton_NY test
 make clean_nwm              # calls the 'make clean' target in NWM build dir
 ```
 <br>
+
+
+## VII. Appendix
+<br>
+
                                                                              
-## VII. Links
+## VIII. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [GNU Make manual](https://www.gnu.org/software/make/manual/)

@@ -10,7 +10,9 @@
 * [IV. Test Case: Croton NY](#IV-Test-Case-Croton-NY) - *steps to setup + run the test case Croton, NY*
 * [V. Idaho NWM Cut-outs](#V-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
 * [VI. Make Target Reference](#VI-Make-Target-Reference) - *reference list of all supported `make` commands*
-* [VII. Links](#VII-Links) - *links to external references*
+* [VII. Appendix](#VII-Appendix) - *links to extended, internal documentation*
+* [VIII. Links](#VIII-Links) - *links to external references*
+
 <br>
 
 
@@ -23,20 +25,31 @@ This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>
 WRF_HYDRO-R2/
 ├── LICENSE
 ├── Makefile
-├── post_processing               # vis scripts for rwrfhydro
-│   ├── CrotonEvalQ.png
-│   ├── evalQ.r
-│   ├── MultiNc.png
-│   ├── MutliNC.r
-│   └── snotelRwrfhydro.R
+├── namelists/                               
+│   ├── hydro.namelist.custom_forcing
+│   ├── hydro.namelist.idealized_forcing
+│   ├── namelist.hrldas.custom_forcing
+│   ├── namelist.hrldas.idealized_forcing
+│   └── README_NAMELISTS.md
+├── prep_input/
+│   ├── convert_wrf_to_wrfhydro.sh           # main pre-process script
+│   ├── env_subset_r2.sh
+│   ├── ncl_scripts/
+│   │   ├── w2wh_esmf_generate_weights.ncl
+│   │   └── w2wh_esmf_regrid_w_weights.ncl
+│   ├── README_CONVERT.md
+│   ├── wrf_gen_weights_wrfhydro.sh
+│   ├── wrf_regrid_wrfhydro.sh
+│   └── wrf_subset_wrfhydro.sh
 ├── README.md
-├── rwrfhydro/                    #   rwrfhydro repository
-├── scripts
-│   ├── build_nwm_r2.sh           # build script
-│   ├── croton_ny_setup.sh        # download + setup croton_NY test case
-│   ├── env_nwm_r2.sh             # environment script
-│   └── submit.sh.template        # SLURM batch template
-└── wrf_hydro_nwm_public/         #   WRF-Hydro v5 / NWM repository
+├── rwrfhydro/                               # rwrfhydro repository
+├── scripts/
+│   ├── build_nwm_r2.sh                      # build script
+│   ├── croton_ny_setup.sh                   # download + setup croton_NY test case
+│   ├── env_nwm_r2.sh                        # NWM environment script
+│   ├── README_BUILD.md
+│   └── submit.sh.template                   # SLURM batch template
+└── wrf_hydro_nwm_public/                    # WRF-Hydro v5 / NWM repository
 ```
 <br>
 
@@ -201,8 +214,13 @@ make clean_test             # cleans all run output from croton_NY test
 make clean_nwm              # calls the 'make clean' target in NWM build dir
 ```
 <br>
+
+
+## VII. Appendix
+<br>
+
                                                                              
-## VII. Links
+## VIII. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [GNU Make manual](https://www.gnu.org/software/make/manual/)

@@ -1,3 +1,6 @@
 # README_NAMELISTS.md
 
-placeholder
+
+## I. Overview
+The namelists provide templates for different physics/routing options for a run.
+

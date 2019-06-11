@@ -217,9 +217,9 @@ make clean_nwm              # calls the 'make clean' target in NWM build dir
 
 
 ## VII. Appendix
-* [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
-* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/prep_input/README_CONVERT.md) - details on data pre-processing scripts
 * [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/scripts/README_BUILD.md) - details on build process
+* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/prep_input/README_CONVERT.md) - details on data pre-processing scripts
+* [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
 <br>
 
                                                                              

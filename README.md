@@ -25,20 +25,31 @@ This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>
 WRF_HYDRO-R2/
 ├── LICENSE
 ├── Makefile
-├── post_processing               # vis scripts for rwrfhydro
-│   ├── CrotonEvalQ.png
-│   ├── evalQ.r
-│   ├── MultiNc.png
-│   ├── MutliNC.r
-│   └── snotelRwrfhydro.R
+├── namelists/                               
+│   ├── hydro.namelist.custom_forcing
+│   ├── hydro.namelist.idealized_forcing
+│   ├── namelist.hrldas.custom_forcing
+│   ├── namelist.hrldas.idealized_forcing
+│   └── README_NAMELISTS.md
+├── prep_input/
+│   ├── convert_wrf_to_wrfhydro.sh           # main pre-process script
+│   ├── env_subset_r2.sh
+│   ├── ncl_scripts/
+│   │   ├── w2wh_esmf_generate_weights.ncl
+│   │   └── w2wh_esmf_regrid_w_weights.ncl
+│   ├── README_CONVERT.md
+│   ├── wrf_gen_weights_wrfhydro.sh
+│   ├── wrf_regrid_wrfhydro.sh
+│   └── wrf_subset_wrfhydro.sh
 ├── README.md
-├── rwrfhydro/                    #   rwrfhydro repository
-├── scripts
-│   ├── build_nwm_r2.sh           # build script
-│   ├── croton_ny_setup.sh        # download + setup croton_NY test case
-│   ├── env_nwm_r2.sh             # environment script
-│   └── submit.sh.template        # SLURM batch template
-└── wrf_hydro_nwm_public/         #   WRF-Hydro v5 / NWM repository
+├── rwrfhydro/                               # rwrfhydro repository
+├── scripts/
+│   ├── build_nwm_r2.sh                      # build script
+│   ├── croton_ny_setup.sh                   # download + setup croton_NY test case
+│   ├── env_nwm_r2.sh                        # NWM environment script
+│   ├── README_BUILD.md
+│   └── submit.sh.template                   # SLURM batch template
+└── wrf_hydro_nwm_public/                    # WRF-Hydro v5 / NWM repository
 ```
 <br>
 

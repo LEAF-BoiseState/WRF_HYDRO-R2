@@ -151,21 +151,21 @@ echo -e "\n\n"
 start_dir=$(pwd)
 
 # FORCING dir in output dir
-output_forcing=$output_dir/FORCING
-if [ -d $output_forcing ]; then
-    rm -rf $output_forcing
+output_forcing_dir=$output_dir/FORCING
+if [ -d $output_forcing_dir ]; then
+    rm -rf $output_forcing_dir
 fi
-mkdir -p $output_forcing
-cd $output_forcing
+mkdir -p $output_forcing_dir
+cd $output_forcing_dir
 
 
 # get file list for dir input
 num_wrfout_files=""
-list_wrfout_files=""
+wrfout_file_list=""
 if [ "$WRFOUT_DIR_FLAG" == "true" ]; then
-num_wrfout_files=$(ls -1 $input_dir/$SRC_PREFIX* 2> /dev/null | wc -l)
+    num_wrfout_files=$(ls -1 $input_dir/$SRC_PREFIX* 2> /dev/null | wc -l)
     if [ $num_wrfout_files -ge 1 ]; then
-        list_wrfout_files="$(ls $input_dir/$SRC_PREFIX*)"
+        wrfout_file_list="$(ls $input_dir/$SRC_PREFIX*)"
     else
         echo -e "\nNo valid input (wrfout) files found in, $input_dir."
         echo -e "Exiting.\n\n"
@@ -185,7 +185,7 @@ fi
 # (1) Subset
 # ----------
 if [ "$WRFOUT_DIR_FLAG" == "false" ]; then
-    $SUBSET_SCRIPT $wrfout_input $output_forcing
+    $SUBSET_SCRIPT $wrfout_input $output_forcing_dir
     subset_status=$?
     if [ $subset_status -ne 0 ]; then
         echo -e "\nNon-zero exit status in subsetting, $wrfout_input."
@@ -193,9 +193,9 @@ if [ "$WRFOUT_DIR_FLAG" == "false" ]; then
         exit $subset_status
     fi
 else
-    for wo in $list_wrfout_files;
+    for wo in $wrfout_file_list
     do
-        $SUBSET_SCRIPT $wo $output_forcing        
+        $SUBSET_SCRIPT $wo $output_forcing_dir        
         subset_status=$?
 	if [ $subset_status -ne 0 ]; then
 	    echo -e "\nNon-zero exit status in subsetting, $wo."
@@ -209,20 +209,19 @@ fi
 
 # *(2) Generate Weights [optional]
 # --------------------------------
-
 spatial_weights=""
 if [ "$WEIGHT_FLAG" == "false" ]; then
-    spatial_weights_file_count=$(ls -1 $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
+    spatial_weights_file_count=$(ls -1 $output_forcing_dir/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
     if [ $spatial_weights_file_count -ge 1 ]; then 
-        spatial_weights="$(ls $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null)"
-        echo -e "\nNon-declared weight file(s) found in, $output_forcing."
+        spatial_weights="$(ls $output_forcing_dir/$WEIGHTS_PREFIX* 2> /dev/null)"
+        echo -e "\nNon-declared weight file(s) found in, $output_forcing_dir."
         echo -e "Removing $spatial_weights_file_count non-declared weight file(s), $spatial_weights..."
         rm -fv $spatial_weights
     fi
-    first_wrfout=$(ls -1 $output_forcing/$SRC_PREFIX* 2> /dev/null | head -1)
+    first_wrfout=$(ls -1 $output_forcing_dir/$SRC_PREFIX* 2> /dev/null | head -1)
 
     # generate weight file call
-    $GEN_WEIGHT_SCRIPT $first_wrfout $geogrid_file $output_forcing
+    $GEN_WEIGHT_SCRIPT $first_wrfout $geogrid_file $output_forcing_dir
     gen_weight_status=$?
     if [ $gen_weight_status -ne 0 ]; then
         echo -e "\nNon-zero exit status in generating weights, src: $first_wrfout, dst: $geogrid_file."
@@ -232,13 +231,14 @@ if [ "$WEIGHT_FLAG" == "false" ]; then
 fi
 
 # locate new or provide weight file
-spatial_weights_count=$(ls -1 $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
+spatial_weights_count=$(ls -1 $output_forcing_dir/$WEIGHTS_PREFIX* 2> /dev/null | wc -l)
 if [ $spatial_weights_count -gt 1 ]; then
     echo -e "\nMore than 1 spatial weight files found, $spatial_weights_count, only 1 allowed."
     echo -e "Exiting.\n\n"
     exit 2
 elif [ $spatial_weights_count -eq 1 ]; then
-    spatial_weights=$(ls $output_forcing/$WEIGHTS_PREFIX* 2> /dev/null)
+    spatial_weights=$(ls $output_forcing_dir/$WEIGHTS_PREFIX* 2> /dev/null)
+    weight_file=$spatial_weights
 else
     echo -e "\nNo spatial weight file."
     echo -e "Exiting.\n\n"
@@ -246,9 +246,50 @@ else
 fi
 
 
+
 # (3) Regrid
 # ----------
+regrid_wrfout_file_list=""
+num_regrid_wrfout_files=$(ls -1 $output_forcing_dir/$SRC_PREFIX*$NC_SUFFIX 2> /dev/null | wc -l)
+if [ $num_regrid_wrfout_files -ge 1 ]; then
+    regrid_wrfout_file_list="$(ls $output_forcing_dir/$SRC_PREFIX*$NC_SUFFIX)"
+    echo -e "\nNumber of regridding input files found: $num_regrid_wrfout_files."
+    echo -e "Files to be regridded:"
+    ls -1 $output_forcing_dir/$SRC_PREFIX*$NC_SUFFIX
+else
+    echo -e "\nNo valid regridding input (wrfout\*.nc) files found in, $output_forcing_dir."
+    echo -e "Exiting.\n\n"
+    exit 2
+fi
 
+for rwo in $regrid_wrfout_file_list
+do
+    $REGRID_SCRIPT $rwo $geogrid_file $weight_file $output_forcing_dir
+    regrid_status=$?
+    if [ $regrid_status -ne 0 ]; then
+        echo -e "\nNon-zero exit status in regridding, src: $rwo, dst: $geogrid_file, wgt: $weight_file."
+        echo -e "Exiting.\n\n"
+        exit $regrid_status
+    fi
+    mv $rwo ${rwo%.nc}
+done
+
+
+# display results
+num_regridded_wrfout_files=$(ls -1 $output_forcing_dir/$SRC_PREFIX* 2> /dev/null | wc -l)
+if [ $num_regridded_wrfout_files -ge 1 ];then
+    echo -e "\nNumber of regridded wrfout files: $num_regridded_wrfout_files, in output directory, $output_forcing_dir."
+    echo -e "Regridded wrfout files: "
+    ls -1 $output_forcing_dir/$SRC_PREFIX*
+else
+    echo -e "\nNo regridded wrfout files found in output directory, $output_forcing_dir."
+    echo -e "Exiting.\n\n"
+    exit 2
+fi
+
+
+# clean up
+echo "\n\tIMPLEMENT ME:  CLEAN UP!\n"
 
 
 

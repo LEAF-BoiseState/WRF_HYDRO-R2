@@ -50,6 +50,7 @@
 # ----------
 RAINNC_BUCKET_FLAG="true"   # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
+NC_SUFFIX=".nc"             # set NC_SUFFIX="", if none desired
 LSM_VARS="Times,XLAT,XLONG,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI,HGT"
 ENV_SCRIPT=/home/$USER/LEAF/WRF_HYDRO-R2/subsetting/env_subset_r2.sh
 
@@ -147,7 +148,7 @@ do
     fi
 
     # Extract each hour
-    hour_outfile=${day_outfile}_${t_pad}:00:00
+    hour_outfile=${day_outfile}_${t_pad}:00:00$NC_SUFFIX
     ncks -d Time,$t,$t $output_dir/$day_outfile $output_dir/$hour_outfile
 done
 

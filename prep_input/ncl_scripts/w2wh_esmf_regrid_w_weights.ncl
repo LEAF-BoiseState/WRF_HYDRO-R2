@@ -80,8 +80,6 @@ dims            = dimsizes(dlat2d)
 ;--------------------------------------------------------------------------------
 ; Open new output file for regridded data
 ;--------------------------------------------------------------------------------
-; check for output + 'FORCING' dir, make if not present
-outputDir = outputDir + "/" + "FORCING"
 outdir_exists = systemfunc("test -d "+outputDir+"; echo $?")
 if      (outdir_exists .eq. 0) then
     system("echo")    

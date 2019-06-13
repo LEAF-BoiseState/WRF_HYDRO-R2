@@ -40,7 +40,7 @@ fi
 wrfout_file="$1"
 geogrid_file="$2"
 weight_file="$3"
-output_dir="$4"
+output_dir="${4%/}"
 
 # Display user input
 echo -e "\n\n\t**  USER INPUT  **"

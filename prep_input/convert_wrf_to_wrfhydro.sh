@@ -83,7 +83,7 @@ input_dir=""
 WRFOUT_DIR_FLAG=""
 if   [ -d "$wrfout_input" ]; then
     WRFOUT_DIR_FLAG=true
-    input_dir=$wrfout_input
+    input_dir=${wrfout_input%/}
 elif [ -f "$wrfout_input" ]; then
     WRFOUT_DIR_FLAG=false
     input_dir=$(dirname $wrfout_input)

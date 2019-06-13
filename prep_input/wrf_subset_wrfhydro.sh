@@ -71,8 +71,8 @@ if [ ! $# -eq 2 ]; then
   echo -e "\nUsage: $0 <wrfout_file> <output_dir>\n"
   exit 1
 fi
-wrfout_file=$1
-output_dir=$2
+wrfout_file="$1"
+output_dir="${2%/}"
 
 # check wrfout file exists
 if [ ! -f $wrfout_file ]; then

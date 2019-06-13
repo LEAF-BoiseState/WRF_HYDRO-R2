@@ -97,7 +97,7 @@ end if
 
 ; get output file name
 srcName       = systemfunc("echo $(basename "+srcGridFile+")")
-out_file      = outputDir + "/" + srcName +".nc"
+out_file      = outputDir + "/" + srcName
 if (isfilepresent(out_file)) then
    system ("/bin/rm "+out_file)
 end if

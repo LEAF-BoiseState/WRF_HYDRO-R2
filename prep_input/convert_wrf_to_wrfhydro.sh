@@ -25,8 +25,6 @@
 #
 # ******************************************************************************
 
-
-
 # -----------------------------------------------------------------------------
 # (1) Parameters
 # -----------------------------------------------------------------------------
@@ -49,22 +47,24 @@ else
 fi
 
 
-
 # -----------------------------------------------------------------------------
 # (2) User input
 # -----------------------------------------------------------------------------
+script_name=""
 wrfout_input=""
 geogrid_file=""
 output_dir=""
 weight_file=""
 WEIGHT_FLAG=""
 if [ "$#" -eq 4 ]; then
+    script_name="$(basename $0)"
     wrfout_input="$1"
     geogrid_file="$2"
     output_dir="$3"
     weight_file="$4"
     WEIGHT_FLAG=true
 elif [ "$#" -eq 3 ]; then
+    script_name="$(basename $0)"
     wrfout_input="$1"
     geogrid_file="$2"
     output_dir="$3"
@@ -96,7 +96,7 @@ fi
 # ii)  geogrid file - exisits?
 geogrid_filename=$(basename $geogrid_file)
 geo_prefix=${geogrid_filename%%.*}
-if [[ ! -f "$geogrid_file" ]] || [[ "$geo_prefix" != "DST_PREFIX" ]]; then
+if [[ ! -f "$geogrid_file" ]] || [[ "$geo_prefix" != "$DST_PREFIX" ]]; then
     echo -e "\nNo valid geogrid file, $geogrid_file."
     echo -e "Exiting.\n"
     exit 2
@@ -130,8 +130,11 @@ if [[ "$WEIGHT_FLAG" == "true" ]] && [[ ! -f "$weight_file" ]]; then
 fi
 
 
+
 # Display user input
-echo -e "\n\n\t**  USER INPUT  **"
+echo -e "\n\n**********************************"
+echo -e     "SCRIPT: $script_name\n"
+echo -e     "\t**  USER INPUT  **"
 echo -e     "\t=================="
 echo -e     "\t1) wrfout input:  $wrfout_input"
 echo -e     "\t2) geogrid file:  $geogrid_file"

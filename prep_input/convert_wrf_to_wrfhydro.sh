@@ -35,7 +35,7 @@ REGRID_SCRIPT=$DIR/wrf_regrid_wrfhydro.sh
 INPUT_PREP_ENV=$DIR/env_subset_r2.sh
 DST_PREFIX=geo_em
 SRC_PREFIX=wrfout
-WEIGHTS_PREFIX=w2wh_spatialweights
+WEIGHTS_PREFIX=w2wh_spatialweight
 
 # source environment script
 if [ -f "$INPUT_PREP_ENV" ]; then

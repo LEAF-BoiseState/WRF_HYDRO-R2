@@ -52,16 +52,6 @@ RAINNC_BUCKET_FLAG="true"   # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
 NC_SUFFIX=".nc"             # set NC_SUFFIX="", if none desired
 LSM_VARS="Times,XLAT,XLONG,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI,HGT"
-ENV_SCRIPT=/home/$USER/LEAF/WRF_HYDRO-R2/prep_input/env_subset_r2.sh
-
-
-# Environment
-# -----------
-if [ ! -f $ENV_SCRIPT ]; then
-    echo -e "\nNo environment script found, $ENV_SCRIPT. Exiting.\n\n"
-    exit 1
-fi
-source $ENV_SCRIPT
 
 
 

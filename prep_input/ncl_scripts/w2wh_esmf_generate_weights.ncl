@@ -58,7 +58,7 @@ begin
 ;;outputDir
 
 interp_opt   = "bilinear"
-wgtFileName  = "w2wh_spatialweight_"+interp_opt+".nc"
+wgtFileName  = "w2wh_spatialweights_"+interp_opt+".nc"
 wgtFile      = outputDir+"/"+wgtFileName
 
 ;;srcGridName  = ""                              ;; L1D2 := LEAF 1, Domain 2

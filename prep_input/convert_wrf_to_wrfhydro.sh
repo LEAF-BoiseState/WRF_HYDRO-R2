@@ -96,7 +96,7 @@ fi
 # ii)  geogrid file - exisits?
 geogrid_filename=$(basename $geogrid_file)
 geo_prefix=${geogrid_filename%%.*}
-if [[ ! -f "$geogrid_file" ]] || [[ "$geo_prefix" != "DST_PREFIX" ]]; then
+if [[ ! -f "$geogrid_file" ]] || [[ "$geo_prefix" != "$DST_PREFIX" ]]; then
     echo -e "\nNo valid geogrid file, $geogrid_file."
     echo -e "Exiting.\n"
     exit 2

@@ -23,33 +23,35 @@ This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>
 ## II. Manifest
 ```bash
 WRF_HYDRO-R2/
+├── build/
+│   ├── build_nwm_r2.sh                           
+│   ├── env_nwm_r2.sh                             # WH/NWM environment script
+│   └── README_BUILD.md
 ├── LICENSE
 ├── Makefile
-├── namelists/                               
+├── namelists/
 │   ├── hydro.namelist.custom_forcing
 │   ├── hydro.namelist.idealized_forcing
 │   ├── namelist.hrldas.custom_forcing
 │   ├── namelist.hrldas.idealized_forcing
 │   └── README_NAMELISTS.md
-├── prep_input/
-│   ├── convert_wrf_to_wrfhydro.sh           # main pre-process script
-│   ├── env_subset_r2.sh
+├── post_process/
+├── pre_process/
+│   ├── convert_wrf_to_wrfhydro.sh                # main pre-process script
+│   ├── env_preprocess_r2.sh
 │   ├── ncl_scripts/
 │   │   ├── w2wh_esmf_generate_weights.ncl
 │   │   └── w2wh_esmf_regrid_w_weights.ncl
-│   ├── README_CONVERT.md
+│   ├── README_PREPROCESS.md
 │   ├── wrf_gen_weights_wrfhydro.sh
 │   ├── wrf_regrid_wrfhydro.sh
 │   └── wrf_subset_wrfhydro.sh
 ├── README.md
-├── rwrfhydro/                               # rwrfhydro repository
-├── scripts/
-│   ├── build_nwm_r2.sh                      # build script
-│   ├── croton_ny_setup.sh                   # download + setup croton_NY test case
-│   ├── env_nwm_r2.sh                        # NWM environment script
-│   ├── README_BUILD.md
-│   └── submit.sh.template                   # SLURM batch template
-└── wrf_hydro_nwm_public/                    # WRF-Hydro v5 / NWM repository
+├── run_scripts/
+│   ├── croton_ny_setup.sh                        # download + setup croton_NY test case
+│   └── submit.sh.template                        # SLURM batch template
+├── rwrfhydro/                                    # rwrfhydro repository
+└── wrf_hydro_nwm_public/                         # WRF-Hydro v5 / NWM repository
 ```
 <br>
 
@@ -57,7 +59,7 @@ WRF_HYDRO-R2/
 ```bash            
 git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
-source scripts/env_nwm_r2.sh                                 # source r2 environment
+source build/env_nwm_r2.sh                                   # source r2 environment
 make sub                                                     # initialize / update submodules
 make build                                                   # build NWM-offline executable
 ```
@@ -149,7 +151,7 @@ will look like the following
  The model finished successfully.......
 ```
 In this case there are 4 lines that say 'The model finished successfully.......' -- there is one line for each
-core/task used.  The default value of 4 can be changed in the script: `scripts/croton_ny_setup.sh`.  Open it with
+core/task used.  The default value of 4 can be changed in the script: `run_scripts/croton_ny_setup.sh`.  Open it with
 a text editor and you should see the following user parameters near the top
 ```bash
 ...
@@ -217,8 +219,8 @@ make clean_nwm              # calls the 'make clean' target in NWM build dir
 
 
 ## VII. Appendix
-* [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/scripts/README_BUILD.md) - details on build process
-* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/prep_input/README_CONVERT.md) - details on data pre-processing scripts
+* [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/build/README_BUILD.md) - details on build process
+* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
 * [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
 <br>
 

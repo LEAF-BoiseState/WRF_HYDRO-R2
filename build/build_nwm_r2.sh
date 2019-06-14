@@ -13,17 +13,17 @@
 # *****************************************************************************
 
 # params
-WH_CONFIG=3                                        # 3: Linux ifort compiler dmpar
-SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
-WH_R2_REPO=${SCRIPTS_DIR%/*}                       # WH_R2 repo base dir
-NWM_REPO=$WH_R2_REPO/wrf_hydro_nwm_public          # NWM repo base dir
+WH_CONFIG=3                                           # 3: Linux ifort compiler dmpar
+REPO_BUILD_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
+WH_R2_REPO=${REPO_BUILD_DIR%/*}                       # WH_R2 repo base dir
+NWM_REPO=$WH_R2_REPO/wrf_hydro_nwm_public             # WH/NWM repo base dir
 BUILD_DIR=$NWM_REPO/trunk/NDHMS
 START_DIR=$(pwd)
 LOG=WH_R2_noahMP_compile.log
 
 # source shell env
-echo -e "\nSourcing environment script, $SCRIPTS_DIR/$ENV_R2.."
-source $SCRIPTS_DIR/env_nwm_r2.sh
+echo -e "\nSourcing environment script, $REPO_BUILD_DIR/env_nwm_r2.sh.."
+source $REPO_BUILD_DIR/env_nwm_r2.sh
 
 # set WRF-Hydro options
 echo -e "\nChange directory to build dir, $BUILD_DIR.."

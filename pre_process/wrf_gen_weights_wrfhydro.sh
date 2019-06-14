@@ -40,7 +40,7 @@ if [ "$#" -ne 3 ]; then
 fi
 wrfout_file="$1"
 geogrid_file="$2"
-output_dir="$3"
+output_dir="${3%/}"
 
 # Display user input
 echo -e "\n\n\t**  USER INPUT  **"

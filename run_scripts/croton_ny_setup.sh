@@ -21,8 +21,8 @@ JOB_NAME='whcroton'             # jobname:   8 chars only
 
 
 #params
-SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
-WH_R2_REPO=${SCRIPTS_DIR%/*}                       # WH_R2 repo base dir
+RUN_SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
+WH_R2_REPO=${RUN_SCRIPTS_DIR%/*}                       # WH_R2 repo base dir
 WH_BUILD_RUN_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS/Run
 NWM_EXAMPLE_RUN_DIR=$WH_R2_REPO/croton_NY/NWM
 CROTON_NY_GZ=https://github.com/NCAR/wrf_hydro_nwm_public/releases/download/v5.0.3/croton_NY_example_testcase.tar.gz
@@ -40,8 +40,8 @@ cp -v $WH_BUILD_RUN_DIR/*.TBL .
 cp -r ../FORCING .
 
 # create submit script
-cp -v $SCRIPTS_DIR/env_nwm_r2.sh .
-cp -v $SCRIPTS_DIR/submit.sh.template .
+cp -v $RUN_SCRIPTS_DIR/env_nwm_r2.sh .
+cp -v $RUN_SCRIPTS_DIR/submit.sh.template .
 cp -v submit.sh.template submit
 nwm_run_dir_sed_safe=${NWM_EXAMPLE_RUN_DIR////'\/'}
 sed -i "s/queuename/$QUEUE_NAME/g"           submit

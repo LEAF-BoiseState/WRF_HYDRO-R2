@@ -13,7 +13,7 @@ WH_ENV=rundir/env_nwm_r2.sh
 
 # sources/exports
 if [ ! -f "$WH_ENV" ]; then
-  echo -e "\nNo WRF environment script, $WH_ENV, found. Check WRF_HYDRO-R2/scripts.\n"
+  echo -e "\nNo WRF environment script, $WH_ENV, found. Check WRF_HYDRO-R2/build directory.\n"
   exit 2
 fi
 echo "Sourcing WRF-Hydro environment:  $WH_ENV"

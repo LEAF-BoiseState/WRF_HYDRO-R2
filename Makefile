@@ -42,7 +42,7 @@ sub:
 
 # build
 build_nwm:
-	./scripts/build_nwm_r2.sh
+	./build/build_nwm_r2.sh
 
 build:  build_nwm
 
@@ -50,7 +50,7 @@ build:  build_nwm
 
 # croton ny test case
 test:
-	./scripts/croton_ny_setup.sh
+	./run_scripts/croton_ny_setup.sh
 
 run:
 	sbatch $(TESTCASE_RUN_DIR)/submit

@@ -32,16 +32,16 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 SUBSET_SCRIPT=$DIR/wrf_subset_wrfhydro.sh
 GEN_WEIGHT_SCRIPT=$DIR/wrf_gen_weights_wrfhydro.sh
 REGRID_SCRIPT=$DIR/wrf_regrid_wrfhydro.sh
-INPUT_PREP_ENV=$DIR/env_subset_r2.sh
+PREPROCESS_ENV=$DIR/env_preprocess_r2.sh
 DST_PREFIX=geo_em
 SRC_PREFIX=wrfout
 WEIGHTS_PREFIX=w2wh_spatialweights
 
 # source environment script
-if [ -f "$INPUT_PREP_ENV" ]; then
-    source $INPUT_PREP_ENV
+if [ -f "$PREPROCESS_ENV" ]; then
+    source $PREPROCESS_ENV
 else
-    echo -e "\nNo environment script, $INPUT_PREP_ENV, found."
+    echo -e "\nNo environment script, $PREPROCESS_ENV, found."
     echo -e "Exiting.\n\n"
     exit 2
 fi

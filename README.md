@@ -25,15 +25,16 @@ This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>
 WRF_HYDRO-R2/
 ├── LICENSE
 ├── Makefile
-├── namelists/                               
+├── namelists/
 │   ├── hydro.namelist.custom_forcing
 │   ├── hydro.namelist.idealized_forcing
 │   ├── namelist.hrldas.custom_forcing
 │   ├── namelist.hrldas.idealized_forcing
 │   └── README_NAMELISTS.md
-├── prep_input/
+├── post_process/
+├── pre_process/
 │   ├── convert_wrf_to_wrfhydro.sh           # main pre-process script
-│   ├── env_subset_r2.sh
+│   ├── env_preprocess_r2.sh
 │   ├── ncl_scripts/
 │   │   ├── w2wh_esmf_generate_weights.ncl
 │   │   └── w2wh_esmf_regrid_w_weights.ncl
@@ -43,10 +44,10 @@ WRF_HYDRO-R2/
 │   └── wrf_subset_wrfhydro.sh
 ├── README.md
 ├── rwrfhydro/                               # rwrfhydro repository
-├── scripts/
+├── run_scripts/
 │   ├── build_nwm_r2.sh                      # build script
 │   ├── croton_ny_setup.sh                   # download + setup croton_NY test case
-│   ├── env_nwm_r2.sh                        # NWM environment script
+│   ├── env_nwm_r2.sh                        # WH/NWM environment script
 │   ├── README_BUILD.md
 │   └── submit.sh.template                   # SLURM batch template
 └── wrf_hydro_nwm_public/                    # WRF-Hydro v5 / NWM repository
@@ -218,7 +219,7 @@ make clean_nwm              # calls the 'make clean' target in NWM build dir
 
 ## VII. Appendix
 * [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/scripts/README_BUILD.md) - details on build process
-* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/prep_input/README_CONVERT.md) - details on data pre-processing scripts
+* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
 * [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
 <br>
 

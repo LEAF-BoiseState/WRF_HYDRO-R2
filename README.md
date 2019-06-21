@@ -177,7 +177,7 @@ Currently provided cut-outs from the National Water Model and their reference nu
 by calling
 
 ```bash
-make list_cutout
+make dom_list
 ```
 
 ```bash
@@ -192,28 +192,25 @@ make list_cutout
           7:   13258500  -  Weiser River near Cambridge ID
           8:   13316500  -  Little Salmon River at Riggins ID
 ```
-
-You can then make a copy of a cut-out run directory by calling `make copy_cutout NUM=<num>`, 
-where `<num>` specifies the number ID of the basin [1-8].  For example, to create a copy of the MF Payette River
-near Cambridge ID (13237920), the call would be
-```bash
-make copy_cutout NUM=6
-```
 <br>
+
 
                                                              
 ## VI. Make Target Reference
 ```bash                        
-make                        # default, calls target sub
-make help                   # display make target reference list
-make sub                    # initializes and updates submodule NWM
-make build                  # builds the NoahMP/NWM-Offline exe
-make test                   # get and setup croton_NY test case
-make run                    # run the croton_NY test case
-make list_cutout            # display reference list of cut-outs with number ID's
-make copy_cutout NUM=<num>  # create a copy of cutout directory for number ID <num> 
-make clean_test             # cleans all run output from croton_NY test
-make clean_nwm              # calls the 'make clean' target in NWM build dir
+make sub_mod                                             #  initialize and update submodules (NWM,rwrfhydro)"
+make build                                               #  builds the NoahMP/NWM-Offline executable"
+make setup_test_case                                     #  download and setup croton_NY test case"
+make run_test_case                                       #  run the croton_NY test case"
+make cmd_list                                            #  display this reference list of commands"
+make dom_list                                            #  display reference list of cut-outs with number ID's"
+make rto_list                                            #  display reference list of routing options"
+make run_dir RUNID=<run_id>                              #  creates new run directory in user scratch"
+make run_exe RUNID=<run_id> RTOID=<routing_opt_id>       #  creates executable in run directory w/ routing option"
+make run_dom RUNID=<run_id> DOMID=<dom_id>               #  creates DOMAIN directory in run directory"
+make run_frc RUNID=<run_id> INDIR=<in_dir> GEO=<geogrid> #  convert run forcing given inuput dir and geogrid file"
+make clean_test                                          #  cleans all run output from croton_NY test"
+make clean_nwm                                           #  calls the 'make clean' target in NWM build directory"
 ```
 <br>
 

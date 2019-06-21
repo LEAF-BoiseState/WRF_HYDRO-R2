@@ -1,4 +1,5 @@
 # WRF_HYDRO-R2 makefile
+WHSIM=/scratch/${USER}/WH_SIM
 NWM_BUILD=wrf_hydro_nwm_public/trunk/NDHMS
 TESTCASE_RUN_DIR=croton_NY/NWM
 TESTCASE_OUTPUT=*.CHANOBS_DOMAIN1 *.CHRTOUT_DOMAIN1 *.GWOUT_DOMAIN1 *.LAKEOUT_DOMAIN1 \
@@ -26,15 +27,98 @@ CUTOUT8=13316500
 CUTOUT8_DESC="Little Salmon River at Riggins ID"
 
 RM=rm -f
-MKDIR=mkdir -p
 CP=cp -R
+MKDIR=mkdir -p
+ECHO=echo -e
+
+
 
 # default
 all:    sub
 
 
+
+# XXX working -------------------------------------
+echeck:
+	@$(ECHO) "USER: ${USER}"
+	@$(ECHO) "DOMID: $(DOMID)"
+	@$(ECHO) "RUNID: $(RUNID)"
+
+
+run_dir:
+ifndef RUNID
+	@$(ECHO) "\n\tUSAGE: make run_dir RUNID=<run_id>\n"
+else
+	@test ! -d $(WHSIM)_$(RUNID) || $(ECHO) "\nRun directory already exists."
+	@test   -d $(WHSIM)_$(RUNID) || $(ECHO) "\nCreating run directory..."
+	@test   -d $(WHSIM)_$(RUNID) || $(MKDIR) $(WHSIM)_$(RUNID)
+	@$(ECHO) "\tDirectory: $(WHSIM)_$(RUNID).\n"
+endif
+
+
+run_exe:
+	@echo "Implement me!  'run_exe <run_ID> <routing_opt>'"
+
+
+run_dom:
+ifndef RUNID
+	@$(ECHO) "\n\tUSAGE: make run_dom RUNID=<run_id> DOMID=<dom_id>\n"
+else ifndef DOMID
+	@$(ECHO) "\n\tUSAGE: make run_dom RUNID=<run_id> DOMID=<dom_id>\n"
+else ifeq ($(DOMID),1)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT1) - $(CUTOUT1_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT1)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "Domain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),2)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT2) - $(CUTOUT2_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT2)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "\tDomain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),3)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT3) - $(CUTOUT3_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT3)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "\tDomain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),4)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT4) - $(CUTOUT4_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT4)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "\tDomain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),5)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT5) - $(CUTOUT5_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT5)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "\tDomain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),6)
+	@$(ECHO)"\n\t$(DOMID):  $(CUTOUT6) - $(CUTOUT6_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT6)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "\tDomain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),7)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT7) - $(CUTOUT7_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT7)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "Domain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+else ifeq ($(DOMID),8)
+	@$(ECHO) "\n\t$(DOMID):  $(CUTOUT8) - $(CUTOUT8_DESC)"
+	@$(MKDIR) $(WHSIM)_$(RUNID)/DOMAIN
+	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT8)/* $(WHSIM)_$(RUNID)/DOMAIN
+	@$(ECHO) "Domain directory has been created: $(WHSIM)_$(RUNID)/DOMAIN\n"
+endif
+
+
+run_frc:
+	@echo "Implement me!  'run_frc <run_ID> <input_dir> <geogrid_file>'"
+
+
+# XXX End working -------------------------------------
+
+
+
+
 # submodules
-sub:
+sub_mod:
 	git submodule init
 	git submodule update
 
@@ -49,98 +133,56 @@ build:  build_nwm
 
 
 # croton ny test case
-test:
+setup_test_case:
 	./run_scripts/croton_ny_setup.sh
 
-run:
+run_test_case:
 	sbatch $(TESTCASE_RUN_DIR)/submit
 
 
 # cut-out test cases
-list_cutout:
-	@echo -e "\n\tNUM:   Gauge ID  -  Description"
-	@echo -e "\t----------------------------------------------------"
-	@echo -e "\t  1:   13139510  -  Big Wood River at Hailey ID"
-	@echo -e "\t  2:   13168500  -  Bruneau River near Hot Springs ID"
-	@echo -e "\t  3:   13185000  -  Boise River near Twin Springs ID"
-	@echo -e "\t  4:   13186000  -  SF Boise River near Featherville ID"
-	@echo -e "\t  5:   13235000  -  SF Payette River at Lowman ID"
-	@echo -e "\t  6:   13237920  -  MF Payette River near Crouch ID"
-	@echo -e "\t  7:   13258500  -  Weiser River near Cambridge ID"
-	@echo -e "\t  8:   13316500  -  Little Salmon River at Riggins ID\n\n"
-
-copy_cutout:
-ifndef NUM
-	@echo -e "\n\tNo cut-out ID provided."
-	@echo -e "\tTry 'make list_cutouts' for listing of cut-out IDs.\n"
-else ifeq ($(NUM),1)
-	@echo -e "\n\t$(NUM):  $(CUTOUT1) - $(CUTOUT1_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT1)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT1)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT1)/* run_dir_gid$(CUTOUT1)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT1)/\n"
-else ifeq ($(NUM),2)
-	@echo -e "\t$(NUM):  $(CUTOUT2) - $(CUTOUT2_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT2)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT2)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT2)/* run_dir_gid$(CUTOUT2)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT2)/\n"
-else ifeq ($(NUM),3)
-	@echo -e "\n\t$(NUM):  $(CUTOUT3) - $(CUTOUT3_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT3)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT3)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT3)/* run_dir_gid$(CUTOUT3)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT3)/\n"
-else ifeq ($(NUM),4)
-	@echo -e "\n\t$(NUM):  $(CUTOUT4) - $(CUTOUT4_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT4)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT4)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT4)/* run_dir_gid$(CUTOUT4)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT4)/\n"
-else ifeq ($(NUM),5)
-	@echo -e "\n\t$(NUM):  $(CUTOUT5) - $(CUTOUT5_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT5)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT5)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT5)/* run_dir_gid$(CUTOUT5)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT5)/\n"
-else ifeq ($(NUM),6)
-	@echo -e"\n\t$(NUM):  $(CUTOUT6) - $(CUTOUT6_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT6)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT6)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT6)/* run_dir_gid$(CUTOUT6)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT6)/\n"
-else ifeq ($(NUM),7)
-	@echo -e "\n\t$(NUM):  $(CUTOUT7) - $(CUTOUT7_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT7)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT7)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT7)/* run_dir_gid$(CUTOUT7)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT7)/\n"
-else ifeq ($(NUM),8)
-	@echo -e "\n\t$(NUM):  $(CUTOUT8) - $(CUTOUT8_DESC)\n"
-	@$(MKDIR) run_dir_gid$(CUTOUT8)/DOMAIN
-	@$(CP) $(NWM_BUILD)/Run/* run_dir_gid$(CUTOUT8)
-	@$(CP) $(IDAHO_CUT_OUTS)/$(CUTOUT8)/* run_dir_gid$(CUTOUT8)/DOMAIN
-	@echo -e "\tRun directory has been created:  ./run_dir_gid$(CUTOUT8)/\n"
-endif
+dom_list:
+	@$(ECHO) "\n\tNUM:   Gauge ID  -  Description"
+	@$(ECHO) "\t----------------------------------------------------"
+	@$(ECHO) "\t  1:   $(CUTOUT1)  -  $(CUTOUT1_DESC)"
+	@$(ECHO) "\t  2:   $(CUTOUT2)  -  $(CUTOUT2_DESC)"
+	@$(ECHO) "\t  3:   $(CUTOUT3)  -  $(CUTOUT3_DESC)"
+	@$(ECHO) "\t  4:   $(CUTOUT4)  -  $(CUTOUT4_DESC)"
+	@$(ECHO) "\t  5:   $(CUTOUT5)  -  $(CUTOUT5_DESC)"
+	@$(ECHO) "\t  6:   $(CUTOUT6)  -  $(CUTOUT6_DESC)"
+	@$(ECHO) "\t  7:   $(CUTOUT7)  -  $(CUTOUT7_DESC)"
+	@$(ECHO) "\t  8:   $(CUTOUT8)  -  $(CUTOUT8_DESC)"
+	@$(ECHO) "\n"
 
 
+cmd_list:
+	@$(ECHO) "\n\t\t* WRF_HYDRO-R2 make reference list *"
+	@$(ECHO)   "\t\t===================================="
+	@$(ECHO) "\t  make sub_mod                                             #  initialize and update submodules (NWM,rwrfhydro)"
+	@$(ECHO) "\t  make build                                               #  builds the NoahMP/NWM-Offline executable"
+	@$(ECHO) "\t  make setup_test_case                                     #  download and setup croton_NY test case"
+	@$(ECHO) "\t  make run_test_case                                       #  run the croton_NY test case"
+	@$(ECHO) "\t  make cmd_list                                            #  display this reference list of commands"
+	@$(ECHO) "\t  make dom_list                                            #  display reference list of cut-outs with number ID's"
+	@$(ECHO) "\t  make rto_list                                            #  display reference list of routing options"
+	@$(ECHO) "\t  make run_dir RUNID=<run_id>                              #  creates new run directory in user scratch"
+	@$(ECHO) "\t  make run_exe RUNID=<run_id> RTOID=<routing_opt_id>       #  creates executable in run directory w/ routing option"
+	@$(ECHO) "\t  make run_dom RUNID=<run_id> DOMID=<dom_id>               #  creates DOMAIN directory in run directory"
+	@$(ECHO) "\t  make run_frc RUNID=<run_id> INDIR=<in_dir> GEO=<geogrid> #  convert run forcing given inuput dir and geogrid file"
+	@$(ECHO) "\t  make clean_test                                          #  cleans all run output from croton_NY test"
+	@$(ECHO) "\t  make clean_nwm                                           #  calls the 'make clean' target in NWM build directory"
+	@$(ECHO) "\n"
 
-help:
-	@echo -e "\n\t\t* WRF_HYDRO-R2 make reference list *"
-	@echo -e   "\t\t===================================="
-	@echo -e "\t  make help                  #  display this reference list"
-	@echo -e "\t  make sub                   #  initialize and update submodules (NWM,rwrfhydro)"
-	@echo -e "\t  make build                 #  builds the NoahMP/NWM-Offline executable"
-	@echo -e "\t  make test                  #  download and setup croton_NY test case"
-	@echo -e "\t  make run                   #  run the croton_NY test case"
-	@echo -e "\t  make list_cutout           #  display reference list of cut-outs with number ID's"
-	@echo -e "\t  make copy_cutout NUM=<num> #  create a copy of cutout directory for number ID <num>"
-	@echo -e "\t  make clean_test            #  cleans all run output from croton_NY test"
-	@echo -e "\t  make clean_nwm             #  calls the 'make clean' target in NWM build directory"
-	@echo -e "\n"
 
-
-
+rto_list:
+	@$(ECHO) "\n\tNUM:   Routing option  -  Description"
+	@$(ECHO) "\t----------------------------------------------------"
+	@$(ECHO) "\t  0:     "
+	@$(ECHO) "\t  1:     "
+	@$(ECHO) "\t  2:     "
+	@$(ECHO) "\t  3:     "
+	@$(ECHO) "\t  4:     "
+	@$(ECHO) "\n"
 
 
 
@@ -148,12 +190,12 @@ help:
 
 # clean
 clean_nwm:
-	echo -e "\nCleaning build directory: $(NWM_BUILD)\n"
+	$(ECHO) "\nCleaning build directory: $(NWM_BUILD)\n"
 	sleep 1
 	cd $(NWM_BUILD) && $(MAKE) clean
 
 clean_test:
-	echo -e "\nCleaning test run directory directory: $(TESTCASE_RUN_DIR)\n"
+	$(ECHO) "\nCleaning test run directory directory: $(TESTCASE_RUN_DIR)\n"
 	cd $(TESTCASE_RUN_DIR) && $(RM) $(TESTCASE_OUTPUT)
 
 

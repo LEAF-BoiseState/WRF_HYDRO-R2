@@ -8,7 +8,7 @@ TESTCASE_OUTPUT=*.CHANOBS_DOMAIN1 *.CHRTOUT_DOMAIN1 *.GWOUT_DOMAIN1 *.LAKEOUT_DO
 		whcroton.log whcroton.out whcroton.err
 
 
-IDAHO_CUT_OUTS=/scratch/leaf/share/WRF_hydro_subsets_201810
+IDAHO_CUT_OUTS=/scratch/leaf/WRF-Hydro/cutouts
 CUTOUT1=13139510
 CUTOUT1_DESC="Big Wood River at Hailey ID"
 CUTOUT2=13168500
@@ -109,7 +109,19 @@ endif
 
 
 run_frc:
-	@echo "Implement me!  'run_frc <run_ID> <input_dir> <geogrid_file>'"
+ifndef RUNID
+	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+else ifndef INDIR
+	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+else ifndef GEO
+	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+else
+	@$(ECHO) "\nmake run_frc"
+	@$(ECHO) "\tRUNID=$(RUNID)"
+	@$(ECHO) "\tINDIR=$(INDIR)"
+	@$(ECHO) "\tGEO=$(GEO)\n"
+endif
+
 
 
 # XXX End working -------------------------------------

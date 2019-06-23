@@ -1,6 +1,7 @@
 # WRF_HYDRO-R2 makefile
 WHSIM=/scratch/${USER}/WH_SIM
 NWM_BUILD=wrf_hydro_nwm_public/trunk/NDHMS
+CONVERT_W2WH=./pre_process/convert_wrf_to_wrfhydro.sh
 TESTCASE_RUN_DIR=croton_NY/NWM
 TESTCASE_OUTPUT=*.CHANOBS_DOMAIN1 *.CHRTOUT_DOMAIN1 *.GWOUT_DOMAIN1 *.LAKEOUT_DOMAIN1 \
                 *.LDASOUT_DOMAIN1 *.LSMOUT_DOMAIN   *.RTOUT_DOMAIN1 diag_hydro.*      \
@@ -120,6 +121,7 @@ else
 	@$(ECHO) "\tRUNID=$(RUNID)"
 	@$(ECHO) "\tINDIR=$(INDIR)"
 	@$(ECHO) "\tGEO=$(GEO)\n"
+	$(CONVERT_W2WH) $(INDIR) $(GEO) $(WHSIM)_$(RUNID)
 endif
 
 

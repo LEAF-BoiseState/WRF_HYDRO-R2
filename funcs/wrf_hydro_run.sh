@@ -93,7 +93,7 @@ function wh_run_dir() {
 
 # (4) wh_run_exe:
 function wh_run_exe() {
-    echo -e "IMPLEMENT ME:  wh_run_exe()"
+    echo -e "IMPLEMENT ME:  wh_run_exe() <run_id> <routing_opt>"
     return
 }
 
@@ -102,9 +102,11 @@ function wh_run_exe() {
 function wh_run_dom() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>\n"
+        return
     elif [[ $2 -lt 1 || $2 -gt $NUM_CUTOUTS ]]; then
         echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>"
         echo -e   "\t\twhere, 1 <= <dom_id> <= $NUM_CUTOUTS.\n"
+        return
     fi
     local run_id="$1"
     local dom_id=$2
@@ -112,7 +114,7 @@ function wh_run_dom() {
     if [ ! -d ${RUN_DIR_BASE}_$run_id ]; then
         echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
         return
-    if
+    fi
 
     if   [ $dom_id -eq 1 ]; then
 	echo  -e "\n\t$dom_id:  $CUTOUT1 - $CUTOUT1_DESC"
@@ -160,4 +162,3 @@ function wh_run_dom() {
     fi
     return
 }
-

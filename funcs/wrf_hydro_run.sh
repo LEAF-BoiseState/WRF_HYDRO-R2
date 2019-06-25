@@ -13,17 +13,19 @@
 #
 # *  (3)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
 # *  (4)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-# i  (5)  wh_run_exe  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+# i  (5)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
 # iii  (6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
 # ii  (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
 # iv  (8)  wh_list                                                # list wrf-hydro defined functions
 #  v  (9)  wh_list_dom                                            # list wrf-hydro cutout domains
-#  vi (10)  wh_list_rtg                                            # list routing/physics options
+#  vi (10)  wh_list_rto                                            # list routing/physics options
 #
 #
 
-# global parameters
+# Global parameters
+# -----------------
+# user
 RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
 NWM_BUILD=wrf_hydro_nwm_public/trunk/NDHMS
 CONVERT_W2WH=pre_process/convert_wrf_to_wrfhydro.sh
@@ -49,6 +51,7 @@ CUTOUT8=13316500
 CUTOUT8_DESC="Little Salmon River at Riggins ID"
 
 # routing options
+NUM_ROUTING_OPTS=7
 ROUTING1=1
 ROUTING1_STR='lsm'
 ROUTING1_DESC='NoahMP LSM'
@@ -113,6 +116,10 @@ function wh_dev() {
 
 # (2) wh_build                                               # compile the wrf-hydro/nwm executable
 #
+function wh_build() {
+    echo -e "IMPLEMENT ME:  wh_build()"
+    return
+}
 
 
 # (3) wh_run_dir: create WRF-Hydro run directory
@@ -201,26 +208,49 @@ function wh_run_dom() {
 
 
 
-# (4) wh_run_exe:
-function wh_run_exe() {
-    echo -e "IMPLEMENT ME:  wh_run_exe() <run_id> <routing_opt>"
+# (5) wh_run_exe:
+function wh_run_rto() {
+    # copy exe and associated files to parent
+    # copy namelists to parent
+    echo -e "IMPLEMENT ME:  wh_run_rto() <run_id> <routing_opt>"
     return
 }
 
 
-#   (6)  wh_run_frc
+
+
+# (6)  wh_run_frc <run_id> <input_dir> <geogrid_file>
+function wh_run_frc() {
+    echo -e "IMPLEMENT ME:  wh_run_frc() <run_id> <input_dir> <geogrid_file>"
+    return
+}
 
 #   (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+function wh_run_sub() {
+    echo -e "IMPLEMENT ME:  wh_run_sub() <run_id> <yyyy> <mm> <dd> <hh> <sim_days>"
+    return
+}
 
 
 
 #   (8)  wh_list                                                # list wrf-hydro defined functions
-
+function wh_list() {
+    echo -e "IMPLEMENT ME:  wh_list()"
+    return
+}
 
 
 #   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
+function wh_list_dom() {
+    echo -e "IMPLEMENT ME:  wh_list_dom()"
+    return
+}
 
 
 
-#  (10)  wh_list_rtg                                            # list routing/physics options
+#  (10)  wh_list_rto                                            # list routing/physics options
+function wh_list_rto() {
+    echo -e "IMPLEMENT ME:  wh_list_rto()"
+    return
+}
 

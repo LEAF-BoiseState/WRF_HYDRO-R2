@@ -7,10 +7,20 @@
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
 # FUNCTION DEFS:
-#   (1)    wh_dev      <queue_name> <sim_time>     # request wrf-hydro dev session
-#   (2)    wh_run_dir  <run_id>                    # create wrf-hydro run (parent) directory
-#   (3)    wh_run_exe  <run_id>
-#   (4)    wh_run_dom  <run_id>
+# *  (1)  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session
+#
+# vii  (2)  wh_build                                               # compile the wrf-hydro/nwm executable
+#
+# *  (3)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+# *  (4)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+# i  (5)  wh_run_exe  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+# iii  (6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+# ii  (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+#
+# iv  (8)  wh_list                                                # list wrf-hydro defined functions
+#  v  (9)  wh_list_dom                                            # list wrf-hydro cutout domains
+#  vi (10)  wh_list_rtg                                            # list routing/physics options
+#
 #
 
 # global parameters
@@ -37,6 +47,35 @@ CUTOUT7=13258500
 CUTOUT7_DESC="Weiser River near Cambridge ID"
 CUTOUT8=13316500
 CUTOUT8_DESC="Little Salmon River at Riggins ID"
+
+# routing options
+ROUTING1=1
+ROUTING1_STR='lsm'
+ROUTING1_DESC='NoahMP LSM'
+
+ROUTING2=2
+ROUTING2_STR='lsm_sub'
+ROUTING2_DESC='NoahMP LSM + Subsurface routing'
+
+ROUTING3=3
+ROUTING3_STR='lsm_ovr'
+ROUTING3_DESC='NoahMP LSM + Overland surface flow routing'
+
+ROUTING4=4
+ROUTING4_STR='lsm_chl'
+ROUTING4_DESC='NoahMP LSM + Channel routing'
+
+ROUTING5=5
+ROUTING5_STR='lsm_res'
+ROUTING5_DESC='NoahMP LSM + Lake/reservoir routing'
+
+ROUTING6=6
+ROUTING6_STR='lsm_gwb'
+ROUTING6_DESC='NoahMP LSM + Groundwater/baseflow model'
+
+ROUTING6=7
+ROUTING6_STR='lsm_ovr_chl'
+ROUTING6_DESC='NoahMP LSM + Overland surface flow routing + Channel routing'
 
 
 
@@ -72,7 +111,11 @@ function wh_dev() {
 
 
 
-# (2) wh_run_dir: create WRF-Hydro run directory
+# (2) wh_build                                               # compile the wrf-hydro/nwm executable
+#
+
+
+# (3) wh_run_dir: create WRF-Hydro run directory
 #       input:    run ID 
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
@@ -91,14 +134,7 @@ function wh_run_dir() {
     return
 }
 
-# (4) wh_run_exe:
-function wh_run_exe() {
-    echo -e "IMPLEMENT ME:  wh_run_exe() <run_id> <routing_opt>"
-    return
-}
-
-
-# (3) wh_run_dom: 
+# (4) wh_run_dom: 
 function wh_run_dom() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>\n"
@@ -162,3 +198,29 @@ function wh_run_dom() {
     fi
     return
 }
+
+
+
+# (4) wh_run_exe:
+function wh_run_exe() {
+    echo -e "IMPLEMENT ME:  wh_run_exe() <run_id> <routing_opt>"
+    return
+}
+
+
+#   (6)  wh_run_frc
+
+#   (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+
+
+
+#   (8)  wh_list                                                # list wrf-hydro defined functions
+
+
+
+#   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
+
+
+
+#  (10)  wh_list_rtg                                            # list routing/physics options
+

@@ -23,12 +23,19 @@
 #
 #
 
-# Global parameters
-# -----------------
-# user
+
+# USER PARAMETERS
 RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
-NWM_BUILD=wrf_hydro_nwm_public/trunk/NDHMS
-CONVERT_W2WH=pre_process/convert_wrf_to_wrfhydro.sh
+
+
+
+# ----------------------------- FIXED PARAMETERS ------------------------------ #
+WH_R2_FUNCS_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
+WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                       # WH_R2 repo base dir
+NWM_BUILD_RUN_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS/Run
+CONVERT_W2WH=$WH_R2_REPO/pre_process/convert_wrf_to_wrfhydro.sh
+EXE=wrf_hydro_NoahMP.exe
+
 
 # cutouts
 NUM_CUTOUTS=8
@@ -210,10 +217,74 @@ function wh_run_dom() {
 
 # (5) wh_run_exe:
 function wh_run_rto() {
-    # copy exe and associated files to parent
-    # copy namelists to parent
+###XXX
     echo -e "IMPLEMENT ME:  wh_run_rto() <run_id> <routing_opt>"
     return
+###XXXEND
+
+
+    if   [ $# -ne 2 ]; then 
+        echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>\n"
+        return
+    elif [[ $2 -lt 1 || $2 -gt $NUM_ROUTING_OPTS ]]; then
+        echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>"
+        echo -e   "\t\twhere, 1 <= <routing_opt> <= $NUM_ROUTING_OPTS.\n"
+        return
+    fi
+    local run_id="$1"
+    local routing_opt=$2
+    local run_dir_path=${RUN_DIR_BASE}_${run_id}
+    if [ ! -d $run_dir_path ]; then
+        echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
+        return
+    fi
+
+
+    # copy exe and associated files to parent
+    cp -v $NWM_BUILD_RUN_DIR/$EXE $run_dir_path
+    cp -v $NWM_BUILD_RUN_DIR/*.TBL $run_dir_path
+
+
+    # copy namelists to parent
+    if   [ $routing_opt -eq $ROUTING1 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING1_STR - $ROUTING1_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING1/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING2 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING2_STR - $ROUTING2_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING2/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING3 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING3_STR - $ROUTING3_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING3/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING4 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING4_STR - $ROUTING4_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING4/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING5 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING5_STR - $ROUTING5_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING5/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING6 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING6_STR - $ROUTING6_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING6/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    elif [ $routing_opt -eq $ROUTING7 ]; then
+	echo  -e "\n\t$routing_opt:  $ROUTING7_STR - $ROUTING7_DESC"
+	mkdir -p $run_dir_path/DOMAIN
+	cp    -r $IDAHO_ROUTINGS/$ROUTING7/* $run_dir_path/DOMAIN
+	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+    else
+        echo  -e "\nInvalid routing option, routing_opt == $routing_opt.\n"
+        return
+    fi
 }
 
 

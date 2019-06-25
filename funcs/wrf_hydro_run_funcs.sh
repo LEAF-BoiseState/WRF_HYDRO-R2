@@ -6,11 +6,20 @@
 # PURPOSE: set of functions to simply build and run related tasks.
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
+# FUNCTION DEFS:
+#   (1)    wh_dev      <queue_name> <sim_time>     # request wrf-hydro dev session
+#   (2)    wh_run_dir  <run_id>                    # create wrf-hydro run (parent) directory
+#
+
+# global parameters
+RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
 
 
-# wh_dev: WRF-Hydro dev session
+
+# (1) wh_dev:  request WRF-Hydro dev session 
+#       input: queue name, requested simulation time
 function wh_dev() {
-    local session_id='WRFHYDEV'               # can be changed
+    local session_id='WRFHYDEV'
     local let MAXMINS=60
 
     if [ $# -ne 2 ]; then
@@ -37,5 +46,24 @@ function wh_dev() {
 }
 
 
+
+# (2) wh_run_dir: create WRF-Hydro run directory
+#       input:    run ID 
+function wh_run_dir() {
+    if [ $# -ne 1 ]; then
+        echo -e "\n\tUSAGE: wh_run_dir <run_id>\n"
+        return
+    fi
+    local run_id="$1"
+    local run_dir_path=${RUN_DIR_BASE}_$run_id
+    if [ -d $run_dir_path ]; then
+        echo -e "\nRun directory already exists."
+    else
+        echo -e "\nCreating run directory..."
+        mkdir -p $run_dir_path
+    fi
+    echo -e "\tDirectory: $run_dir_path.\n"
+    return
+}
 
 

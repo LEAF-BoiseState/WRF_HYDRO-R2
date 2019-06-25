@@ -1,5 +1,5 @@
 # .gitignore
+rwrfhydro
+wrf_hydro_nwm_public
 Makefile
-upper_boise/
-upper_boise_bak/
 

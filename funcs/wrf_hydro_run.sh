@@ -217,16 +217,11 @@ function wh_run_dom() {
 
 # (5) wh_run_exe:
 function wh_run_rto() {
-###XXX
-    echo -e "IMPLEMENT ME:  wh_run_rto() <run_id> <routing_opt>"
-    return
-###XXXEND
-
-
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>\n"
         return
-    elif [[ $2 -lt 1 || $2 -gt $NUM_ROUTING_OPTS ]]; then
+###    elif [[ $2 -lt 1 || $2 -gt $NUM_ROUTING_OPTS ]]; then  
+    elif [[ $2 -lt $NUM_ROUTING_OPTS || $2 -gt $NUM_ROUTING_OPTS ]]; then
         echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>"
         echo -e   "\t\twhere, 1 <= <routing_opt> <= $NUM_ROUTING_OPTS.\n"
         return
@@ -239,52 +234,45 @@ function wh_run_rto() {
         return
     fi
 
-
     # copy exe and associated files to parent
-    cp -v $NWM_BUILD_RUN_DIR/$EXE $run_dir_path
-    cp -v $NWM_BUILD_RUN_DIR/*.TBL $run_dir_path
+    cp -v $NWM_BUILD_RUN_DIR/* $run_dir_path
+    mv -v $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
+    mv -v $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
 
-
-    # copy namelists to parent
+    # copy routing specific namelists to parent
     if   [ $routing_opt -eq $ROUTING1 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING1_STR - $ROUTING1_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING1/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING1_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING1_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING2 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING2_STR - $ROUTING2_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING2/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING2_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING2_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING3 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING3_STR - $ROUTING3_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING3/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING3_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING3_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING4 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING4_STR - $ROUTING4_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING4/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING4_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING4_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING5 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING5_STR - $ROUTING5_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING5/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING5_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING5_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING6 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING6_STR - $ROUTING6_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING6/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING6_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING6_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING7 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING7_STR - $ROUTING7_DESC"
-	mkdir -p $run_dir_path/DOMAIN
-	cp    -r $IDAHO_ROUTINGS/$ROUTING7/* $run_dir_path/DOMAIN
-	echo  -e "\tDomain directory has been created: $run_dir_path/DOMAIN.\n"
+	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING7_STR $run_dir_path/hydro.namelist
+	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING7_STR $run_dir_path/namelist.hrldas
     else
         echo  -e "\nInvalid routing option, routing_opt == $routing_opt.\n"
         return
     fi
+    return
 }
 
 

@@ -1,5 +1,5 @@
 # .gitignore
-rwrfhydro
-wrf_hydro_nwm_public
+rwrfhydro/
+wrf_hydro_nwm_public/
 Makefile
 

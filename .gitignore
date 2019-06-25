@@ -1,5 +1,5 @@
 # .gitignore
-Makefile.cs430
+Makefile
 upper_boise/
 upper_boise_bak/
 

@@ -16,12 +16,12 @@
 #   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
 #   (6)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
 #   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-# ii  (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+#   (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
 #   (9)  wh_list                                                # list wrf-hydro defined functions
 #  (10)  wh_list_dom                                            # list wrf-hydro cutout domains
 #  (11)  wh_list_rto                                            # list routing/physics options
-#  (12) wh_clean_nwm                                           # clean NWM repo build 
+#  (12)  wh_clean_nwm                                           # clean NWM repo build 
 #
 
 
@@ -30,9 +30,9 @@ RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
 
 
 
-# ----------------------------- FIXED PARAMETERS ------------------------------
-WH_R2_FUNCS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"    # path of script
-WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                                                       # WH_R2 repo base dir
+# -------------------------------- FIXED PARAMETERS ---------------------------------
+WH_R2_FUNCS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                                                   
 NWM_BUILD_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS
 NWM_BUILD_RUN_DIR=$NWM_BUILD_DIR/Run
 CONVERT_W2WH=$WH_R2_REPO/pre_process/convert_wrf_to_wrfhydro.sh
@@ -349,18 +349,18 @@ function wh_run_job() {
     sed -i "s/starthour/$hr/g"     $run_dir_path/namelist.hrldas
     sed -i "s/simdays/$sim_days/g" $run_dir_path/namelist.hrldas
 
-    cp -v $WH_R2_REPO/run_scripts/submit.sh.template $run_dir_path
-    mv -v $run_dir_path/submit.sh.template $run_dir_path/submit
+    cp $WH_R2_REPO/run_scripts/submit.sh.template $run_dir_path
+    mv $run_dir_path/submit.sh.template $run_dir_path/submit
     run_dir_sed_safe=${run_dir_path////'\/'}
 
-    sed -i "s/queuename/$QUEUE_NAME/g"       submit
-    sed -i "s/queuetime/$QUEUE_TIME/g"       submit
-    sed -i "s/numcores/$NUM_CORES/g"         submit
-    sed -i "s/jobname/$run_id/g"             submit
-    sed -i "s/rundir/$run_dir_sed_safe/g"    submit
+    sed -i "s/queuename/$QUEUE_NAME/g"       $run_dir_path/submit
+    sed -i "s/queuetime/$QUEUE_TIME/g"       $run_dir_path/submit
+    sed -i "s/numcores/$NUM_CORES/g"         $run_dir_path/submit
+    sed -i "s/jobname/$run_id/g"             $run_dir_path/submit
+    sed -i "s/rundir/$run_dir_sed_safe/g"    $run_dir_path/submit
 
-    echo -e "\n\tJob ID, $run_id, ready for submission."
-    echo -e "\tRun directory: $run_dir_path.\n"
+    echo -e "\n\tJob ID:        $run_id."
+    echo -e   "\tRun directory: $run_dir_path.\n"
     echo -e "\tsbatch $run_dir_path/submit\n\n"
     return
 }

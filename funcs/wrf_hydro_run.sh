@@ -412,7 +412,7 @@ function wh_list_dom() {
 
 #  (11)  wh_list_rto                                            # list routing/physics options
 function wh_list_rto() {
-    echo -e "\n\tNUM:   Routing option  -  Description"
+    echo -e "\n\tNUM:     Routing option   -  Description"
     echo -e "\t----------------------------------------------------"
     echo -e "\t  1:     $ROUTING1_STR\t\t  -  $ROUTING1_DESC"
     echo -e "\t  2:     $ROUTING2_STR\t  -  $ROUTING2_DESC"

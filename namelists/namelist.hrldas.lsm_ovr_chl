@@ -68,6 +68,6 @@
  !                                 4=Idealized, 5=Ideal w/ spec. precip, 
  !                                 6=HRLDAS-hr format w/ spec. precip,
  !                                 7=WRF w/ spec. precip 
- FORC_TYP = 4
+ FORC_TYP = 3
 
 /

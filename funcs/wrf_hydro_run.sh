@@ -17,8 +17,8 @@
 # iii  (6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
 # ii  (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
-# iv  (8)  wh_list                                                # list wrf-hydro defined functions
-#  v  (9)  wh_list_dom                                            # list wrf-hydro cutout domains
+#   (8)  wh_list                                                # list wrf-hydro defined functions
+#   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
 #  vi (10)  wh_list_rto                                            # list routing/physics options
 #  (11) wh_clean_nwm                                           # clean NWM repo build 
 #
@@ -295,7 +295,22 @@ function wh_run_sub() {
 
 #   (8)  wh_list                                                # list wrf-hydro defined functions
 function wh_list() {
-    echo -e "IMPLEMENT ME:  wh_list"
+    echo -e '\n'
+    echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
+    echo -e '                   ====================== '
+    echo -e '\n'
+    echo -e '  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session\n'
+    echo -e '  wh_build                                               # compile the wrf-hydro/nwm executable\n'
+    echo -e '  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory'
+    echo -e '  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir'
+    echo -e '  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir'
+    echo -e '  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING'
+    echo -e '  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job\n'
+    echo -e '  wh_list                                                # list wrf-hydro defined functions'
+    echo -e '  wh_list_dom                                            # list wrf-hydro cutout domains'
+    echo -e '  wh_list_rto                                            # list routing/physics options\n'
+    echo -e '  wh_clean_nwm                                           # clean NWM repo build'
+    echo -e '\n'
     return
 }
 
@@ -304,14 +319,14 @@ function wh_list() {
 function wh_list_dom() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"
-    echo -e "\t  1:   $(CUTOUT1)  -  $(CUTOUT1_DESC)"
-    echo -e "\t  2:   $(CUTOUT2)  -  $(CUTOUT2_DESC)"
-    echo -e "\t  3:   $(CUTOUT3)  -  $(CUTOUT3_DESC)"
-    echo -e "\t  4:   $(CUTOUT4)  -  $(CUTOUT4_DESC)"
-    echo -e "\t  5:   $(CUTOUT5)  -  $(CUTOUT5_DESC)"
-    echo -e "\t  6:   $(CUTOUT6)  -  $(CUTOUT6_DESC)"
-    echo -e "\t  7:   $(CUTOUT7)  -  $(CUTOUT7_DESC)"
-    echo -e "\t  8:   $(CUTOUT8)  -  $(CUTOUT8_DESC)"
+    echo -e "\t  1:   $CUTOUT1  -  $CUTOUT1_DESC"
+    echo -e "\t  2:   $CUTOUT2  -  $CUTOUT2_DESC"
+    echo -e "\t  3:   $CUTOUT3  -  $CUTOUT3_DESC"
+    echo -e "\t  4:   $CUTOUT4  -  $CUTOUT4_DESC"
+    echo -e "\t  5:   $CUTOUT5  -  $CUTOUT5_DESC"
+    echo -e "\t  6:   $CUTOUT6  -  $CUTOUT6_DESC"
+    echo -e "\t  7:   $CUTOUT7  -  $CUTOUT7_DESC"
+    echo -e "\t  8:   $CUTOUT8  -  $CUTOUT8_DESC"
     echo -e "\n"
     return
 }

@@ -29,9 +29,10 @@ RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
 
 
 
-# ----------------------------- FIXED PARAMETERS ------------------------------ #
-WH_R2_FUNCS_DIR="$(dirname "$(readlink -f "$0")")"     # path of script
-WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                       # WH_R2 repo base dir
+# ----------------------------- FIXED PARAMETERS ------------------------------
+WH_R2_FUNCS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"    # path of script
+WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                                                       # WH_R2 repo base dir
+NWM_BUILD_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS
 NWM_BUILD_RUN_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS/Run
 CONVERT_W2WH=$WH_R2_REPO/pre_process/convert_wrf_to_wrfhydro.sh
 EXE=wrf_hydro_NoahMP.exe
@@ -235,39 +236,39 @@ function wh_run_rto() {
     fi
 
     # copy exe and associated files to parent
-    cp -v $NWM_BUILD_RUN_DIR/* $run_dir_path
-    mv -v $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
-    mv -v $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
+    cp    $NWM_BUILD_RUN_DIR/* $run_dir_path
+    mv    $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
+    mv    $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
 
     # copy routing specific namelists to parent
     if   [ $routing_opt -eq $ROUTING1 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING1_STR - $ROUTING1_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING1_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING1_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING1_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING1_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING2 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING2_STR - $ROUTING2_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING2_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING2_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING2_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING2_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING3 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING3_STR - $ROUTING3_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING3_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING3_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING3_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING3_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING4 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING4_STR - $ROUTING4_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING4_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING4_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING4_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING4_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING5 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING5_STR - $ROUTING5_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING5_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING5_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING5_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING5_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING6 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING6_STR - $ROUTING6_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING6_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING6_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING6_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING6_STR $run_dir_path/namelist.hrldas
     elif [ $routing_opt -eq $ROUTING7 ]; then
 	echo  -e "\n\t$routing_opt:  $ROUTING7_STR - $ROUTING7_DESC"
-	cp    -v $WH_R2_REPO/namelists/hydro.namelist.$ROUTING7_STR $run_dir_path/hydro.namelist
-	cp    -v $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING7_STR $run_dir_path/namelist.hrldas
+	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING7_STR $run_dir_path/hydro.namelist
+	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING7_STR $run_dir_path/namelist.hrldas
     else
         echo  -e "\nInvalid routing option, routing_opt == $routing_opt.\n"
         return
@@ -310,6 +311,15 @@ function wh_list_dom() {
 #  (10)  wh_list_rto                                            # list routing/physics options
 function wh_list_rto() {
     echo -e "IMPLEMENT ME:  wh_list_rto()"
+    return
+}
+
+
+#  (11)  wh_clean_nwm
+function wh_clean_nwm() {
+    if [ -d $NWM_BUILD_DIR/Run         ]; then rm -vrf $NWM_BUILD_DIR/Run;        fi
+    if [ -f $NWM_BUILD_DIR/setEnvar.sh ]; then rm -vf $NWM_BUILD_DIR/setEnvar.sh; fi
+    if [ -f $NWM_BUILD_DIR/macros.orig ]; then rm -vf $NWM_BUILD_DIR/macros.orig; fi
     return
 }
 

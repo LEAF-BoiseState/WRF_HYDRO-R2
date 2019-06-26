@@ -15,8 +15,8 @@
 #   (4)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
 #   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
 #   (6)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-# iii  (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-# ii  (8)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+#   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+# ii  (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
 #   (9)  wh_list                                                # list wrf-hydro defined functions
 #  (10)  wh_list_dom                                            # list wrf-hydro cutout domains
@@ -124,14 +124,16 @@ function wh_dev() {
 
 # (2) wh_sub_mod
 function wh_sub_mod() {
+    local start_dir=$(pwd)
+    cd $WH_R2_REPO
     git submodule init
     git submodule update
+    cd $start_dir
     return
 }
 
 
 # (3) wh_build                                               # compile the wrf-hydro/nwm executable
-#
 function wh_build() {
     $WH_R2_REPO/build/build_nwm_r2.sh
     return
@@ -287,21 +289,28 @@ function wh_run_rto() {
 
 # (7)  wh_run_frc <run_id> <input_dir> <geogrid_file>
 function wh_run_frc() {
-# ifndef RUNID
-# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
-# else ifndef INDIR
-# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
-# else ifndef GEO
-# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
-# else
-# 	@$(ECHO) "\nmake run_frc"
-# 	@$(ECHO) "\tRUNID=$(RUNID)"
-# 	@$(ECHO) "\tINDIR=$(INDIR)"
-# 	@$(ECHO) "\tGEO=$(GEO)\n"
-# 	$(CONVERT_W2WH) $(INDIR) $(GEO) $(WHSIM)_$(RUNID)
-# endif
+    if [ $# -ne 3 ]; then
+        echo -e "\n\tUSAGE: wh_run_frc <run_id> <input_dir> <geogrid_file>\n"
+        return
+    fi
+    local run_id="$1"
+    local input_dir="$2"
+    local geogrid_file="$3"
 
-    echo -e "IMPLEMENT ME:  wh_run_frc <run_id> <input_dir> <geogrid_file>"
+    if [ ! -d ${RUN_DIR_BASE}_${run_id} ]; then
+        echo -e "\nInvalid run directory, ${RUN_DIR_BASE}_${run_id}, for <run_id> = $run_id.\n"
+        return
+    fi
+    if [ ! -d $input_dir ]; then
+        echo -e "\nInvalid input directory, $input_dir.\n"
+        return
+    fi
+    if [ ! -f $geogrid_file ]; then
+        echo -e "\nInvalid geogrid file, $geogrid_file.\n"
+        return
+    fi
+
+    $CONVERT_W2WH $input_dir $geogrid_file ${RUN_DIR_BASE}_${run_id}
     return
 }
 

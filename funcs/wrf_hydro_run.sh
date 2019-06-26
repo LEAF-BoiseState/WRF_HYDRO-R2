@@ -314,9 +314,54 @@ function wh_run_frc() {
     return
 }
 
-# (8)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
-function wh_run_sub() {
-    echo -e "IMPLEMENT ME:  wh_run_sub <run_id> <yyyy> <mm> <dd> <hh> <sim_days>"
+# (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+function wh_run_job() {
+    local QUEUE_NAME="leaf"
+    local QUEUE_TIME="00:10:00"
+    local NUM_CORES=1
+    if [ $# -ne 6 ]; then
+        echo -e "\n\tUSAGE: wh_run_job <run_id> <yyyy> <mm> <dd> <hh> <sim_days>\n"
+        return
+    fi
+    local run_id="$1"
+    local year="$2"
+    local mn="$3"
+    local dy="$4"
+    local hr="$5"
+    local sim_days="$6"
+    local run_dir_path=${RUN_DIR_BASE}_${run_id}
+    if [ ! -d $run_dir_path ]; then
+        echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
+        return
+    fi
+    if [ ! -f $run_dir_path/hydro.namelist ]; then
+        echo -e "\nNo valid hydro.namelist, $run_dir_path/hydro.namelist, found.\n"
+        return
+    fi
+    if [ ! -f $run_dir_path/namelist.hrldas ]; then
+        echo -e "\nNo valid namelist.hrldas, $run_dir_path/namelist.hrldas, found.\n"
+        return
+    fi
+
+    sed -i "s/startyear/$year/g"   $run_dir_path/namelist.hrldas
+    sed -i "s/startmonth/$mn/g"    $run_dir_path/namelist.hrldas
+    sed -i "s/startday/$dy/g"      $run_dir_path/namelist.hrldas
+    sed -i "s/starthour/$hr/g"     $run_dir_path/namelist.hrldas
+    sed -i "s/simdays/$sim_days/g" $run_dir_path/namelist.hrldas
+
+    cp -v $WH_R2_REPO/run_scripts/submit.sh.template $run_dir_path
+    mv -v $run_dir_path/submit.sh.template $run_dir_path/submit
+    run_dir_sed_safe=${run_dir_path////'\/'}
+
+    sed -i "s/queuename/$QUEUE_NAME/g"       submit
+    sed -i "s/queuetime/$QUEUE_TIME/g"       submit
+    sed -i "s/numcores/$NUM_CORES/g"         submit
+    sed -i "s/jobname/$run_id/g"             submit
+    sed -i "s/rundir/$run_dir_sed_safe/g"    submit
+
+    echo -e "\n\tJob ID, $run_id, ready for submission."
+    echo -e "\tRun directory: $run_dir_path.\n"
+    echo -e "\tsbatch $run_dir_path/submit\n\n"
     return
 }
 
@@ -335,7 +380,7 @@ function wh_list() {
     echo -e '  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir'
     echo -e '  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir'
     echo -e '  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING'
-    echo -e '  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job\n'
+    echo -e '  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job\n'
     echo -e '  wh_list                                                # list wrf-hydro defined functions'
     echo -e '  wh_list_dom                                            # list wrf-hydro cutout domains'
     echo -e '  wh_list_rto                                            # list routing/physics options\n'

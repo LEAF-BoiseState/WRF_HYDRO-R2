@@ -7,7 +7,7 @@
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
 # FUNCTION DEFS:
-#   (1)  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session
+#   (1)  wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
 #
 #   (2)  wh_sub_mod                                             # init/update submodules
 #   (3)  wh_build                                               # compile the wrf-hydro/nwm executable
@@ -99,11 +99,11 @@ function wh_dev() {
     local let MAXMINS=60
 
     if [ $# -ne 2 ]; then
-        echo -e "\n\tUSAGE: wh_dev <queue_name> <simulation_minutes>\n"
+        echo -e "\n\tUSAGE: wh_dev <queue_name> <minutes>\n"
         return
     elif [[ $2 -le 0 || $2 -gt $MAXMINS ]]; then
-        echo -e "\n\tUSAGE: wh_dev <queue_name> <simulation_minutes>"
-        echo -e   "\t\twhere, 0  <  <simulation_minutes>  <=  60.\n"
+        echo -e "\n\tUSAGE: wh_dev <queue_name> <minutes>"
+        echo -e   "\t\twhere, 0  <  <minutes>  <=  60.\n"
         return
     fi
     local queue_name="$1"
@@ -244,6 +244,7 @@ function wh_run_rto() {
         echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
         return
     fi
+    cp $WH_R2_REPO/build/env_nwm_r2.sh $run_dir_path
 
     # copy exe and associated files to parent
     cp    $NWM_BUILD_RUN_DIR/* $run_dir_path
@@ -281,8 +282,9 @@ function wh_run_rto() {
 	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING7_STR $run_dir_path/namelist.hrldas
     else
         echo  -e "\nInvalid routing option, routing_opt == $routing_opt.\n"
-        return
+        return 
     fi
+
     return
 }
 
@@ -373,7 +375,7 @@ function wh_list() {
     echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
     echo -e '                   ====================== '
     echo -e '\n'
-    echo -e '  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session\n'
+    echo -e '  wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session\n'
     echo -e '  wh_sub_mod                                             # init/update submodules'
     echo -e '  wh_build                                               # compile the wrf-hydro/nwm executable\n'
     echo -e '  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory'

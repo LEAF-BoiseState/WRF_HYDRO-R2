@@ -7,20 +7,20 @@
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
 # FUNCTION DEFS:
-# *  (1)  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session
+#   (1)  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session
 #
-# vii  (2)  wh_build                                               # compile the wrf-hydro/nwm executable
+#   (2)  wh_build                                               # compile the wrf-hydro/nwm executable
 #
-# *  (3)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-# *  (4)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-# i  (5)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+#   (3)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+#   (4)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+#   (5)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
 # iii  (6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
 # ii  (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
 # iv  (8)  wh_list                                                # list wrf-hydro defined functions
 #  v  (9)  wh_list_dom                                            # list wrf-hydro cutout domains
 #  vi (10)  wh_list_rto                                            # list routing/physics options
-#
+#  (11) wh_clean_nwm                                           # clean NWM repo build 
 #
 
 
@@ -33,7 +33,7 @@ RUN_DIR_BASE="/scratch/${USER}/WH_SIM"
 WH_R2_FUNCS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"    # path of script
 WH_R2_REPO=${WH_R2_FUNCS_DIR%/*}                                                       # WH_R2 repo base dir
 NWM_BUILD_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS
-NWM_BUILD_RUN_DIR=$WH_R2_REPO/wrf_hydro_nwm_public/trunk/NDHMS/Run
+NWM_BUILD_RUN_DIR=$NWM_BUILD_DIR/Run
 CONVERT_W2WH=$WH_R2_REPO/pre_process/convert_wrf_to_wrfhydro.sh
 EXE=wrf_hydro_NoahMP.exe
 
@@ -125,7 +125,7 @@ function wh_dev() {
 # (2) wh_build                                               # compile the wrf-hydro/nwm executable
 #
 function wh_build() {
-    echo -e "IMPLEMENT ME:  wh_build()"
+    $WRF_R2_REPO/build/build_nwm_r2.sh
     return
 }
 

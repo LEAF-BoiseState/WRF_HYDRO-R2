@@ -318,7 +318,7 @@ function wh_run_frc() {
 
 # (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 function wh_run_job() {
-    local QUEUE_NAME="leaf"
+    local QUEUE_NAME="defq"
     local QUEUE_TIME="00:10:00"
     local NUM_CORES=1
     if [ $# -ne 6 ]; then

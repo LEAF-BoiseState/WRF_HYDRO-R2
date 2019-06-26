@@ -1,5 +1,5 @@
 # .gitignore
-Makefile.cs430
-upper_boise/
-upper_boise_bak/
+rwrfhydro/
+wrf_hydro_nwm_public/
+Makefile
 

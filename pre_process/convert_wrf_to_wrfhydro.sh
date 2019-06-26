@@ -292,10 +292,8 @@ fi
 
 
 # clean up
-echo "\n\tIMPLEMENT ME:  CLEAN UP!\n"
-
-
-
+echo -e "\nClean up..."
+rm -rfv *.Log *.nc
 
 cd $start_dir
 

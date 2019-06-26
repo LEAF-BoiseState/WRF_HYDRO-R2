@@ -41,7 +41,7 @@ EXE=wrf_hydro_NoahMP.exe
 
 # cutouts
 NUM_CUTOUTS=8
-IDAHO_CUTOUTS=/scratch/leaf/WRF-Hydro/cutouts
+IDAHO_CUTOUTS=/scratch/mmasarik/WHv5_NWM_Tutorial/cutouts
 CUTOUT1=13139510
 CUTOUT1_DESC="Big Wood River at Hailey ID"
 CUTOUT2=13168500

@@ -7,9 +7,9 @@
 * [I. Overview](#I-Overview) - *brief description of repository*
 * [II. Manifest](#II-Manifest) - *main repository structure*
 * [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
-* [IV. Test Case: Croton NY](#IV-Test-Case-Croton-NY) - *steps to setup + run the test case Croton, NY*
-* [V. Idaho NWM Cut-outs](#V-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
-* [VI. Make Target Reference](#VI-Make-Target-Reference) - *reference list of all supported `make` commands*
+* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
+* [V. Routing Options](#V-Routing-Options) - *list of available routing configurations*
+* [VI. Function Reference](#VI-Function-Reference) - *reference list of defined function commands*
 * [VII. Appendix](#VII-Appendix) - *links to extended, internal documentation*
 * [VIII. Links](#VIII-Links) - *links to external references*
 
@@ -17,27 +17,30 @@
 
 
 ## I. Overview
-This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. The *GNU Make*<sup>[3](#3)</sup> utility is used to automate core tasks and reduce them to a single command. The `make` commands must be issued from the repository root directory, `WRF_HYDRO-R2/`.
+This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. UNIX shell functions have been defined to automate core tasks and reduce them to a single command.
 <br><br>
 
 ## II. Manifest
 ```bash
 WRF_HYDRO-R2/
 ├── build/
-│   ├── build_nwm_r2.sh                           
-│   ├── env_nwm_r2.sh                             # WH/NWM environment script
+│   ├── build_nwm_r2.sh
+│   ├── env_nwm_r2.sh
 │   └── README_BUILD.md
+├── funcs/
+│   └── wrf_hydro_run.sh
 ├── LICENSE
-├── Makefile
 ├── namelists/
 │   ├── hydro.namelist.custom_forcing
 │   ├── hydro.namelist.idealized_forcing
+│   ├── hydro.namelist.lsm_ovr_chl
 │   ├── namelist.hrldas.custom_forcing
 │   ├── namelist.hrldas.idealized_forcing
+│   ├── namelist.hrldas.lsm_ovr_chl
 │   └── README_NAMELISTS.md
 ├── post_process/
 ├── pre_process/
-│   ├── convert_wrf_to_wrfhydro.sh                # main pre-process script
+│   ├── convert_wrf_to_wrfhydro.sh
 │   ├── env_preprocess_r2.sh
 │   ├── ncl_scripts/
 │   │   ├── w2wh_esmf_generate_weights.ncl
@@ -47,11 +50,10 @@ WRF_HYDRO-R2/
 │   ├── wrf_regrid_wrfhydro.sh
 │   └── wrf_subset_wrfhydro.sh
 ├── README.md
-├── run_scripts/
-│   ├── croton_ny_setup.sh                        # download + setup croton_NY test case
-│   └── submit.sh.template                        # SLURM batch template
-├── rwrfhydro/                                    # rwrfhydro repository
-└── wrf_hydro_nwm_public/                         # WRF-Hydro v5 / NWM repository
+├── rwrfhydro/
+├── supplements/
+│   └── submit.sh.template
+└── wrf_hydro_nwm_public/
 ```
 <br>
 
@@ -59,12 +61,10 @@ WRF_HYDRO-R2/
 ```bash            
 git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
-source build/env_nwm_r2.sh                                   # source r2 environment
-make sub                                                     # initialize / update submodules
-make build                                                   # build NWM-offline executable
+source funcs/wrf_hydro_run.sh                                # load function definitions
+wh_sub_mod                                                   # initialize / update submodules
+wh_build                                                     # build NWM-offline executable
 ```
-**NOTE: Make sure to source the environment script as shown above.  This loads the correct modules as well as                          
-exports needed `PATH` variables.** 
 <br>
 
 Sample output at the end of a successful build by username, `auser`, looks like the following
@@ -98,86 +98,21 @@ WRFIO_NCD_LARGE_FILE_SUPPORT=1
 ```
 
 
-*NOTE: both the build log and executable location are listed at the end of the build output.* If you received a 'BUILD UNSUCCESSFUL' message from the `make build` step (assuming the preceding steps were successful), try these steps to troubleshoot.  First, assess what went wrong from looking at the build log file.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue the build command, e.g. (assuming you are back in the top-level directory, WRF_HYDRO-R2):
+*NOTE: both the build log and executable location are listed at the end of the build output.* If you received a 'BUILD UNSUCCESSFUL' message from the `wh_build` step (assuming the preceding steps were successful), try these steps to troubleshoot.  First, assess what went wrong from looking at the build log file.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue the build command.
 
 ```bash
-make clean                                                   # calls make clean in build directory
-make build                                                   # build NWM-offline executable
+wh_clean_nwm                                                   # remove previous NWM build
+wh_build                                                       # build NWM-offline executable
 ```
 <br>
 
-## IV. Test Case: Croton NY
-The example test case for Croton, NY<sup>[4](#4)</sup> will be downloaded, set up, and 
-submitted as a batch job using the following commands
-```bash
-make test               # setup test, must be run after 'make build'
-```
-After running `make test`, sample output text at completion of setup will look similar to this
-```bash
 
-	** Croton_NY Testcase setup finished. **
-	----------------------------------------
-	Run directory: /home/mmasarik/LEAF/WRF_HYDRO-R2/croton_NY/NWM
-	Run command:   make run
-```
-*Note: The 'Run directory' listed is where you will find all the output files generated by the run
-(after you do `make run`).  The 'run command' `make run` should still be issued in the repository
-root directory, WRF_HYDRO-R2, like all other `make` commands.*
-
-Now to submit a batch job to the SLURM scheduler, issue the following
-```bash
-make run                # submit batch job to run test case, croton_NY 
-```
-After running this command the text displayed to the screen will look like this
-```bash
-sbatch croton_NY/NWM/submit
-Submitted batch job 137663
-```
-To check on the run status in the queue, use the SLURM command `squeue` with `-j` option followed by the job batch number,
-here this number is 137663.  For this job we would use
-```bash
-squeue -j 137663
-```
-Once the run has finished, to verify the run was successful, navigate to the Run directory, then look at the end of the run log file, the default run log file is named '`whcroton.log`'.  Log file text for a successful Croton, NY simulation 
-will look like the following
-```bash
- ...
- ***DATE=2011-09-02_00:00:00 294.95029   2.25479    Timing:   0.22 Cumulative:       36.38  SFLX:   0.00
- ***DATE=2011-09-02_00:00:00 294.31494   2.25479    Timing:   0.22 Cumulative:       36.38  SFLX:   0.00
- ***DATE=2011-09-02_00:00:00 294.40228   2.25479    Timing:   0.22 Cumulative:       36.38  SFLX:   0.00
- The model finished successfully.......
- The model finished successfully.......
- The model finished successfully.......
- The model finished successfully.......
-```
-In this case there are 4 lines that say 'The model finished successfully.......' -- there is one line for each
-core/task used.  The default value of 4 can be changed in the script: `run_scripts/croton_ny_setup.sh`.  Open it with
-a text editor and you should see the following user parameters near the top
-```bash
-...
-# USER PARAMETERS - CHANGE ME!
-NUM_CORES=4                     # mpi tasks: 1-28          [4         default]
-QUEUE_TIME='00:10:00'           # runtime:   hh:mm:ss      [00:10:00  default]
-QUEUE_NAME=defq                 # queue:                   [defq      default]
-JOB_NAME='whcroton'             # jobname:   8 chars only for display in queue
-```
-These four parameters can be adjusted to your liking.  
-
-After `make test` and `make run` have been issued, you can use `make clean_test`
-to remove the run output files from test run directory.  You can then do another run using 
-that same setup test directory by issuing `make run` again, possibly after
-editting the namelists in the displayed run directory to experiment with different
-options.
-<br><br>
-
-
-
-## V. Idaho NWM Cut-outs
+## IV. Idaho NWM Cut-outs
 Currently provided cut-outs from the National Water Model and their reference numbers can be displayed 
 by calling
 
 ```bash
-make dom_list
+wh_list_dom
 ```
 
 ```bash
@@ -195,22 +130,38 @@ make dom_list
 <br>
 
 
+## V. Routing options
+```bash
+        NUM:     Routing option   -  Description
+        ----------------------------------------------------
+          1:     lsm              -  NoahMP LSM
+          2:     lsm_sub          -  NoahMP LSM + Subsurface routing
+          3:     lsm_ovr          -  NoahMP LSM + Overland surface flow routing
+          4:     lsm_chl          -  NoahMP LSM + Channel routing
+          5:     lsm_res          -  NoahMP LSM + Lake/reservoir routing
+          6:     lsm_gwb          -  NoahMP LSM + Groundwater/baseflow model
+          7:     lsm_ovr_chl      -  NoahMP LSM + Overland surface flow routing + Channel routing
+```
+<br>
+
                                                              
-## VI. Make Target Reference
-```bash                        
-make sub_mod                                             #  initialize and update submodules (NWM,rwrfhydro)"
-make build                                               #  builds the NoahMP/NWM-Offline executable"
-make setup_test_case                                     #  download and setup croton_NY test case"
-make run_test_case                                       #  run the croton_NY test case"
-make cmd_list                                            #  display this reference list of commands"
-make dom_list                                            #  display reference list of cut-outs with number ID's"
-make rto_list                                            #  display reference list of routing options"
-make run_dir RUNID=<run_id>                              #  creates new run directory in user scratch"
-make run_exe RUNID=<run_id> RTOID=<routing_opt_id>       #  creates executable in run directory w/ routing option"
-make run_dom RUNID=<run_id> DOMID=<dom_id>               #  creates DOMAIN directory in run directory"
-make run_frc RUNID=<run_id> INDIR=<in_dir> GEO=<geogrid> #  convert run forcing given inuput dir and geogrid file"
-make clean_test                                          #  cleans all run output from croton_NY test"
-make clean_nwm                                           #  calls the 'make clean' target in NWM build directory"
+## VI. Function Reference
+```bash
+wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
+
+wh_sub_mod                                             # init/update submodules
+wh_build                                               # compile the wrf-hydro/nwm executable
+wh_clean_nwm                                           # clean NWM repo build
+
+wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+
+wh_list                                                # list wrf-hydro defined functions
+wh_list_dom                                            # list wrf-hydro cutout domains
+wh_list_rto                                            # list routing/physics options
 ```
 <br>
 
@@ -225,8 +176,6 @@ make clean_nwm                                           #  calls the 'make clea
 ## VIII. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
-* <sup><a name="3">3</a></sup> [GNU Make manual](https://www.gnu.org/software/make/manual/)
-* <sup><a name="4">4</a></sup> [WRF-Hydro Testcases](https://ral.ucar.edu/projects/wrf_hydro/testcases) - See '*Croton New York Test Case*'
 <br>
 
 [Return to top](#WRF_HYDRO-R2)

@@ -351,7 +351,7 @@ function wh_run_job() {
     sed -i "s/starthour/$hr/g"     $run_dir_path/namelist.hrldas
     sed -i "s/simdays/$sim_days/g" $run_dir_path/namelist.hrldas
 
-    cp $WH_R2_REPO/run_scripts/submit.sh.template $run_dir_path
+    cp $WH_R2_REPO/supplements/submit.sh.template $run_dir_path
     mv $run_dir_path/submit.sh.template $run_dir_path/submit
     run_dir_sed_safe=${run_dir_path////'\/'}
 

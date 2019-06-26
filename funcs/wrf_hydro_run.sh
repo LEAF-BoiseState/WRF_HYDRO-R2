@@ -9,18 +9,19 @@
 # FUNCTION DEFS:
 #   (1)  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session
 #
-#   (2)  wh_build                                               # compile the wrf-hydro/nwm executable
+#   (2)  wh_sub_mod                                             # init/update submodules
+#   (3)  wh_build                                               # compile the wrf-hydro/nwm executable
 #
-#   (3)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-#   (4)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-#   (5)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-# iii  (6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-# ii  (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+#   (4)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+#   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+#   (6)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+# iii  (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+# ii  (8)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
-#   (8)  wh_list                                                # list wrf-hydro defined functions
-#   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
-#  vi (10)  wh_list_rto                                            # list routing/physics options
-#  (11) wh_clean_nwm                                           # clean NWM repo build 
+#   (9)  wh_list                                                # list wrf-hydro defined functions
+#  (10)  wh_list_dom                                            # list wrf-hydro cutout domains
+#  (11)  wh_list_rto                                            # list routing/physics options
+#  (12) wh_clean_nwm                                           # clean NWM repo build 
 #
 
 
@@ -121,8 +122,15 @@ function wh_dev() {
 }
 
 
+# (2) wh_sub_mod
+function wh_sub_mod() {
+    git submodule init
+    git submodule update
+    return
+}
 
-# (2) wh_build                                               # compile the wrf-hydro/nwm executable
+
+# (3) wh_build                                               # compile the wrf-hydro/nwm executable
 #
 function wh_build() {
     $WH_R2_REPO/build/build_nwm_r2.sh
@@ -130,7 +138,7 @@ function wh_build() {
 }
 
 
-# (3) wh_run_dir: create WRF-Hydro run directory
+# (4) wh_run_dir: create WRF-Hydro run directory
 #       input:    run ID 
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
@@ -149,7 +157,7 @@ function wh_run_dir() {
     return
 }
 
-# (4) wh_run_dom: 
+# (5) wh_run_dom: 
 function wh_run_dom() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>\n"
@@ -216,7 +224,7 @@ function wh_run_dom() {
 
 
 
-# (5) wh_run_rto:
+# (6) wh_run_rto:
 function wh_run_rto() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_rto <run_id> <routing_opt>\n"
@@ -277,15 +285,27 @@ function wh_run_rto() {
 }
 
 
-
-
-# (6)  wh_run_frc <run_id> <input_dir> <geogrid_file>
+# (7)  wh_run_frc <run_id> <input_dir> <geogrid_file>
 function wh_run_frc() {
+# ifndef RUNID
+# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+# else ifndef INDIR
+# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+# else ifndef GEO
+# 	@$(ECHO) "\n\tUSAGE: make run_frc RUNID=<run_id> INDIR=<input_dir> GEO=<geogrid_file>\n"
+# else
+# 	@$(ECHO) "\nmake run_frc"
+# 	@$(ECHO) "\tRUNID=$(RUNID)"
+# 	@$(ECHO) "\tINDIR=$(INDIR)"
+# 	@$(ECHO) "\tGEO=$(GEO)\n"
+# 	$(CONVERT_W2WH) $(INDIR) $(GEO) $(WHSIM)_$(RUNID)
+# endif
+
     echo -e "IMPLEMENT ME:  wh_run_frc <run_id> <input_dir> <geogrid_file>"
     return
 }
 
-#   (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+# (8)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 function wh_run_sub() {
     echo -e "IMPLEMENT ME:  wh_run_sub <run_id> <yyyy> <mm> <dd> <hh> <sim_days>"
     return
@@ -293,13 +313,14 @@ function wh_run_sub() {
 
 
 
-#   (8)  wh_list                                                # list wrf-hydro defined functions
+# (9)  wh_list                                                # list wrf-hydro defined functions
 function wh_list() {
     echo -e '\n'
     echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
     echo -e '                   ====================== '
     echo -e '\n'
     echo -e '  wh_dev      <queue_name> <sim_time>                    # slurm request interactive compute session\n'
+    echo -e '  wh_sub_mod                                             # init/update submodules'
     echo -e '  wh_build                                               # compile the wrf-hydro/nwm executable\n'
     echo -e '  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory'
     echo -e '  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir'
@@ -315,7 +336,7 @@ function wh_list() {
 }
 
 
-#   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
+# (10)  wh_list_dom                                            # list wrf-hydro cutout domains
 function wh_list_dom() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"
@@ -333,7 +354,7 @@ function wh_list_dom() {
 
 
 
-#  (10)  wh_list_rto                                            # list routing/physics options
+#  (11)  wh_list_rto                                            # list routing/physics options
 function wh_list_rto() {
     echo -e "\n\tNUM:   Routing option  -  Description"
     echo -e "\t----------------------------------------------------"
@@ -349,7 +370,7 @@ function wh_list_rto() {
 }
 
 
-#  (11)  wh_clean_nwm
+#  (12)  wh_clean_nwm
 function wh_clean_nwm() {
     if [ -d $NWM_BUILD_DIR/Run         ]; then rm -vrf $NWM_BUILD_DIR/Run;        fi
     if [ -f $NWM_BUILD_DIR/setEnvar.sh ]; then rm -vf $NWM_BUILD_DIR/setEnvar.sh; fi

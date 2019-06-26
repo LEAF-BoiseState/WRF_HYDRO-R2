@@ -125,7 +125,7 @@ function wh_dev() {
 # (2) wh_build                                               # compile the wrf-hydro/nwm executable
 #
 function wh_build() {
-    $WRF_R2_REPO/build/build_nwm_r2.sh
+    $WH_R2_REPO/build/build_nwm_r2.sh
     return
 }
 
@@ -216,14 +216,14 @@ function wh_run_dom() {
 
 
 
-# (5) wh_run_exe:
+# (5) wh_run_rto:
 function wh_run_rto() {
     if   [ $# -ne 2 ]; then 
-        echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>\n"
+        echo -e "\n\tUSAGE: wh_run_rto <run_id> <routing_opt>\n"
         return
 ###    elif [[ $2 -lt 1 || $2 -gt $NUM_ROUTING_OPTS ]]; then  
     elif [[ $2 -lt $NUM_ROUTING_OPTS || $2 -gt $NUM_ROUTING_OPTS ]]; then
-        echo -e "\n\tUSAGE: wh_run_rto() <run_id> <routing_opt>"
+        echo -e "\n\tUSAGE: wh_run_rto <run_id> <routing_opt>"
         echo -e   "\t\twhere, 1 <= <routing_opt> <= $NUM_ROUTING_OPTS.\n"
         return
     fi
@@ -281,13 +281,13 @@ function wh_run_rto() {
 
 # (6)  wh_run_frc <run_id> <input_dir> <geogrid_file>
 function wh_run_frc() {
-    echo -e "IMPLEMENT ME:  wh_run_frc() <run_id> <input_dir> <geogrid_file>"
+    echo -e "IMPLEMENT ME:  wh_run_frc <run_id> <input_dir> <geogrid_file>"
     return
 }
 
 #   (7)  wh_run_sub  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 function wh_run_sub() {
-    echo -e "IMPLEMENT ME:  wh_run_sub() <run_id> <yyyy> <mm> <dd> <hh> <sim_days>"
+    echo -e "IMPLEMENT ME:  wh_run_sub <run_id> <yyyy> <mm> <dd> <hh> <sim_days>"
     return
 }
 
@@ -295,14 +295,24 @@ function wh_run_sub() {
 
 #   (8)  wh_list                                                # list wrf-hydro defined functions
 function wh_list() {
-    echo -e "IMPLEMENT ME:  wh_list()"
+    echo -e "IMPLEMENT ME:  wh_list"
     return
 }
 
 
 #   (9)  wh_list_dom                                            # list wrf-hydro cutout domains
 function wh_list_dom() {
-    echo -e "IMPLEMENT ME:  wh_list_dom()"
+    echo -e "\n\tNUM:   Gauge ID  -  Description"
+    echo -e "\t----------------------------------------------------"
+    echo -e "\t  1:   $(CUTOUT1)  -  $(CUTOUT1_DESC)"
+    echo -e "\t  2:   $(CUTOUT2)  -  $(CUTOUT2_DESC)"
+    echo -e "\t  3:   $(CUTOUT3)  -  $(CUTOUT3_DESC)"
+    echo -e "\t  4:   $(CUTOUT4)  -  $(CUTOUT4_DESC)"
+    echo -e "\t  5:   $(CUTOUT5)  -  $(CUTOUT5_DESC)"
+    echo -e "\t  6:   $(CUTOUT6)  -  $(CUTOUT6_DESC)"
+    echo -e "\t  7:   $(CUTOUT7)  -  $(CUTOUT7_DESC)"
+    echo -e "\t  8:   $(CUTOUT8)  -  $(CUTOUT8_DESC)"
+    echo -e "\n"
     return
 }
 

@@ -131,6 +131,11 @@ wh_list_dom
 
 
 ## V. Routing options
+The routing options available and their reference numbers can be displayed by calling
+```bash
+wh_list_rto
+```
+
 ```bash
         NUM:     Routing option   -  Description
         ----------------------------------------------------
@@ -146,6 +151,10 @@ wh_list_dom
 
                                                              
 ## VI. Function Reference
+The functions defined can be displayed by the command
+```bash
+wh_list_rto
+```
 ```bash
 wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
 

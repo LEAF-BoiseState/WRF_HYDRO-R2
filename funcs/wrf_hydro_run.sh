@@ -84,9 +84,9 @@ ROUTING6=6
 ROUTING6_STR='lsm_gwb'
 ROUTING6_DESC='NoahMP LSM + Groundwater/baseflow model'
 
-ROUTING6=7
-ROUTING6_STR='lsm_ovr_chl'
-ROUTING6_DESC='NoahMP LSM + Overland surface flow routing + Channel routing'
+ROUTING7=7
+ROUTING7_STR='lsm_ovr_chl'
+ROUTING7_DESC='NoahMP LSM + Overland surface flow routing + Channel routing'
 
 
 
@@ -335,7 +335,16 @@ function wh_list_dom() {
 
 #  (10)  wh_list_rto                                            # list routing/physics options
 function wh_list_rto() {
-    echo -e "IMPLEMENT ME:  wh_list_rto()"
+    echo -e "\n\tNUM:   Routing option  -  Description"
+    echo -e "\t----------------------------------------------------"
+    echo -e "\t  1:     $ROUTING1_STR\t\t  -  $ROUTING1_DESC"
+    echo -e "\t  2:     $ROUTING2_STR\t  -  $ROUTING2_DESC"
+    echo -e "\t  3:     $ROUTING3_STR\t  -  $ROUTING3_DESC"
+    echo -e "\t  4:     $ROUTING4_STR\t  -  $ROUTING4_DESC"
+    echo -e "\t  5:     $ROUTING5_STR\t  -  $ROUTING5_DESC"
+    echo -e "\t  6:     $ROUTING6_STR\t  -  $ROUTING6_DESC"
+    echo -e "\t  7:     $ROUTING7_STR\t  -  $ROUTING7_DESC"
+    echo -e "\n"
     return
 }
 

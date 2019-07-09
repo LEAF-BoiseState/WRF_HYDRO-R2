@@ -7,11 +7,12 @@
 * [I. Overview](#I-Overview) - *brief description of repository*
 * [II. Manifest](#II-Manifest) - *main repository structure*
 * [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
-* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *Idaho cut-outs from NWM*
+* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *available Idaho watershed domains from NWM*
 * [V. Routing Options](#V-Routing-Options) - *list of available routing configurations*
-* [VI. Function Reference](#VI-Function-Reference) - *reference list of defined function commands*
-* [VII. Appendix](#VII-Appendix) - *links to extended, internal documentation*
-* [VIII. Links](#VIII-Links) - *links to external references*
+* [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence) - **main command sequence for repeated simulations**
+* [VII. Function Reference List](#VII-Function-Reference-List) - *list of defined commands*
+* [VIII. Appendix](#VIII-Appendix) - *links to extended, internal documentation*
+* [IX. Links](#IX-Links) - *links to external references*
 
 <br>
 
@@ -58,6 +59,7 @@ WRF_HYDRO-R2/
 <br>
 
 ## III. Build
+In a terminal follow these steps to download the repository, set it up, and build the WRF-Hydro/NWM executable,
 ```bash            
 git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
@@ -66,7 +68,10 @@ wh_sub_mod                                                   # initialize / upda
 wh_build                                                     # build NWM-offline executable
 ```
 <br>
+After issuing the last command, the model will be compiling for rougly a couple minutes.  When the command prompt returns, look at the end of the text output right above it and read below to determine whether it was successful or not.
 
+
+#### SUCCESSFUL BUILD
 Sample output at the end of a successful build by username, `auser`, looks like the following
 ```bash
 ...
@@ -91,20 +96,25 @@ WRF_HYDRO_RAPID=0
 WRFIO_NCD_LARGE_FILE_SUPPORT=1
 
 
-	** BUILD SUCCESSFUL!!! **
-	-------------------------
-	Executable: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run/wrf_hydro_NoahMP.exe
-	Log file:   /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
-```
-
-
-*NOTE: both the build log and executable location are listed at the end of the build output.* If you received a 'BUILD UNSUCCESSFUL' message from the `wh_build` step (assuming the preceding steps were successful), try these steps to troubleshoot.  First, assess what went wrong from looking at the build log file.  Next, make any necessary changes to address the problem.  Lastly, clean out the build directory and re-issue the build command.
-
-```bash
-wh_clean_nwm                                                   # remove previous NWM build
-wh_build                                                       # build NWM-offline executable
+    ** BUILD SUCCESSFUL!!! **
+    -------------------------
+    Executable: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run/wrf_hydro_NoahMP.exe
+    Log file:   /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
 ```
 <br>
+
+*NOTE: as shown above, both the build log and executable location are listed at the end of the build output.* 
+
+
+#### UNSUCCESSFUL BUILD: TROUBLESHOOTING
+If you did not see the success message like above, and instead received a 'BUILD UNSUCCESSFUL' message, try these steps to resolve it and build again.  First, look at the build log file to locate the error.  Once you've done that, apply the necessary fix.  If you've completed that, you just need to clean out the build directory, then try building again as below,
+
+```bash
+wh_clean_nwm                                                   # clean out previous NWM build
+wh_build                                                       # try building NWM executable again
+```
+<br>
+
 
 
 ## IV. Idaho NWM Cut-outs
@@ -149,11 +159,38 @@ wh_list_rto
 ```
 <br>
 
-                                                             
-## VI. Function Reference
-The functions defined can be displayed by the command
+
+## VI. Main Simulation Sequence
+Once you have cloned the repository and built the executable, then you are set up to easily do
+repeated runs.  When you log in and out from your R2 sessions, you will not (in general) need to
+re-clone or re-build the WRF-Hydro model (executable).  You will however need to `source` the
+functions file each time you log in, as below, where it's assumed you're in the root directory of
+the repository
 ```bash
-wh_list_rto
+source funcs/wrf_hydro_run.sh                                # load function definitions
+```
+Once that is done for a session, you can proceed with doing runs.  These five core commands are
+the sequence you should follow,
+```bash
+wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+```
+The last command above, `wh_run_job`, will set the simulation times as well as information for a batch
+job in a SLURM script (`submit`) in the run directory.  Also, just before it returns the command prompt, it will
+print out the command (starting with `sbatch`) needed to submit the job to the scheduler.  This is done so
+you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
+running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
+Repeat those steps to continue to do different simulations.
+<br>
+
+
+## VII. Function Reference List
+A list of the available commands can be displayed by entering `wh_list`, the output of which is below
+```bash
+wh_list
 ```
 ```bash
 wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
@@ -175,14 +212,14 @@ wh_list_rto                                            # list routing/physics op
 <br>
 
 
-## VII. Appendix
+## VIII. Appendix
 * [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/build/README_BUILD.md) - details on build process
 * [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
 * [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
 <br>
 
                                                                              
-## VIII. Links
+## IX. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 <br>

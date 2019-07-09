@@ -184,7 +184,7 @@ print out the command (starting with `sbatch`) needed to submit the job to the s
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
-<br><br>
+<br><br><br>
 
 
 ## VII. Function Reference List

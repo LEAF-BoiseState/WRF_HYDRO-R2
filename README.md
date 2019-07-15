@@ -18,7 +18,7 @@
 
 
 ## I. Overview
-This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. UNIX shell functions have been defined to automate core tasks and reduce them to a single command.
+This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. UNIX shell functions have been defined to automate core tasks and reduce them to a single command.  Further information can be found in the WRF-HydroV5 Technical Manual<sup>[3](#3)</sup>.
 <br><br>
 
 ## II. Manifest
@@ -213,6 +213,7 @@ wh_list_rto                                            # list routing/physics op
 
 
 ## VIII. Appendix
+* <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
 * [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/build/README_BUILD.md) - details on build process
 * [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
 * [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options

@@ -10,11 +10,22 @@
 # (4) RES - LAKE / RESERVOIR
 # (5) GWB - GROUNDWATER / BASEFLOW
 #
+# NOTES:  
+#   * Terrain routing = Overland flow routing, and/or Subsurface flow routing
+#
+
+
+# PARAMETERS - DEFAULT / USER
+DX_LSM_METERS=1000                  # Land Surface Model grid spacing    [meters]
+DX_ROUTING_TERRAIN_METERS=250       # Terrain Routing Model grid spacing [meters]
+DT_ROUTING_TERRAIN_SECONDS=10       # Terrain Routing Model timestep    [seconds]
+DT_ROUTING_CHANNEL_SECONDS=10       # Channel Routing Model timestep    [seconds]
 
 
 
 
-# INPUT
+
+# USER INPUT ARGS
 routing_options=""
 routing_options_flag="false"
 num_routing_options=0
@@ -29,6 +40,10 @@ elif [ "$#" -ge 1 ]; then
 fi
 
 
+
+
+#XXX  Test for 'routing_options_flag' ???
+#
 SUB_FLAG=0                   # 1 SUB: Subsurface
 OVR_FLAG=0                   # 2 OVR: Overland
 CHL_FLAG=0                   # 3 CHL: Channel
@@ -83,14 +98,14 @@ rst_typ=$lsm_rst_type
 RTOUT_DOMAIN=$terrain_routing_grid_output
 
 # Specify the terrain routing model timestep...(seconds)
-DTRT_TER=10
+DTRT_TER=$DT_ROUTING_TERRAIN_SECONDS
 
 # Specify the grid spacing of the terrain routing grid...(meters)
-DXRT=250
+DXRT=$DX_ROUTING_TERRAIN_METERS
 
 # Created parameter, grid spacing of the LSM grid (meters), file: geo_em.d0x.nc
 # NOTE: this is along with DXRT to calculate AGGFACTRT
-DXLSM=1000 
+DXLSM=$DX_LSM_METERS
 
 # Integer multiple between land model grid and terrain routing grid...(integer)
 AGGFACTRT=$(( DXLSM / DXRT ))
@@ -158,7 +173,7 @@ CHANRTSWCRT=$chanrtswcrt_val
 channel_option=3
 
 # Specify the channel routing model timestep...(seconds)
-DTRT_CH=10
+DTRT_CH=$DT_ROUTING_CHANNEL_SECONDS
 
 # Netcdf point timeseries output at all channel points (1d):
 # (0 = no output, 1 = output)

@@ -239,3 +239,29 @@ output_gw=$output_gw_val
 
 
 
+# ----------------------------------------------------------------------------- *
+#                     MAIN - CREATE HYDRO.NAMELIST
+# ----------------------------------------------------------------------------- *
+# rstdt         rst_dt
+# lsmoutdomain  LSMOUT_DOMAIN
+# lsmrsttype    rst_typ
+# rtoutdomain   RTOUT_DOMAIN
+# dtrtter       DTRT_TER
+# dxrt          DXRT
+# aggfactrt     AGGFACTRT
+# subrtswcrt    SUBRTSWCRT
+# ovrtswcrt     OVRTSWCRT
+# rtoption      rt_option
+# chanrtswcrt   CHANRTSWCRT
+# channeloption channel_option
+# dtrtch        DTRT_CH
+# chrtoutdomain CHRTOUT_DOMAIN
+# chanobsdomain CHANOBS_DOMAIN
+# chrtoutgrid   CHRTOUT_GRID
+# frxstptsout   frxst_pts_out
+# outlakeval    outlake
+# gwbaseswcrt   GWBASESWCRT
+# gwrestart     GW_RESTART
+# outputgw      output_gw
+
+

@@ -41,22 +41,38 @@ fi
 
 
 
-
-#XXX  Test for 'routing_options_flag' ???
-#
+# Set flag / display routing components from user input
 SUB_FLAG=0                   # 1 SUB: Subsurface
 OVR_FLAG=0                   # 2 OVR: Overland
 CHL_FLAG=0                   # 3 CHL: Channel
 RES_FLAG=0                   # 4 RES: Lakes / Reservoirs
 GWB_FLAG=0                   # 5 GWB: Groundwater / Base flow
-for ro in $routing_options
-do
-    if [ $ro -eq 1 ]; then SUB_FLAG=1; fi
-    if [ $ro -eq 2 ]; then OVR_FLAG=1; fi
-    if [ $ro -eq 3 ]; then CHL_FLAG=1; fi
-    if [ $ro -eq 4 ]; then RES_FLAG=1; fi
-    if [ $ro -eq 5 ]; then GWB_FLAG=1; fi
-done
+echo -e "\nROUTING OPTIONS"
+echo -e   "---------------"
+echo -e "\t(0) LSM: NoahMP Land Surface Model"
+if [ "$routing_options_flag" == "true" ]; then
+
+    for ro in $routing_options
+    do
+	if   [ $ro -eq 1 ]; then
+            SUB_FLAG=1
+            echo -e "\t(1) SUB: Subsurface Flow Routing"
+	elif [ $ro -eq 2 ]; then
+            OVR_FLAG=1
+            echo -e "\t(2) OVR: Overland Flow Routing"
+	elif [ $ro -eq 3 ]; then
+            CHL_FLAG=1
+            echo -e "\t(3) CHL: Channel Routing"
+	elif [ $ro -eq 4 ]; then
+            RES_FLAG=1
+            echo -e "\t(4) RES: Lakes/Reservoir Routing"
+	elif [ $ro -eq 5 ]; then
+            GWB_FLAG=1
+            echo -e "\t(5) GWB: Groundwater/baseflow Routing"
+        fi
+    done
+    echo -e "\n"
+fi
 
 
 # ----------------------------------------------------------------------------- *

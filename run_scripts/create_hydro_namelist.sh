@@ -29,11 +29,14 @@ DT_ROUTING_CHANNEL_SECONDS=10       # Channel Routing Model timestep    [seconds
 routing_options=""
 routing_options_flag="false"
 num_routing_options=0
-if [ "$#" -gt 5 ]; then
+hydro_namelist_path=""
+if [[ "$#" -lt 1 || "$#" -gt 7 ]]; then
     prog=$(basename $0)
-    echo -e "\n\tUSAGE: $prog [<opt1> ... <opt5>]   # <optn> = n\n"
+    echo -e "\n\tUSAGE: $prog <hydro_namelist> [<0 ... 5>]\n"
     exit 1
-elif [ "$#" -ge 1 ]; then
+else
+    hydro_namelist_path="$1"
+    shift
     routing_options="$*"
     num_routing_options=$#
     routing_options_flag="true"
@@ -49,6 +52,7 @@ RES_FLAG=0                   # 4 RES: Lakes / Reservoirs
 GWB_FLAG=0                   # 5 GWB: Groundwater / Base flow
 echo -e "\nROUTING OPTIONS"
 echo -e   "---------------"
+echo -e "\thydro.namelist path: $hydro_namelist_path\n"
 echo -e "\t(0) LSM: NoahMP Land Surface Model"
 if [ "$routing_options_flag" == "true" ]; then
 
@@ -258,26 +262,26 @@ output_gw=$output_gw_val
 # ----------------------------------------------------------------------------- *
 #                     MAIN - CREATE HYDRO.NAMELIST
 # ----------------------------------------------------------------------------- *
-# rstdt         rst_dt
-# lsmoutdomain  LSMOUT_DOMAIN
-# lsmrsttype    rst_typ
-# rtoutdomain   RTOUT_DOMAIN
-# dtrtter       DTRT_TER
-# dxrt          DXRT
-# aggfactrt     AGGFACTRT
-# subrtswcrt    SUBRTSWCRT
-# ovrtswcrt     OVRTSWCRT
-# rtoption      rt_option
-# chanrtswcrt   CHANRTSWCRT
-# channeloption channel_option
-# dtrtch        DTRT_CH
-# chrtoutdomain CHRTOUT_DOMAIN
-# chanobsdomain CHANOBS_DOMAIN
-# chrtoutgrid   CHRTOUT_GRID
-# frxstptsout   frxst_pts_out
-# outlakeval    outlake
-# gwbaseswcrt   GWBASESWCRT
-# gwrestart     GW_RESTART
-# outputgw      output_gw
+sed -i'' "s/rstdt/$rst_dt/g"                   $hydro_namelist_path
+sed -i'' "s/lsmoutdomain/$LSMOUT_DOMAIN/g"     $hydro_namelist_path
+sed -i'' "s/lsmrsttype/$rst_typ/g"             $hydro_namelist_path
+sed -i'' "s/rtoutdomain/$RTOUT_DOMAIN/g"       $hydro_namelist_path
+sed -i'' "s/dtrtter/$DTRT_TER/g"               $hydro_namelist_path
+sed -i'' "s/dxrt/$DXRT/g"                      $hydro_namelist_path
+sed -i'' "s/aggfactrt/$AGGFACTRT/g"            $hydro_namelist_path
+sed -i'' "s/subrtswcrt/$SUBRTSWCRT/g"          $hydro_namelist_path
+sed -i'' "s/ovrtswcrt/$OVRTSWCRT/g"            $hydro_namelist_path
+sed -i'' "s/rtoption/$rt_option/g"             $hydro_namelist_path
+sed -i'' "s/chanrtswcrt/$CHANRTSWCRT/g"        $hydro_namelist_path
+sed -i'' "s/channeloption/$channel_option/g"   $hydro_namelist_path
+sed -i'' "s/dtrtch/$DTRT_CH/g"                 $hydro_namelist_path
+sed -i'' "s/chrtoutdomain/$CHRTOUT_DOMAIN/g"   $hydro_namelist_path
+sed -i'' "s/chanobsdomain/$CHANOBS_DOMAIN/g"   $hydro_namelist_path
+sed -i'' "s/chrtoutgrid/$CHRTOUT_GRID/g"       $hydro_namelist_path
+sed -i'' "s/frxstptsout/$frxst_pts_out/g"      $hydro_namelist_path
+sed -i'' "s/outlakeval/$outlake/g"             $hydro_namelist_path
+sed -i'' "s/gwbaseswcrt/$GWBASESWCRT/g"        $hydro_namelist_path
+sed -i'' "s/gwrestart/$GW_RESTART/g"           $hydro_namelist_path
+sed -i'' "s/outputgw/$output_gw/g"             $hydro_namelist_path
 
-
+exit

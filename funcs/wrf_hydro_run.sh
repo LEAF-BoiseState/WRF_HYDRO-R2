@@ -13,7 +13,7 @@
 #   (3)  wh_build                                               # compile the wrf-hydro/nwm executable
 #
 #   (4)  wh_run_dir  <run_id>                                   # create run directory, copy exe + aux files
-#   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
+#   (5)  wh_domain   <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
 #   (6)  wh_hydro_nml <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
 #   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
 #   (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
@@ -141,8 +141,8 @@ function wh_run_dir() {
     return
 }
 
-# (5) wh_run_dom: 
-function wh_run_dom() {
+# (5) wh_domain: 
+function wh_domain() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>\n"
         return

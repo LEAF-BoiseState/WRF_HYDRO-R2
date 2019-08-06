@@ -19,8 +19,8 @@
 #   (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
 #   (9)  wh_list                                                # list wrf-hydro defined functions
-#  (10)  wh_list_dom                                            # list wrf-hydro cutout domains
-#  (11)  wh_list_rto                                            # list routing/physics options
+#  (10)  wh_list_domain                                         # list wrf-hydro cutout domains
+#  (11)  wh_list_routing                                        # list routing/physics options
 #  (12)  wh_clean_nwm                                           # clean NWM repo build 
 #
 
@@ -333,7 +333,7 @@ function wh_list() {
 
 
 # (10)  wh_list_dom                                            # list wrf-hydro cutout domains
-function wh_list_dom() {
+function wh_list_domain() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"
     echo -e "\t  1:   $CUTOUT1  -  $CUTOUT1_DESC"

@@ -14,14 +14,18 @@
 #
 #   (4)  wh_run_dir  <run_id>                                   # create run directory, copy exe + aux files
 #   (5)  wh_domain   <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-#   (6)  wh_hydro_nml <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
-#   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-#   (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+
+#   *(6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
+
+#   (7)  wh_hydro_nml  <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
+#   (8)  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # create hydro.namelist w routing opts
+
+#   *(9)  wh_run_job  <run_id>   # set namelist sim time and submit job
 #
-#   (9)  wh_list                                                # list wrf-hydro defined functions
-#  (10)  wh_list_domain                                         # list wrf-hydro cutout domains
-#  (11)  wh_list_routing                                        # list routing/physics options
-#  (12)  wh_clean_nwm                                           # clean NWM repo build 
+#  (10)  wh_list                                                # list wrf-hydro defined functions
+#  (11)  wh_list_domain                                         # list wrf-hydro cutout domains
+#  (12)  wh_list_routing                                        # list routing/physics options
+#  (13)  wh_clean_nwm                                           # clean NWM repo build 
 #
 
 
@@ -109,10 +113,7 @@ function wh_build() {
 }
 
 
-# (4) wh_run_dir: create WRF-Hydro run directory
-#       input:    run ID 
-
-
+# (4) wh_run_dir: create run directory, copy exe + aux files
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
         echo -e "\n\tUSAGE: wh_run_dir <run_id>\n"
@@ -207,57 +208,7 @@ function wh_domain() {
 }
 
 
-# (6) wh_hydro_nml:
-function wh_hydro_nml() {
-    if   [[ "$#" -lt 1 || "$#" -gt 7 ]]; then 
-        echo -e "\n\tUSAGE: wh_hydro_nml <run_id> [<0 ... 5>]\n"
-        return
-    fi
-    local run_id="$1"
-    shift
-    local routing_opts="$*"
-    local run_dir_path=${RUN_DIR_BASE}_${run_id}
-
-    if [ ! -d $run_dir_path ]; then
-        echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
-        return
-    fi
-
-    # get copy of hydro.namelist.template
-    cp $WH_R2_REPO/namelists/hydro.namelist.template $run_dir_path/hydro.namelist
-
-    # call create_hydro_namelist.sh
-    $WH_R2_REPO/run_scripts/create_hydro_namelist.sh $run_dir_path/hydro.namelist $routing_opts
-
-    return
-}
-
-
-# (xxx) wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>
-function wh_hrldas_nml() {
-    if [ $# -ne 6 ]; then
-        echo -e "\n\tUSAGE: wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>\n"
-        return
-    fi
-    local run_id="$1"
-    shift
-    local hrldas_opts="$*"
-    local run_dir_path=${RUN_DIR_BASE}_${run_id}
-    if [ ! -d $run_dir_path ]; then
-        echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
-        return
-    fi
-
-    # get copy of namelist.hrldas template
-    cp $WH_R2_REPO/namelists/namelist.hrldas.template $run_dir_path/namelist.hrldas
-
-    # call create_hrldas_namelist.sh
-    $WH_R2_REPO/run_scripts/create_hrldas_namelist.sh $run_dir_path/namelist.hrldas $hrldas_opts
-    
-    return
-}
-
-# (7)  wh_run_frc <run_id> <input_dir> <geogrid_file>
+# (6)  wh_run_frc <run_id> <input_dir> <geogrid_file>
 function wh_run_frc() {
     if [ $# -ne 3 ]; then
         echo -e "\n\tUSAGE: wh_run_frc <run_id> <input_dir> <geogrid_file>\n"
@@ -284,7 +235,60 @@ function wh_run_frc() {
     return
 }
 
-# (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+
+
+# (7) wh_hydro_nml:
+function wh_hydro_nml() {
+    if   [[ "$#" -lt 1 || "$#" -gt 7 ]]; then 
+        echo -e "\n\tUSAGE: wh_hydro_nml <run_id> [<0 ... 5>]\n"
+        return
+    fi
+    local run_id="$1"
+    shift
+    local routing_opts="$*"
+    local run_dir_path=${RUN_DIR_BASE}_${run_id}
+
+    if [ ! -d $run_dir_path ]; then
+        echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
+        return
+    fi
+
+    # get copy of hydro.namelist.template
+    cp $WH_R2_REPO/namelists/hydro.namelist.template $run_dir_path/hydro.namelist
+
+    # call create_hydro_namelist.sh
+    $WH_R2_REPO/run_scripts/create_hydro_namelist.sh $run_dir_path/hydro.namelist $routing_opts
+
+    return
+}
+
+
+# (8) wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>
+function wh_hrldas_nml() {
+    if [ $# -ne 6 ]; then
+        echo -e "\n\tUSAGE: wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>\n"
+        return
+    fi
+    local run_id="$1"
+    shift
+    local hrldas_opts="$*"
+    local run_dir_path=${RUN_DIR_BASE}_${run_id}
+    if [ ! -d $run_dir_path ]; then
+        echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
+        return
+    fi
+
+    # get copy of namelist.hrldas template
+    cp $WH_R2_REPO/namelists/namelist.hrldas.template $run_dir_path/namelist.hrldas
+
+    # call create_hrldas_namelist.sh
+    $WH_R2_REPO/run_scripts/create_hrldas_namelist.sh $run_dir_path/namelist.hrldas $hrldas_opts
+    
+    return
+}
+
+
+# (9)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 function wh_run_job() {
     local QUEUE_NAME="defq"
     local QUEUE_TIME="00:10:00"
@@ -337,7 +341,7 @@ function wh_run_job() {
 
 
 
-# (9)  wh_list                                                # list wrf-hydro defined functions
+# (10)  wh_list                                                # list wrf-hydro defined functions
 function wh_list() {
     echo -e '\n'
     echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
@@ -360,7 +364,7 @@ function wh_list() {
 }
 
 
-# (10)  wh_list_domain                                            # list wrf-hydro cutout domains
+# (11)  wh_list_domain                                            # list wrf-hydro cutout domains
 function wh_list_domain() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"
@@ -378,7 +382,7 @@ function wh_list_domain() {
 
 
 
-#  (11)  wh_list_routing
+#  (12)  wh_list_routing
 function wh_list_routing() {
     echo -e "\n\tNUM   Routing option:  Description"
     echo -e "\t----------------------------------------------------"
@@ -393,7 +397,7 @@ function wh_list_routing() {
 }
 
 
-#  (12)  wh_clean_nwm
+#  (13)  wh_clean_nwm
 function wh_clean_nwm() {
     if [ -d $NWM_BUILD_DIR/Run         ]; then rm -vrf $NWM_BUILD_DIR/Run;        fi
     if [ -f $NWM_BUILD_DIR/setEnvar.sh ]; then rm -vf $NWM_BUILD_DIR/setEnvar.sh; fi

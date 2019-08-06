@@ -144,11 +144,11 @@ function wh_run_dir() {
 # (5) wh_domain: 
 function wh_domain() {
     if   [ $# -ne 2 ]; then 
-        echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>\n"
+        echo -e "\n\tUSAGE: wh_domain <run_id> <domain_id>\n"
         return
     elif [[ $2 -lt 1 || $2 -gt $NUM_CUTOUTS ]]; then
-        echo -e "\n\tUSAGE: wh_run_dom <run_id> <domain_id>"
-        echo -e   "\t\twhere, 1 <= <dom_id> <= $NUM_CUTOUTS.\n"
+        echo -e "\n\tUSAGE: wh_domain <run_id> <domain_id>"
+        echo -e   "\t\twhere, 1 <= <domain_id> <= $NUM_CUTOUTS.\n"
         return
     fi
     local run_id="$1"

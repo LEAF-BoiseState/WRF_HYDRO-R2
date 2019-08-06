@@ -12,7 +12,7 @@
 #   (2)  wh_sub_mod                                             # init/update submodules
 #   (3)  wh_build                                               # compile the wrf-hydro/nwm executable
 #
-#   (4)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
+#   (4)  wh_run_dir  <run_id>                                   # create run directory, copy exe + aux files
 #   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
 #   (6)  wh_hydro_nml <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
 #   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
@@ -112,15 +112,15 @@ function wh_build() {
 # (4) wh_run_dir: create WRF-Hydro run directory
 #       input:    run ID 
 
-    # cp $WH_R2_REPO/build/env_nwm_r2.sh $run_dir_path
-    # # copy exe and associated files to parent
-    # cp    $NWM_BUILD_RUN_DIR/* $run_dir_path
-    # mv    $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
-    # mv    $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
 
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
         echo -e "\n\tUSAGE: wh_run_dir <run_id>\n"
+        return
+    fi
+    if [ ! -d $NWM_BUILD_DIR/Run ]; then
+        echo -e "NWM build executable directory, $NWM_BUILD_DIR/Run, does not exist."
+        echo -e "Run, wh_build, then re-run, wh_run_dir.\n"
         return
     fi
     local run_id="$1"
@@ -132,6 +132,12 @@ function wh_run_dir() {
         mkdir -p $run_dir_path
     fi
     echo -e "\tDirectory: $run_dir_path.\n"
+
+    cp $WH_R2_REPO/build/env_nwm_r2.sh   $run_dir_path
+    cp $NWM_BUILD_RUN_DIR/*              $run_dir_path
+    mv $run_dir_path/hydro.namelist      $run_dir_path/hydro.namelist.build
+    mv $run_dir_path/namelist.hrldas     $run_dir_path/namelist.hrldas.build
+
     return
 }
 
@@ -318,7 +324,7 @@ function wh_list() {
     echo -e '  wh_dev       <queue_name> <minutes>                    # slurm request interactive compute session\n'
     echo -e '  wh_sub_mod                                             # init/update submodules'
     echo -e '  wh_build                                               # compile the wrf-hydro/nwm executable\n'
-    echo -e '  wh_run_dir   <run_id>                                  # create wrf-hydro run (parent) directory'
+    echo -e '  wh_run_dir   <run_id>                                  # create run directory, copy exe + aux files'
     echo -e '  wh_run_dom   <run_id> <domain_id>                      # create DOMAIN from cutout in run dir'
     echo -e '  wh_hydro_nml <run_id> <routing_opts>                   # copy exe + associated files to run dir'
     echo -e '  wh_run_frc   <run_id> <input_dir> <geogrid_file>       # subset + regrid forcing to FORCING'
@@ -332,7 +338,7 @@ function wh_list() {
 }
 
 
-# (10)  wh_list_dom                                            # list wrf-hydro cutout domains
+# (10)  wh_list_domain                                            # list wrf-hydro cutout domains
 function wh_list_domain() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"

@@ -233,7 +233,29 @@ function wh_hydro_nml() {
 }
 
 
+# (xxx) wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>
+function wh_hrldas_nml() {
+    if [ $# -ne 6 ]; then
+        echo -e "\n\tUSAGE: wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>\n"
+        return
+    fi
+    local run_id="$1"
+    shift
+    local hrldas_opts="$*"
+    local run_dir_path=${RUN_DIR_BASE}_${run_id}
+    if [ ! -d $run_dir_path ]; then
+        echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
+        return
+    fi
 
+    # get copy of namelist.hrldas template
+    cp $WH_R2_REPO/namelists/namelist.hrldas.template $run_dir_path/namelist.hrldas
+
+    # call create_hrldas_namelist.sh
+    $WH_R2_REPO/run_scripts/create_hrldas_namelist.sh $run_dir_path/namelist.hrldas $hrldas_opts
+    
+    return
+}
 
 # (7)  wh_run_frc <run_id> <input_dir> <geogrid_file>
 function wh_run_frc() {

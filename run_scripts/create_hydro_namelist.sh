@@ -76,7 +76,7 @@ if [ "$routing_options_flag" == "true" ]; then
             GWB_FLAG=1
             echo -e "\t(5) GWB: Groundwater/baseflow Routing"
         else
-            echo -e "\t($ro) Bad routing option value. Valid opts: 0-5."
+            echo -e "\t  ** ($ro) BAD VALUE. Valid opts: 0-5. **"
         fi
     done
     echo -e "\n"

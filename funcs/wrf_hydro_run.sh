@@ -14,7 +14,7 @@
 #
 #   (4)  wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
 #   (5)  wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-#   (6)  wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
+#   (6)  wh_hydro_nml <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
 #   (7)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
 #   (8)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 #
@@ -142,6 +142,13 @@ function wh_build() {
 
 # (4) wh_run_dir: create WRF-Hydro run directory
 #       input:    run ID 
+
+    # cp $WH_R2_REPO/build/env_nwm_r2.sh $run_dir_path
+    # # copy exe and associated files to parent
+    # cp    $NWM_BUILD_RUN_DIR/* $run_dir_path
+    # mv    $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
+    # mv    $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
+
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
         echo -e "\n\tUSAGE: wh_run_dir <run_id>\n"
@@ -225,68 +232,32 @@ function wh_run_dom() {
 }
 
 
-
-# (6) wh_run_rto:
-function wh_run_rto() {
-    if   [ $# -ne 2 ]; then 
-        echo -e "\n\tUSAGE: wh_run_rto <run_id> <routing_opt>\n"
-        return
-###    elif [[ $2 -lt 1 || $2 -gt $NUM_ROUTING_OPTS ]]; then  
-    elif [[ $2 -lt $NUM_ROUTING_OPTS || $2 -gt $NUM_ROUTING_OPTS ]]; then
-        echo -e "\n\tUSAGE: wh_run_rto <run_id> <routing_opt>"
-        echo -e   "\t\twhere, 1 <= <routing_opt> <= $NUM_ROUTING_OPTS.\n"
+# (6) wh_hydro_nml:
+function wh_hydro_nml() {
+    if   [[ "$#" -lt 1 || "$#" -gt 7 ]]; then 
+        echo -e "\n\tUSAGE: wh_hydro_nml <run_id> [<0 ... 5>]\n"
         return
     fi
     local run_id="$1"
-    local routing_opt=$2
+    shift
+    local routing_opts="$*"
     local run_dir_path=${RUN_DIR_BASE}_${run_id}
+
     if [ ! -d $run_dir_path ]; then
         echo -e "\n\tRun directory does not exist: $run_dir_path.\n"
         return
     fi
-    cp $WH_R2_REPO/build/env_nwm_r2.sh $run_dir_path
 
-    # copy exe and associated files to parent
-    cp    $NWM_BUILD_RUN_DIR/* $run_dir_path
-    mv    $run_dir_path/hydro.namelist  $run_dir_path/hydro.namelist.build
-    mv    $run_dir_path/namelist.hrldas $run_dir_path/namelist.hrldas.build
+    # get copy of hydro.namelist.template
+    cp $WH_R2_REPO/namelists/hydro.namelist.template $run_dir_path/hydro.namelist
 
-    # copy routing specific namelists to parent
-    if   [ $routing_opt -eq $ROUTING1 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING1_STR - $ROUTING1_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING1_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING1_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING2 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING2_STR - $ROUTING2_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING2_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING2_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING3 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING3_STR - $ROUTING3_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING3_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING3_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING4 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING4_STR - $ROUTING4_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING4_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING4_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING5 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING5_STR - $ROUTING5_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING5_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING5_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING6 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING6_STR - $ROUTING6_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING6_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING6_STR $run_dir_path/namelist.hrldas
-    elif [ $routing_opt -eq $ROUTING7 ]; then
-	echo  -e "\n\t$routing_opt:  $ROUTING7_STR - $ROUTING7_DESC"
-	cp       $WH_R2_REPO/namelists/hydro.namelist.$ROUTING7_STR $run_dir_path/hydro.namelist
-	cp       $WH_R2_REPO/namelists/namelist.hrldas.$ROUTING7_STR $run_dir_path/namelist.hrldas
-    else
-        echo  -e "\nInvalid routing option, routing_opt == $routing_opt.\n"
-        return 
-    fi
+    # call create_hydro_namelist.sh
+    $WH_R2_REPO/run_scripts/create_hydro_namelist.sh $run_dir_path/hydro.namelist $routing_opts
 
     return
 }
+
+
 
 
 # (7)  wh_run_frc <run_id> <input_dir> <geogrid_file>

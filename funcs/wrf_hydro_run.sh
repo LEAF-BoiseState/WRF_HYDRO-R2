@@ -59,37 +59,6 @@ CUTOUT7_DESC="Weiser River near Cambridge ID"
 CUTOUT8=13316500
 CUTOUT8_DESC="Little Salmon River at Riggins ID"
 
-# routing options
-NUM_ROUTING_OPTS=7
-ROUTING1=1
-ROUTING1_STR='lsm'
-ROUTING1_DESC='NoahMP LSM'
-
-ROUTING2=2
-ROUTING2_STR='lsm_sub'
-ROUTING2_DESC='NoahMP LSM + Subsurface routing'
-
-ROUTING3=3
-ROUTING3_STR='lsm_ovr'
-ROUTING3_DESC='NoahMP LSM + Overland surface flow routing'
-
-ROUTING4=4
-ROUTING4_STR='lsm_chl'
-ROUTING4_DESC='NoahMP LSM + Channel routing'
-
-ROUTING5=5
-ROUTING5_STR='lsm_res'
-ROUTING5_DESC='NoahMP LSM + Lake/reservoir routing'
-
-ROUTING6=6
-ROUTING6_STR='lsm_gwb'
-ROUTING6_DESC='NoahMP LSM + Groundwater/baseflow model'
-
-ROUTING7=7
-ROUTING7_STR='lsm_ovr_chl'
-ROUTING7_DESC='NoahMP LSM + Overland surface flow routing + Channel routing'
-
-
 
 
 # (1) wh_dev:  request WRF-Hydro dev session 
@@ -381,17 +350,16 @@ function wh_list_dom() {
 
 
 
-#  (11)  wh_list_rto                                            # list routing/physics options
-function wh_list_rto() {
-    echo -e "\n\tNUM:     Routing option   -  Description"
+#  (11)  wh_list_routing
+function wh_list_routing() {
+    echo -e "\n\tNUM   Routing option:  Description"
     echo -e "\t----------------------------------------------------"
-    echo -e "\t  1:     $ROUTING1_STR\t\t  -  $ROUTING1_DESC"
-    echo -e "\t  2:     $ROUTING2_STR\t  -  $ROUTING2_DESC"
-    echo -e "\t  3:     $ROUTING3_STR\t  -  $ROUTING3_DESC"
-    echo -e "\t  4:     $ROUTING4_STR\t  -  $ROUTING4_DESC"
-    echo -e "\t  5:     $ROUTING5_STR\t  -  $ROUTING5_DESC"
-    echo -e "\t  6:     $ROUTING6_STR\t  -  $ROUTING6_DESC"
-    echo -e "\t  7:     $ROUTING7_STR\t  -  $ROUTING7_DESC"
+    echo -e "\t(0)   LSM:             NoahMP Land Surface Model [selected by default]"
+    echo -e "\t(1)   SUB:             Subsurface Flow Routing"
+    echo -e "\t(2)   OVR:             Overland Flow Routing"
+    echo -e "\t(3)   CHL:             Channel Routing"
+    echo -e "\t(4)   RES:             Lakes/Reservoir Routing"
+    echo -e "\t(5)   GWB:             Groundwater/baseflow Routing"
     echo -e "\n"
     return
 }

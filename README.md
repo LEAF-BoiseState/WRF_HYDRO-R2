@@ -31,14 +31,11 @@ WRF_HYDRO-R2/
 │   └── wrf_hydro_run.sh
 ├── LICENSE
 ├── namelists/
-│   ├── hydro.namelist.custom_forcing
-│   ├── hydro.namelist.idealized_forcing
-│   ├── hydro.namelist.lsm_ovr_chl
-│   ├── namelist.hrldas.custom_forcing
-│   ├── namelist.hrldas.idealized_forcing
-│   ├── namelist.hrldas.lsm_ovr_chl
+│   ├── hydro.namelist.template
+│   ├── namelist.hrldas.template
 │   └── README_NAMELISTS.md
 ├── post_process/
+│   └── Open and Plot WRF-Hydro Output.ipynb
 ├── pre_process/
 │   ├── convert_wrf_to_wrfhydro.sh
 │   ├── env_preprocess_r2.sh
@@ -50,6 +47,9 @@ WRF_HYDRO-R2/
 │   ├── wrf_regrid_wrfhydro.sh
 │   └── wrf_subset_wrfhydro.sh
 ├── README.md
+├── run_scripts/
+│   ├── create_hrldas_namelist.sh
+│   └── create_hydro_namelist.sh
 ├── rwrfhydro/
 ├── supplements/
 │   └── submit.sh.template

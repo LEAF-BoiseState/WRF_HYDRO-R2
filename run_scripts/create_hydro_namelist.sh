@@ -50,37 +50,37 @@ OVR_FLAG=0                   # 2 OVR: Overland
 CHL_FLAG=0                   # 3 CHL: Channel
 RES_FLAG=0                   # 4 RES: Lakes / Reservoirs
 GWB_FLAG=0                   # 5 GWB: Groundwater / Base flow
-echo -e "\nROUTING OPTIONS"
-echo -e   "---------------"
-echo -e "\thydro.namelist path: $hydro_namelist_path\n"
-echo -e "\t(0) LSM: NoahMP Land Surface Model"
+echo -e "\n\tROUTING OPTIONS"
+echo -e   "\t---------------"
+echo -e "\t  0:   LSM          -  NoahMP Land Surface Model [selected by default]"
 if [ "$routing_options_flag" == "true" ]; then
 
     for ro in $routing_options
     do
 	if   [ $ro -eq 0 ]; then
-            : # dummy op, 0 is default selected
+            : # null op, 0 is default selected
 	elif [ $ro -eq 1 ]; then
             SUB_FLAG=1
-            echo -e "\t(1) SUB: Subsurface Flow Routing"
+            echo -e "\t  1:   SUB          -  Subsurface Flow Routing"
 	elif [ $ro -eq 2 ]; then
             OVR_FLAG=1
-            echo -e "\t(2) OVR: Overland Flow Routing"
+            echo -e "\t  2:   OVR          -  Overland Flow Routing"
 	elif [ $ro -eq 3 ]; then
             CHL_FLAG=1
-            echo -e "\t(3) CHL: Channel Routing"
+            echo -e "\t  3:   CHL          -  Channel Routing"
 	elif [ $ro -eq 4 ]; then
             RES_FLAG=1
-            echo -e "\t(4) RES: Lakes/Reservoir Routing"
+        echo -e "\t  4:   RES          -  Lakes/Reservoir Routing"
 	elif [ $ro -eq 5 ]; then
             GWB_FLAG=1
-            echo -e "\t(5) GWB: Groundwater/baseflow Routing"
+        echo -e "\t  5:   GWB          -  Groundwater/baseflow Routing"
         else
-            echo -e "\t  ** ($ro) BAD VALUE. Valid opts: 0-5. **"
+            echo -e "\t  ** ${ro}:   BAD VALUE   - Valid opts: 0-5. **"
         fi
     done
     echo -e "\n"
 fi
+echo -e "\thydro.namelist path: $hydro_namelist_path\n"
 
 
 # ----------------------------------------------------------------------------- *

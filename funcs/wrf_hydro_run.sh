@@ -6,24 +6,23 @@
 # PURPOSE: set of functions to simply build and run related tasks.
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
-# FUNCTION DEFS:
-#   (1)  wh_dev        <queue_name> <minutes>                      # slurm request interactive compute session
+# CONTENTS:
+#   (1)  wh_dev          <queue_name> <minutes>                     # slurm request interactive compute session
 #
-#   (2)  wh_sub_mod                                                # init/update submodules
-#   (3)  wh_build                                                  # compile the wrf-hydro/nwm executable
+#   (2)  wh_sub_mod                                                 # init/update submodules
+#   (3)  wh_build_nwm                                               # compile wrf-hydro/nwm executable
+#   (4)  wh_clean_nwm                                               # clean out nwm build 
 #
-#   (4)  wh_run_dir    <run_id>                                    # create run directory, copy exe + aux files
-#   (5)  wh_domain     <run_id> <domain_id>                        # copy cutout to DOMAIN/
-#   (6)  wh_forcing    <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing to FORCING/
-#   (7)  wh_hydro_nml  <run_id> [<0 ... 5>]                        # create hydro.namelist w routing opts
-#   (8)  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period
-#   (9)  wh_job        <run_id> <queue_name> <minutes> <cores>            # create submit script
+#   (5)  wh_run_dir      <run_id>                                   # create run directory, copy exe + aux files
+#   (6)  wh_domain       <run_id> <domain_id>                       # copy cutout to DOMAIN/
+#   (7)  wh_forcing      <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING/
+#   (8)  wh_hydro_nlist  <run_id> [<0 ... 5>]                       # create hydro.namelist w routing opts
+#   (9)  wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours> # create namelist.hrldas w simulation period
+#  (10)  wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job submit script
 #
-#  (10)  wh_list                                                   # list wrf-hydro defined functions
-#  (11)  wh_list_domain                                            # list wrf-hydro cutout domains
-#  (12)  wh_list_routing                                           # list routing/physics options
-#
-#  (13)  wh_clean_nwm                                              # clean NWM repo build 
+#  (11)  wh_list                                                    # list wrf-hydro defined functions
+#  (12)  wh_list_domain                                             # list wrf-hydro cutout domains
+#  (13)  wh_list_routing                                            # list routing/physics options
 #
 
 
@@ -43,7 +42,7 @@ EXE=wrf_hydro_NoahMP.exe
 
 # cutouts
 NUM_CUTOUTS=8
-IDAHO_CUTOUTS=/scratch/mmasarik/WHv5_NWM_Tutorial/cutouts
+IDAHO_CUTOUTS=/scratch/leaf/WRF-Hydro/cutouts
 CUTOUT1=13139510
 CUTOUT1_DESC="Big Wood River at Hailey ID"
 CUTOUT2=13168500
@@ -63,8 +62,7 @@ CUTOUT8_DESC="Little Salmon River at Riggins ID"
 
 
 
-# (1) wh_dev:  request WRF-Hydro dev session 
-#       input: queue name, requested simulation time
+# (1)  wh_dev  <queue_name> <minutes>      # slurm request interactive compute session
 function wh_dev() {
     local session_id='WRFHYDEV'
     local let MAXMINS=60
@@ -93,7 +91,8 @@ function wh_dev() {
 }
 
 
-# (2) wh_sub_mod
+
+# (2) wh_sub_mod                     # init/update submodules
 function wh_sub_mod() {
     local start_dir=$(pwd)
     cd $WH_R2_REPO
@@ -104,14 +103,26 @@ function wh_sub_mod() {
 }
 
 
-# (3) wh_build                                               # compile the wrf-hydro/nwm executable
-function wh_build() {
+
+# (3) wh_build_nwm                             # compile wrf-hydro/nwm executable
+function wh_build_nwm() {
     $WH_R2_REPO/build/build_nwm_r2.sh
     return
 }
 
 
-# (4) wh_run_dir: create run directory, copy exe + aux files
+
+# (4) wh_clean_nwm                                              # clean out nwm build 
+function wh_clean_nwm() {
+    if [ -d $NWM_BUILD_DIR/Run         ]; then rm -vrf $NWM_BUILD_DIR/Run;        fi
+    if [ -f $NWM_BUILD_DIR/setEnvar.sh ]; then rm -vf $NWM_BUILD_DIR/setEnvar.sh; fi
+    if [ -f $NWM_BUILD_DIR/macros.orig ]; then rm -vf $NWM_BUILD_DIR/macros.orig; fi
+    return
+}
+
+
+
+# (5) wh_run_dir    <run_id>                    # create run directory, copy exe + aux files
 function wh_run_dir() {
     if [ $# -ne 1 ]; then
         echo -e "\n\tUSAGE: wh_run_dir <run_id>\n"
@@ -140,7 +151,9 @@ function wh_run_dir() {
     return
 }
 
-# (5) wh_domain: 
+
+
+# (6) wh_domain     <run_id> <domain_id>                        # copy cutout to DOMAIN/
 function wh_domain() {
     if   [ $# -ne 2 ]; then 
         echo -e "\n\tUSAGE: wh_domain <run_id> <domain_id>\n"
@@ -206,7 +219,8 @@ function wh_domain() {
 }
 
 
-# (6)  wh_forcing <run_id> <input_dir> <geogrid_file>
+
+# (7) wh_forcing    <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing to FORCING/
 function wh_forcing() {
     if [ $# -ne 3 ]; then
         echo -e "\n\tUSAGE: wh_forcing <run_id> <input_dir> <geogrid_file>\n"
@@ -235,8 +249,8 @@ function wh_forcing() {
 
 
 
-# (7) wh_hydro_nml:
-function wh_hydro_nml() {
+# (8) wh_hydro_nlist  <run_id> [<0 ... 5>]            # create hydro.namelist w routing opts
+function wh_hydro_nlist() {
     if   [[ "$#" -lt 1 || "$#" -gt 7 ]]; then 
         echo -e "\n\tUSAGE: wh_hydro_nml <run_id> [<0 ... 5>]\n"
         return
@@ -261,8 +275,8 @@ function wh_hydro_nml() {
 }
 
 
-# (8) wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>
-function wh_hrldas_nml() {
+# (9) wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>   # create namelist.hrldas w simulation period
+function wh_hrldas_nlist() {
     if [ $# -ne 6 ]; then
         echo -e "\n\tUSAGE: wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>\n"
         return
@@ -286,7 +300,8 @@ function wh_hrldas_nml() {
 }
 
 
-# (9)  wh_job  <run_id> <queue_name> <minutes> <cores>
+
+# (10) wh_job  <run_id> <queue_name> <minutes> <cores>      # create batch job submit script
 function wh_job() {
     if [ $# -ne 4 ]; then
         echo -e "\n\tUSAGE: wh_job <run_id> <queue_name> <minutes> <cores>\n"
@@ -294,8 +309,16 @@ function wh_job() {
     fi
     local run_id="$1"
     local queue_name="$2"
-    local mins="$3"
+    local mins=${3#0}
     local num_cores="$4"
+
+    local mins_0pad=""
+    if [ $mins -lt 10 ]; then
+        mins_0pad="0$mins"
+    else
+        mins_0pad="$mins"
+    fi
+
     local run_dir_path=${RUN_DIR_BASE}_${run_id}
     if [ ! -d $run_dir_path ]; then
         echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
@@ -305,11 +328,11 @@ function wh_job() {
     cp $WH_R2_REPO/supplements/submit.sh.template $run_dir_path/submit
     run_dir_sed_safe=${run_dir_path////'\/'}
 
-    sed -i'' "s/queuename/$queue_name/g"       $run_dir_path/submit
-    sed -i'' "s/queuetime/00:$mins:00/g"       $run_dir_path/submit
-    sed -i'' "s/numcores/$num_cores/g"         $run_dir_path/submit
-    sed -i'' "s/jobname/$run_id/g"             $run_dir_path/submit
-    sed -i'' "s/rundir/$run_dir_sed_safe/g"    $run_dir_path/submit
+    sed -i'' "s/queuename/$queue_name/g"          $run_dir_path/submit
+    sed -i'' "s/queuetime/00:${mins_0pad}:00/g"   $run_dir_path/submit
+    sed -i'' "s/numcores/$num_cores/g"            $run_dir_path/submit
+    sed -i'' "s/jobname/$run_id/g"                $run_dir_path/submit
+    sed -i'' "s/rundir/$run_dir_sed_safe/g"       $run_dir_path/submit
 
     echo -e "\n\tJob ID:        $run_id."
     echo -e   "\tRun directory: $run_dir_path.\n"
@@ -319,31 +342,33 @@ function wh_job() {
 
 
 
-# (10)  wh_list                                                # list wrf-hydro defined functions
+# (11) wh_list                   # list wrf-hydro defined functions
 function wh_list() {
     echo -e '\n'
     echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
     echo -e '                   ====================== '
     echo -e '\n'
-    echo -e '  wh_dev        <queue_name> <minutes>                      # slurm request interactive compute session\n'
-    echo -e '  wh_sub_mod                                                # init/update submodules'
-    echo -e '  wh_build                                                  # compile the wrf-hydro/nwm executable\n'
-    echo -e '  wh_run_dir    <run_id>                                    # create run directory, copy exe + aux files'
-    echo -e '  wh_domain     <run_id> <domain_id>                        # copy cutout to DOMAIN/'
-    echo -e '  wh_forcing    <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing files to FORCING/'
-    echo -e '  wh_hydro_nml  <run_id> <routing_opts>                     # create hydro.namelist w routing options'
-    echo -e '  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period'
-    echo -e '  wh_job        <run_id> <queue_name> <minutes> <cores>     # create slurm batch submit script\n'
-    echo -e '  wh_list                                                   # list wrf-hydro defined functions'
-    echo -e '  wh_list_domain                                            # list wrf-hydro cutout domains'
-    echo -e '  wh_list_routing                                           # list routing/physics options\n'
-    echo -e '  wh_clean_nwm                                              # clean NWM repo build'
+    echo -e '  wh_dev          <queue_name> <minutes>                      # slurm request interactive compute session\n'
+    echo -e '  wh_sub_mod                                                  # init/update submodules'
+    echo -e '  wh_build_nwm                                                # compile wrf-hydro/nwm executable'
+    echo -e '  wh_clean_nwm                                                # clean out nwm build\n'
+    echo -e '  wh_run_dir      <run_id>                                    # create run directory, copy exe + aux files'
+    echo -e '  wh_domain       <run_id> <domain_id>                        # copy cutout to DOMAIN/'
+    echo -e '  wh_forcing      <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing files to FORCING/'
+    echo -e '  wh_hydro_nlist  <run_id> <routing_opts>                     # create hydro.namelist w routing options'
+    echo -e '  wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period'
+    echo -e '  wh_job          <run_id> <queue_name> <minutes> <cores>     # create slurm batch submit script\n'
+    echo -e '  wh_list                                                     # list wrf-hydro defined functions'
+    echo -e '  wh_list_domain                                              # list wrf-hydro cutout domains'
+    echo -e '  wh_list_routing                                             # list routing/physics options'
+
     echo -e '\n'
     return
 }
 
 
-# (11)  wh_list_domain                                            # list wrf-hydro cutout domains
+
+# (12) wh_list_domain                           # list wrf-hydro cutout domains
 function wh_list_domain() {
     echo -e "\n\tNUM:   Gauge ID  -  Description"
     echo -e "\t----------------------------------------------------"
@@ -361,26 +386,17 @@ function wh_list_domain() {
 
 
 
-#  (12)  wh_list_routing
+# (13) wh_list_routing                        # list routing/physics options
 function wh_list_routing() {
-    echo -e "\n\tNUM   Routing option:  Description"
+    echo -e "\n\tNUM:   Routing Opt. -  Description"
     echo -e "\t----------------------------------------------------"
-    echo -e "\t(0)   LSM:             NoahMP Land Surface Model [selected by default]"
-    echo -e "\t(1)   SUB:             Subsurface Flow Routing"
-    echo -e "\t(2)   OVR:             Overland Flow Routing"
-    echo -e "\t(3)   CHL:             Channel Routing"
-    echo -e "\t(4)   RES:             Lakes/Reservoir Routing"
-    echo -e "\t(5)   GWB:             Groundwater/baseflow Routing"
+    echo -e "\t  0:   LSM          -  NoahMP Land Surface Model [selected by default]"
+    echo -e "\t  1:   SUB          -  Subsurface Flow Routing"
+    echo -e "\t  2:   OVR          -  Overland Flow Routing"
+    echo -e "\t  3:   CHL          -  Channel Routing"
+    echo -e "\t  4:   RES          -  Lakes/Reservoir Routing"
+    echo -e "\t  5:   GWB          -  Groundwater/baseflow Routing"
     echo -e "\n"
-    return
-}
-
-
-#  (13)  wh_clean_nwm
-function wh_clean_nwm() {
-    if [ -d $NWM_BUILD_DIR/Run         ]; then rm -vrf $NWM_BUILD_DIR/Run;        fi
-    if [ -f $NWM_BUILD_DIR/setEnvar.sh ]; then rm -vf $NWM_BUILD_DIR/setEnvar.sh; fi
-    if [ -f $NWM_BUILD_DIR/macros.orig ]; then rm -vf $NWM_BUILD_DIR/macros.orig; fi
     return
 }
 

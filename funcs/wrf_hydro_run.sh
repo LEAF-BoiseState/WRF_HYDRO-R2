@@ -7,25 +7,23 @@
 # USAGE:   source wrf_hydro_run_funcs.sh
 #
 # FUNCTION DEFS:
-#   (1)  wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
+#   (1)  wh_dev        <queue_name> <minutes>                      # slurm request interactive compute session
 #
-#   (2)  wh_sub_mod                                             # init/update submodules
-#   (3)  wh_build                                               # compile the wrf-hydro/nwm executable
+#   (2)  wh_sub_mod                                                # init/update submodules
+#   (3)  wh_build                                                  # compile the wrf-hydro/nwm executable
 #
-#   (4)  wh_run_dir  <run_id>                                   # create run directory, copy exe + aux files
-#   (5)  wh_domain   <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-
-#   *(6)  wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-
-#   (7)  wh_hydro_nml  <run_id> [<0 ... 5>]                      # create hydro.namelist w routing opts
-#   (8)  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # create hydro.namelist w routing opts
-
-#   *(9)  wh_run_job  <run_id>   # set namelist sim time and submit job
+#   (4)  wh_run_dir    <run_id>                                    # create run directory, copy exe + aux files
+#   (5)  wh_domain     <run_id> <domain_id>                        # copy cutout to DOMAIN/
+#   (6)  wh_forcing    <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing to FORCING/
+#   (7)  wh_hydro_nml  <run_id> [<0 ... 5>]                        # create hydro.namelist w routing opts
+#   (8)  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period
+#   (9)  wh_job        <run_id> <queue_name> <minutes> <cores>            # create submit script
 #
-#  (10)  wh_list                                                # list wrf-hydro defined functions
-#  (11)  wh_list_domain                                         # list wrf-hydro cutout domains
-#  (12)  wh_list_routing                                        # list routing/physics options
-#  (13)  wh_clean_nwm                                           # clean NWM repo build 
+#  (10)  wh_list                                                   # list wrf-hydro defined functions
+#  (11)  wh_list_domain                                            # list wrf-hydro cutout domains
+#  (12)  wh_list_routing                                           # list routing/physics options
+#
+#  (13)  wh_clean_nwm                                              # clean NWM repo build 
 #
 
 
@@ -208,10 +206,10 @@ function wh_domain() {
 }
 
 
-# (6)  wh_run_frc <run_id> <input_dir> <geogrid_file>
-function wh_run_frc() {
+# (6)  wh_forcing <run_id> <input_dir> <geogrid_file>
+function wh_forcing() {
     if [ $# -ne 3 ]; then
-        echo -e "\n\tUSAGE: wh_run_frc <run_id> <input_dir> <geogrid_file>\n"
+        echo -e "\n\tUSAGE: wh_forcing <run_id> <input_dir> <geogrid_file>\n"
         return
     fi
     local run_id="$1"
@@ -288,50 +286,30 @@ function wh_hrldas_nml() {
 }
 
 
-# (9)  wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
-function wh_run_job() {
-    local QUEUE_NAME="defq"
-    local QUEUE_TIME="00:10:00"
-    local NUM_CORES=1
-    if [ $# -ne 6 ]; then
-        echo -e "\n\tUSAGE: wh_run_job <run_id> <yyyy> <mm> <dd> <hh> <sim_days>\n"
+# (9)  wh_job  <run_id> <queue_name> <minutes> <cores>
+function wh_job() {
+    if [ $# -ne 4 ]; then
+        echo -e "\n\tUSAGE: wh_job <run_id> <queue_name> <minutes> <cores>\n"
         return
     fi
     local run_id="$1"
-    local year="$2"
-    local mn="$3"
-    local dy="$4"
-    local hr="$5"
-    local sim_days="$6"
+    local queue_name="$2"
+    local mins="$3"
+    local num_cores="$4"
     local run_dir_path=${RUN_DIR_BASE}_${run_id}
     if [ ! -d $run_dir_path ]; then
         echo -e "\nInvalid run directory, $run_dir_path, for <run_id> = $run_id.\n"
         return
     fi
-    if [ ! -f $run_dir_path/hydro.namelist ]; then
-        echo -e "\nNo valid hydro.namelist, $run_dir_path/hydro.namelist, found.\n"
-        return
-    fi
-    if [ ! -f $run_dir_path/namelist.hrldas ]; then
-        echo -e "\nNo valid namelist.hrldas, $run_dir_path/namelist.hrldas, found.\n"
-        return
-    fi
 
-    sed -i "s/startyear/$year/g"   $run_dir_path/namelist.hrldas
-    sed -i "s/startmonth/$mn/g"    $run_dir_path/namelist.hrldas
-    sed -i "s/startday/$dy/g"      $run_dir_path/namelist.hrldas
-    sed -i "s/starthour/$hr/g"     $run_dir_path/namelist.hrldas
-    sed -i "s/simdays/$sim_days/g" $run_dir_path/namelist.hrldas
-
-    cp $WH_R2_REPO/supplements/submit.sh.template $run_dir_path
-    mv $run_dir_path/submit.sh.template $run_dir_path/submit
+    cp $WH_R2_REPO/supplements/submit.sh.template $run_dir_path/submit
     run_dir_sed_safe=${run_dir_path////'\/'}
 
-    sed -i "s/queuename/$QUEUE_NAME/g"       $run_dir_path/submit
-    sed -i "s/queuetime/$QUEUE_TIME/g"       $run_dir_path/submit
-    sed -i "s/numcores/$NUM_CORES/g"         $run_dir_path/submit
-    sed -i "s/jobname/$run_id/g"             $run_dir_path/submit
-    sed -i "s/rundir/$run_dir_sed_safe/g"    $run_dir_path/submit
+    sed -i'' "s/queuename/$queue_name/g"       $run_dir_path/submit
+    sed -i'' "s/queuetime/00:$mins:00/g"       $run_dir_path/submit
+    sed -i'' "s/numcores/$num_cores/g"         $run_dir_path/submit
+    sed -i'' "s/jobname/$run_id/g"             $run_dir_path/submit
+    sed -i'' "s/rundir/$run_dir_sed_safe/g"    $run_dir_path/submit
 
     echo -e "\n\tJob ID:        $run_id."
     echo -e   "\tRun directory: $run_dir_path.\n"
@@ -347,18 +325,19 @@ function wh_list() {
     echo -e '                   WRF_HYDRO-R2 FUNCTIONS '
     echo -e '                   ====================== '
     echo -e '\n'
-    echo -e '  wh_dev       <queue_name> <minutes>                    # slurm request interactive compute session\n'
-    echo -e '  wh_sub_mod                                             # init/update submodules'
-    echo -e '  wh_build                                               # compile the wrf-hydro/nwm executable\n'
-    echo -e '  wh_run_dir   <run_id>                                  # create run directory, copy exe + aux files'
-    echo -e '  wh_run_dom   <run_id> <domain_id>                      # create DOMAIN from cutout in run dir'
-    echo -e '  wh_hydro_nml <run_id> <routing_opts>                   # copy exe + associated files to run dir'
-    echo -e '  wh_run_frc   <run_id> <input_dir> <geogrid_file>       # subset + regrid forcing to FORCING'
-    echo -e '  wh_run_job   <run_id> <yyyy> <mm> <dd> <hh> <sim_days> # set namelist sim time and submit job\n'
-    echo -e '  wh_list                                                # list wrf-hydro defined functions'
-    echo -e '  wh_list_domain                                         # list wrf-hydro cutout domains'
-    echo -e '  wh_list_routing                                        # list routing/physics options\n'
-    echo -e '  wh_clean_nwm                                           # clean NWM repo build'
+    echo -e '  wh_dev        <queue_name> <minutes>                      # slurm request interactive compute session\n'
+    echo -e '  wh_sub_mod                                                # init/update submodules'
+    echo -e '  wh_build                                                  # compile the wrf-hydro/nwm executable\n'
+    echo -e '  wh_run_dir    <run_id>                                    # create run directory, copy exe + aux files'
+    echo -e '  wh_domain     <run_id> <domain_id>                        # copy cutout to DOMAIN/'
+    echo -e '  wh_forcing    <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing files to FORCING/'
+    echo -e '  wh_hydro_nml  <run_id> <routing_opts>                     # create hydro.namelist w routing options'
+    echo -e '  wh_hrldas_nml <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period'
+    echo -e '  wh_job        <run_id> <queue_name> <minutes> <cores>     # create slurm batch submit script\n'
+    echo -e '  wh_list                                                   # list wrf-hydro defined functions'
+    echo -e '  wh_list_domain                                            # list wrf-hydro cutout domains'
+    echo -e '  wh_list_routing                                           # list routing/physics options\n'
+    echo -e '  wh_clean_nwm                                              # clean NWM repo build'
     echo -e '\n'
     return
 }

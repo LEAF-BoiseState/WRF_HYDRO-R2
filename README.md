@@ -6,13 +6,12 @@
 ## Contents
 * [I. Overview](#I-Overview) - *brief description of repository*
 * [II. Manifest](#II-Manifest) - *main repository structure*
-* [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
-* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *available Idaho watershed domains from NWM*
+* [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM executable*
+* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *list of available Idaho watershed domains from NWM*
 * [V. Routing Options](#V-Routing-Options) - *list of available routing configurations*
 * [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence) - **main command sequence for repeated simulations**
 * [VII. Function Reference List](#VII-Function-Reference-List) - *list of defined commands*
-* [VIII. Appendix](#VIII-Appendix) - *links to extended, internal documentation*
-* [IX. Links](#IX-Links) - *links to external references*
+* [VIII. Appendix](#VIII-Appendix) - *links to supporting documentation*
 
 <br>
 
@@ -213,16 +212,9 @@ wh_list_rto                                            # list routing/physics op
 
 
 ## VIII. Appendix
-* <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
-* [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/build/README_BUILD.md) - details on build process
-* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
-* [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
-<br>
-
-                                                                             
-## IX. Links
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
+* <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
 <br>
 
 [Return to top](#WRF_HYDRO-R2)

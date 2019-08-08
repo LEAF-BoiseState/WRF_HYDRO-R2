@@ -1,19 +1,25 @@
-#
-# create_hydro_namelist.sh - create hydro.namelist with routing parameters, etc.
-# matt masarik 
-# 7 jul 2019 
-# 
-# (0) LSM - NOAHMP LAND SURFACE
-# (1) SUB - SUBSURFACE
-# (2) OVR - OVERLAND
-# (3) CHL - CHANNEL
-# (4) RES - LAKE / RESERVOIR
-# (5) GWB - GROUNDWATER / BASEFLOW
-#
-# NOTES:  
-#   * Terrain routing = Overland flow routing, and/or Subsurface flow routing
-#
+#!/bin/bash
 
+# *****************************************************************************
+# FILE:     
+# AUTHOR:   Matt Masarik      (MM) 
+# VERSION:  0     2019-07-07   MM    Base version
+#
+# PURPOSE:  create hydro.namelist with routing parameters, etc.
+#
+# USAGE:    ./create_hydro_namelist.sh <hydro_namelist> [<0 ... 5>]
+#
+# NOTES:
+#   Routing options
+#     (0) LSM - NOAHMP LAND SURFACE
+#     (1) SUB - SUBSURFACE
+#     (2) OVR - OVERLAND
+#     (3) CHL - CHANNEL
+#     (4) RES - LAKE / RESERVOIR
+#     (5) GWB - GROUNDWATER / BASEFLOW
+#
+#   * Terrain routing = Overland flow routing, and/or Subsurface flow routing
+# *****************************************************************************
 
 # PARAMETERS - DEFAULT / USER
 DX_LSM_METERS=1000                  # Land Surface Model grid spacing    [meters]
@@ -25,7 +31,7 @@ DT_ROUTING_CHANNEL_SECONDS=10       # Channel Routing Model timestep    [seconds
 
 
 
-# USER INPUT ARGS
+# Input
 routing_options=""
 routing_options_flag="false"
 num_routing_options=0
@@ -41,8 +47,6 @@ else
     num_routing_options=$#
     routing_options_flag="true"
 fi
-
-
 
 # Set flag / display routing components from user input
 SUB_FLAG=0                   # 1 SUB: Subsurface

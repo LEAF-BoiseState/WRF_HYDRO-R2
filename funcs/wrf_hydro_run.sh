@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# *****************************************************************************
+# FILE:     wrf_hydro_run_funcs.sh
+# AUTHOR:   Matt Masarik      (MM) 
+# VERSION:  0     2019-06-24   MM    Base version
 #
-# wrf_hydro_run_funcs.sh,  jun 24, 2019  Matt Masarik
+# PURPOSE:  set of functions to simplify building and run related tasks.
 #
-# PURPOSE: set of functions to simply build and run related tasks.
-# USAGE:   source wrf_hydro_run_funcs.sh
+# USAGE:    source wrf_hydro_run_funcs.sh
 #
 # CONTENTS:
 #   (1)  wh_dev          <queue_name> <minutes>                     # slurm request interactive compute session
@@ -23,7 +26,7 @@
 #  (11)  wh_list                                                    # list wrf-hydro defined functions
 #  (12)  wh_list_domain                                             # list wrf-hydro cutout domains
 #  (13)  wh_list_routing                                            # list routing/physics options
-#
+# *****************************************************************************
 
 
 # USER PARAMETERS
@@ -265,12 +268,8 @@ function wh_hydro_nlist() {
         return
     fi
 
-    # get copy of hydro.namelist.template
     cp $WH_R2_REPO/namelists/hydro.namelist.template $run_dir_path/hydro.namelist
-
-    # call create_hydro_namelist.sh
     $WH_R2_REPO/run_scripts/create_hydro_namelist.sh $run_dir_path/hydro.namelist $routing_opts
-
     return
 }
 
@@ -290,12 +289,8 @@ function wh_hrldas_nlist() {
         return
     fi
 
-    # get copy of namelist.hrldas template
     cp $WH_R2_REPO/namelists/namelist.hrldas.template $run_dir_path/namelist.hrldas
-
-    # call create_hrldas_namelist.sh
     $WH_R2_REPO/run_scripts/create_hrldas_namelist.sh $run_dir_path/namelist.hrldas $hrldas_opts
-    
     return
 }
 
@@ -361,7 +356,6 @@ function wh_list() {
     echo -e '  wh_list                                                     # list wrf-hydro defined functions'
     echo -e '  wh_list_domain                                              # list wrf-hydro cutout domains'
     echo -e '  wh_list_routing                                             # list routing/physics options'
-
     echo -e '\n'
     return
 }

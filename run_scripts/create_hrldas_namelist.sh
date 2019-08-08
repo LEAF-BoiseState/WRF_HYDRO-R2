@@ -1,29 +1,36 @@
+#!/bin/bash
+
+# *****************************************************************************
+# FILE:     create_hrldas_namelist.sh
+# AUTHOR:   Matt Masarik      (MM) 
+# VERSION:  0     2019-08-06   MM    Base version
 #
-# create_hrldas_namelist.sh - create namelist.hrldas with simulation period, etc.
-# matt masarik 
-# 6 aug 2019 
-# 
+# PURPOSE:  create namelist.hrldas with simulation period, etc.
+#
+# USAGE:    ./create_hrldas_namelist.sh <namelist_hrldas> <yyyy> <mm> <dd> <hh> <sim_hours>
+# *****************************************************************************
+
 
 # PARAMETERS
 FORCING_TYPE=3                            # forcing input type: 3= WRF output, 4= Idealized
 FORCING_TIMESTEP=3600                     # forcing time step [seconds]
 OUTPUT_TIMESTEP=3600                      # output time step  [seconds]
 
-# PARAMETERS - NOAHMP
-NOAH_TIMESTEP=3600                        # NoahMP time step  [seconds]
-DYNAMIC_VEG_OPTION=4                      # dynamic vegetation
-CANOPY_STOMATAL_RESISTANCE_OPTION=1       # canopy stomatal resistance
-BTR_OPTION=1                              #
-RUNOFF_OPTION=3                           # runoff
-SURFACE_DRAG_OPTION=1                     # surface drag
-FROZEN_SOIL_OPTION=1                      # frozen soil
-SUPERCOOLED_WATER_OPTION=1                # supercooled water
-RADIATIVE_TRANSFER_OPTION=3               # radiative transfer
-SNOW_ALBEDO_OPTION=2                      # snow albedo
-PCP_PARTITION_OPTION=1                    # 
-TBOT_OPTION=2                             # 
-TEMP_TIME_SCHEME_OPTION=3                 # glacier
-GLACIER_OPTION=2                          # surface resistance
+# NoahMP
+NOAH_TIMESTEP=3600                       
+DYNAMIC_VEG_OPTION=4
+CANOPY_STOMATAL_RESISTANCE_OPTION=1
+BTR_OPTION=1
+RUNOFF_OPTION=3
+SURFACE_DRAG_OPTION=1
+FROZEN_SOIL_OPTION=1
+SUPERCOOLED_WATER_OPTION=1
+RADIATIVE_TRANSFER_OPTION=3
+SNOW_ALBEDO_OPTION=2
+PCP_PARTITION_OPTION=1
+TBOT_OPTION=2
+TEMP_TIME_SCHEME_OPTION=3
+GLACIER_OPTION=2
 SURFACE_RESISTANCE_OPTION=4
 
 

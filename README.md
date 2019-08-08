@@ -31,24 +31,21 @@ commands you may want to experiment with modifying default parameter values for 
 WRF_HYDRO-R2/
 ├── build/
 │   ├── build_nwm_r2.sh
-│   ├── env_nwm_r2.sh
-│   └── README_BUILD.md
+│   └── env_nwm_r2.sh
 ├── funcs/
 │   └── wrf_hydro_run.sh
 ├── LICENSE
 ├── namelists/
 │   ├── hydro.namelist.template
-│   ├── namelist.hrldas.template
-│   └── README_NAMELISTS.md
+│   └── namelist.hrldas.template
 ├── post_process/
 │   └── Open and Plot WRF-Hydro Output.ipynb
-├── pre_process/
+├── pre_process
 │   ├── convert_wrf_to_wrfhydro.sh
 │   ├── env_preprocess_r2.sh
-│   ├── ncl_scripts/
+│   ├── ncl_scripts
 │   │   ├── w2wh_esmf_generate_weights.ncl
 │   │   └── w2wh_esmf_regrid_w_weights.ncl
-│   ├── README_PREPROCESS.md
 │   ├── wrf_gen_weights_wrfhydro.sh
 │   ├── wrf_regrid_wrfhydro.sh
 │   └── wrf_subset_wrfhydro.sh
@@ -58,7 +55,8 @@ WRF_HYDRO-R2/
 │   └── create_hydro_namelist.sh
 ├── rwrfhydro/
 ├── supplements/
-│   └── submit.sh.template
+│   ├── submit.sh.template
+│   └── WRF-HydroV5TechnicalDescription_update512019_0.pdf
 └── wrf_hydro_nwm_public/
 ```
 <br>

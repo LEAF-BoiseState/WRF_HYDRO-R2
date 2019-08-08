@@ -29,11 +29,11 @@ IGRID = 1
 
 ! Specify the restart file write frequency...(minutes)
 ! A value of -99999 will output restarts on the first day of the month only.
-rst_dt = 120
+rst_dt = rstdt
 
 ! Reset the LSM soil states from the high-res routing restart file (1=overwrite, 0=no overwrite)
 ! NOTE: Only turn this option on if overland or subsurface rotuing is active!
-rst_typ = 0
+rst_typ = lsmrsttype
 
 ! Restart file format control
 rst_bi_in = 0       !0: use netcdf input restart file (default)
@@ -45,7 +45,7 @@ rst_bi_out = 0      !0: use netcdf output restart file (default)
 RSTRT_SWC = 0
 
 ! Specify baseflow/bucket model initialization...(0=cold start from table, 1=restart file)
-GW_RESTART = 0
+GW_RESTART = gwrestart
 
 !!!! -------------------- MODEL OUTPUT CONTROL -------------------- !!!!
 
@@ -82,23 +82,23 @@ t0OutputFlag = 1
 output_channelBucket_influx = 0
 
 ! Output netcdf file control
-CHRTOUT_DOMAIN = 0           ! Netcdf point timeseries output at all channel points (1d)
+CHRTOUT_DOMAIN = chrtoutdomain ! Netcdf point timeseries output at all channel points (1d)
                              !      0 = no output, 1 = output
-CHANOBS_DOMAIN = 1           ! Netcdf point timeseries at forecast points or gage points (defined in Routelink)
+CHANOBS_DOMAIN = chanobsdomain ! Netcdf point timeseries at forecast points or gage points (defined in Routelink)
                              !      0 = no output, 1 = output at forecast points or gage points.
-CHRTOUT_GRID = 1             ! Netcdf grid of channel streamflow values (2d)
+CHRTOUT_GRID = chrtoutgrid   ! Netcdf grid of channel streamflow values (2d)
                              !      0 = no output, 1 = output
                              !      NOTE: Not available with reach-based routing
-LSMOUT_DOMAIN = 1            ! Netcdf grid of variables passed between LSM and routing components (2d)
+LSMOUT_DOMAIN = lsmoutdomain ! Netcdf grid of variables passed between LSM and routing components (2d)
                              !      0 = no output, 1 = output
                              !      NOTE: No scale_factor/add_offset available
-RTOUT_DOMAIN = 1             ! Netcdf grid of terrain routing variables on routing grid (2d)
+RTOUT_DOMAIN = rtoutdomain   ! Netcdf grid of terrain routing variables on routing grid (2d)
                              !      0 = no output, 1 = output
-output_gw = 1                ! Netcdf GW output
+output_gw = outputgw                ! Netcdf GW output
                              !      0 = no output, 1 = output
-outlake  = 1                 ! Netcdf grid of lake values (1d)
+outlake  = outlakeval        ! Netcdf grid of lake values (1d)
                              !      0 = no output, 1 = output
-frxst_pts_out = 0            ! ASCII text file of forecast points or gage points (defined in Routelink)
+frxst_pts_out = frxstptsout  ! ASCII text file of forecast points or gage points (defined in Routelink)
                              !      0 = no output, 1 = output
 
 !!!! ------------ PHYSICS OPTIONS AND RELATED SETTINGS ------------ !!!!
@@ -113,32 +113,32 @@ ZSOIL8(3) = -1.00
 ZSOIL8(4) = -2.00
 
 ! Specify the grid spacing of the terrain routing grid...(meters)
-DXRT = 1.0
+DXRT = dxrt
 
 ! Specify the integer multiple between the land model grid and the terrain routing grid...(integer)
-AGGFACTRT = 1000
+AGGFACTRT = aggfactrt
 
 ! Specify the channel routing model timestep...(seconds)
-DTRT_CH = 10
+DTRT_CH = dtrtch
 
 ! Specify the terrain routing model timestep...(seconds)
-DTRT_TER = 10
+DTRT_TER = dtrtter
 
 ! Switch to activate subsurface routing...(0=no, 1=yes)
-SUBRTSWCRT = 1
+SUBRTSWCRT = subrtswcrt
 
 ! Switch to activate surface overland flow routing...(0=no, 1=yes)
-OVRTSWCRT = 1
+OVRTSWCRT = ovrtswcrt
 
 ! Specify overland flow routing option: 1=Seepest Descent (D8) 2=CASC2D (not active)
 ! NOTE: Currently subsurface flow is only steepest descent
-rt_option = 1
+rt_option = rtoption
 
 ! Switch to activate channel routing...(0=no, 1=yes)
-CHANRTSWCRT = 1
+CHANRTSWCRT = chanrtswcrt
 
 ! Specify channel routing option: 1=Muskingam-reach, 2=Musk.-Cunge-reach, 3=Diff.Wave-gridded
-channel_option = 3
+channel_option = channeloption
 
 ! Specify the reach file for reach-based routing options (e.g.: "Route_Link.nc")
 route_link_f = "./DOMAIN/Route_Link.nc"
@@ -151,20 +151,20 @@ compound_channel = .FALSE.
 !!!route_lake_f = "./DOMAIN/LAKEPARM.nc"
 
 ! Switch to activate baseflow bucket model...(0=none, 1=exp. bucket, 2=pass-through)
-GWBASESWCRT = 1
+GWBASESWCRT = gwbaseswcrt
 
 ! Groundwater/baseflow 2d mask specified on land surface model grid (e.g.: "GWBASINS.nc")
 !Note: Only required if baseflow  model is active (1 or 2) and UDMP_OPT=0.
 !!!gwbasmskfil = "./DOMAIN/GWBASINS.nc"
 
 ! Groundwater bucket parameter file (e.g.: "GWBUCKPARM.nc")
-GWBUCKPARM_file = "./DOMAIN/GWBUCKPARM.nc"
+!GWBUCKPARM_file = "./DOMAIN/GWBUCKPARM.nc"
 
 ! User defined mapping, such NHDPlus: 0=no (default), 1=yes
 UDMP_OPT = 0
 
 ! If on, specify the user-defined mapping file (e.g.: "spatialweights.nc")
-udmap_file = "./DOMAIN/spatialweights.nc"
+!udmap_file = "./DOMAIN/spatialweights.nc"
 
 /
 

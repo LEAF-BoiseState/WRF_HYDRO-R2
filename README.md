@@ -1,5 +1,5 @@
 # WRF_HYDRO-R2
-*Wrapper repository to automate build + run + visualize WRF-Hydro v5 / NWM on R2*
+*Wrapper repository to automate building, running, and visualization of WRF-Hydro v5 / NWM on BSU's R2 cluster*
 <br><br><br><br>
 
 
@@ -12,12 +12,18 @@
 * [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence) - **main command sequence for repeated simulations**
 * [VII. Function Reference List](#VII-Function-Reference-List) - *list of defined commands*
 * [VIII. Appendix](#VIII-Appendix) - *links to supporting documentation*
-
 <br>
 
 
 ## I. Overview
 This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. UNIX shell functions have been defined to automate core tasks and reduce them to a single command.  Further information can be found in the WRF-HydroV5 Technical Manual<sup>[3](#3)</sup>.
+
+The main tasks involved are as follows.  First `clone` this repository then build the model which produces a run directory with the
+WRF-Hydro/NWM executable. This complete process is described below in the [III. Build](#III-Build) section.  Next, follow the a
+sequence of six commands described in the section, [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence).  These commands can easily
+be repeated for different input arguments to vary, routing configurations, domains, forcing types, time periods, etc.  Exploring beyond the
+commands you may want to experiment with modifying default parameter values for variables of interest found in the two input namelist files,
+`hydro.namelist` and `namelist.hrldas`.
 <br><br>
 
 ## II. Manifest

@@ -1,49 +1,53 @@
 # WRF_HYDRO-R2
-*Wrapper repository to automate build + run + visualize WRF-Hydro v5 / NWM on R2*
-<br><br><br><br>
+*Wrapper repository to automate building, running, and visualization of WRF-Hydro v5 / NWM on BSU's R2 cluster*
+<br><br><br>
 
 
 ## Contents
 * [I. Overview](#I-Overview) - *brief description of repository*
 * [II. Manifest](#II-Manifest) - *main repository structure*
-* [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM*
-* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *available Idaho watershed domains from NWM*
+* [III. Build](#III-Build) - *steps for building WRF-Hydro / NWM executable*
+* [IV. Idaho NWM Cut-outs](#IV-Idaho-NWM-Cut-outs) - *list of available Idaho watershed domains from NWM*
 * [V. Routing Options](#V-Routing-Options) - *list of available routing configurations*
 * [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence) - **main command sequence for repeated simulations**
 * [VII. Function Reference List](#VII-Function-Reference-List) - *list of defined commands*
-* [VIII. Appendix](#VIII-Appendix) - *links to extended, internal documentation*
-* [IX. Links](#IX-Links) - *links to external references*
-
-<br>
+* [VIII. Appendix](#VIII-Appendix) - *links to supporting documentation*
+<br><br><br>
 
 
 ## I. Overview
 This container repository uses the NCAR NWM<sup>[1](#1)</sup> and rwrfhydro<sup>[2](#2)</sup> repositories as submodules. UNIX shell functions have been defined to automate core tasks and reduce them to a single command.  Further information can be found in the WRF-HydroV5 Technical Manual<sup>[3](#3)</sup>.
-<br><br>
+
+The main tasks involved are as follows.  First `clone` this repository then build the model which produces a run directory with the
+WRF-Hydro/NWM executable. This complete process is described below in the [III. Build](#III-Build) section.  Next, follow the a
+sequence of six commands described in the section, [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence).  These commands can easily
+be repeated for different input arguments to vary, routing configurations, domains, forcing types, time periods, etc.  Exploring beyond the
+commands you may want to experiment with modifying default parameter values for variables of interest found in the two input namelist files,
+`hydro.namelist` and `namelist.hrldas`.<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br><br>
+
 
 ## II. Manifest
 ```bash
 WRF_HYDRO-R2/
 ├── build/
 │   ├── build_nwm_r2.sh
-│   ├── env_nwm_r2.sh
-│   └── README_BUILD.md
+│   └── env_nwm_r2.sh
 ├── funcs/
 │   └── wrf_hydro_run.sh
 ├── LICENSE
 ├── namelists/
 │   ├── hydro.namelist.template
-│   ├── namelist.hrldas.template
-│   └── README_NAMELISTS.md
+│   └── namelist.hrldas.template
 ├── post_process/
 │   └── Open and Plot WRF-Hydro Output.ipynb
-├── pre_process/
+├── pre_process
 │   ├── convert_wrf_to_wrfhydro.sh
 │   ├── env_preprocess_r2.sh
-│   ├── ncl_scripts/
+│   ├── ncl_scripts
 │   │   ├── w2wh_esmf_generate_weights.ncl
 │   │   └── w2wh_esmf_regrid_w_weights.ncl
-│   ├── README_PREPROCESS.md
 │   ├── wrf_gen_weights_wrfhydro.sh
 │   ├── wrf_regrid_wrfhydro.sh
 │   └── wrf_subset_wrfhydro.sh
@@ -53,10 +57,13 @@ WRF_HYDRO-R2/
 │   └── create_hydro_namelist.sh
 ├── rwrfhydro/
 ├── supplements/
-│   └── submit.sh.template
+│   ├── submit.sh.template
+│   └── WRF-HydroV5TechnicalDescription_update512019_0.pdf
 └── wrf_hydro_nwm_public/
 ```
-<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br>
+
 
 ## III. Build
 In a terminal follow these steps to download the repository, set it up, and build the WRF-Hydro/NWM executable,
@@ -65,11 +72,10 @@ git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
 source funcs/wrf_hydro_run.sh                                # load function definitions
 wh_sub_mod                                                   # initialize / update submodules
-wh_build                                                     # build NWM-offline executable
+wh_build_nwm                                                 # build NWM-offline executable
 ```
-<br>
 After issuing the last command, the model will be compiling for rougly a couple minutes.  When the command prompt returns, look at the end of the text output right above it and read below to determine whether it was successful or not.
-
+<br><br><br>
 
 #### SUCCESSFUL BUILD
 Sample output at the end of a successful build by username, `auser`, looks like the following
@@ -101,30 +107,39 @@ WRFIO_NCD_LARGE_FILE_SUPPORT=1
     Executable: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run/wrf_hydro_NoahMP.exe
     Log file:   /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
 ```
-<br>
-
 *NOTE: as shown above, both the build log and executable location are listed at the end of the build output.* 
-
+<br><br><br>
 
 #### UNSUCCESSFUL BUILD: TROUBLESHOOTING
 If you did not see the success message like above, and instead received a 'BUILD UNSUCCESSFUL' message, try these steps to resolve it and build again.  First, look at the build log file to locate the error.  Once you've done that, apply the necessary fix.  If you've completed that, you just need to clean out the build directory, then try building again as below,
-
 ```bash
 wh_clean_nwm                                                   # clean out previous NWM build
-wh_build                                                       # try building NWM executable again
+wh_build_nwm                                                   # try building NWM executable again
 ```
 <br>
+
+#### Background Information
+The script containing the parameters for building the WRF-Hydro executable is called `setEnvar.sh`, and is
+located in `wrf_hydro_nwm_public/trunk/NDHMS/template`.  The build script starts by making a copy of `setEnvar.sh`
+in the directory `wrf_hydro_nwm_public/trunk/NDHMS`.  Next, the build script calls the compilation script 
+`compile_offline_NoahMP.sh` and supplies `setEnvar.sh` as the one input argument.  As described above, a successful
+build results in a new directory being generated called `wrf_hydro_nwm_public/trunk/NDHMS/Run`.  This directory
+contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
+which are generated based on the parameters set in `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
+executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
+executed.  *NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
+the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes of version control*.<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br>
 
 
 
 ## IV. Idaho NWM Cut-outs
 Currently provided cut-outs from the National Water Model and their reference numbers can be displayed 
 by calling
-
 ```bash
-wh_list_dom
+wh_list_domain
 ```
-
 ```bash
 	NUM:   Gauge ID  -  Description
 	----------------------------------------------------
@@ -137,27 +152,27 @@ wh_list_dom
           7:   13258500  -  Weiser River near Cambridge ID
           8:   13316500  -  Little Salmon River at Riggins ID
 ```
-<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br>
 
 
 ## V. Routing options
 The routing options available and their reference numbers can be displayed by calling
 ```bash
-wh_list_rto
+wh_list_routing
 ```
-
 ```bash
-        NUM:     Routing option   -  Description
+        NUM:   Routing Opt. -  Description
         ----------------------------------------------------
-          1:     lsm              -  NoahMP LSM
-          2:     lsm_sub          -  NoahMP LSM + Subsurface routing
-          3:     lsm_ovr          -  NoahMP LSM + Overland surface flow routing
-          4:     lsm_chl          -  NoahMP LSM + Channel routing
-          5:     lsm_res          -  NoahMP LSM + Lake/reservoir routing
-          6:     lsm_gwb          -  NoahMP LSM + Groundwater/baseflow model
-          7:     lsm_ovr_chl      -  NoahMP LSM + Overland surface flow routing + Channel routing
+          0:   LSM          -  NoahMP Land Surface Model [selected by default]
+          1:   SUB          -  Subsurface Flow Routing
+          2:   OVR          -  Overland Flow Routing
+          3:   CHL          -  Channel Routing
+          4:   RES          -  Lakes/Reservoir Routing
+          5:   GWB          -  Groundwater/baseflow Routing
 ```
-<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br>
 
 
 ## VI. Main Simulation Sequence
@@ -169,14 +184,15 @@ the repository
 ```bash
 source funcs/wrf_hydro_run.sh                                # load function definitions
 ```
-Once that is done for a session, you can proceed with doing runs.  These five core commands are
+Once that is done for a session, you can proceed with doing runs.  These six core commands are
 the sequence you should follow,
 ```bash
-wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+wh_run_dir      <run_id>                                   # create run directory, copy exe + aux files
+wh_domain       <run_id> <domain_id>                       # copy cutout to DOMAIN/
+wh_forcing      <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING/
+wh_hydro_nlist  <run_id> [<0 ... 5>]                       # create hydro.namelist w routing opts
+wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours> # create namelist.hrldas w simulation period
+wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job submit script
 ```
 The last command above, `wh_run_job`, will set the simulation times as well as information for a batch
 job in a SLURM script (`submit`) in the run directory.  Also, just before it returns the command prompt, it will
@@ -184,7 +200,16 @@ print out the command (starting with `sbatch`) needed to submit the job to the s
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
-<br><br><br>
+<br><br>
+#### Background Information
+The command `wh_hydro_nlist` modifies a template of the file, `hydro.namelist`.  This file contains parameters that
+are read by the model at runtime.  Among other things, it controls the hydrological routing options and their associated
+parameters to be used in the run.  As input, it takes the run ID, as well as any combination of the available
+routing options: `0 1 2 3 4 5` (Note, 0 - NoahMP LSM is always selected by default, you may list the 0 or leave it
+out). The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`. Among
+other things, it specifies the parameters to be used in the NoahMP LSM and the period of simulation for the run.<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br><br>
 
 
 ## VII. Function Reference List
@@ -193,36 +218,33 @@ A list of the available commands can be displayed by entering `wh_list`, the out
 wh_list
 ```
 ```bash
-wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
+  wh_dev          <queue_name> <minutes>                      # slurm request interactive compute session
 
-wh_sub_mod                                             # init/update submodules
-wh_build                                               # compile the wrf-hydro/nwm executable
-wh_clean_nwm                                           # clean NWM repo build
+  wh_sub_mod                                                  # init/update submodules
+  wh_build_nwm                                                # compile wrf-hydro/nwm executable
+  wh_clean_nwm                                                # clean out nwm build
 
-wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+  wh_run_dir      <run_id>                                    # create run directory, copy exe + aux files
+  wh_domain       <run_id> <domain_id>                        # copy cutout to DOMAIN/
+  wh_forcing      <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing files to FORCING/
+  wh_hydro_nlist  <run_id> <routing_opts>                     # create hydro.namelist w routing options
+  wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period
+  wh_job          <run_id> <queue_name> <minutes> <cores>     # create slurm batch submit script
 
-wh_list                                                # list wrf-hydro defined functions
-wh_list_dom                                            # list wrf-hydro cutout domains
-wh_list_rto                                            # list routing/physics options
+  wh_list                                                     # list wrf-hydro defined functions
+  wh_list_domain                                              # list wrf-hydro cutout domains
+  wh_list_routing                                             # list routing/physics options
 ```
-<br>
+[Return to top](#WRF_HYDRO-R2)
+<br><br><br>
 
 
 ## VIII. Appendix
+* <sup><a name="1">1</a></sup> [Github: NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
+* <sup><a name="2">2</a></sup> [Github: NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
-* [README_BUILD.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/build/README_BUILD.md) - details on build process
-* [README_CONVERT.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/pre_process/README_CONVERT.md) - details on data pre-processing scripts
-* [README_NAMELISTS.md](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/namelists/README_NAMELISTS.md) - details on namelist options
-<br>
-
-                                                                             
-## IX. Links
-* <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
-* <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
+* [NCAR RAL: WRF-Hydro Home Page](https://ral.ucar.edu/projects/wrf_hydro/overview)
+* [NOAA OWP: National Water Model](https://water.noaa.gov/about/nwm)
 <br>
 
 [Return to top](#WRF_HYDRO-R2)

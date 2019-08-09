@@ -84,7 +84,7 @@ if [ "$routing_options_flag" == "true" ]; then
     done
     echo -e "\n"
 fi
-echo -e "\thydro.namelist path: $hydro_namelist_path\n"
+
 
 
 # ----------------------------------------------------------------------------- *
@@ -291,5 +291,7 @@ sed -i'' "s/outlakeval/$outlake/g"             $hydro_namelist_path
 sed -i'' "s/gwbaseswcrt/$GWBASESWCRT/g"        $hydro_namelist_path
 sed -i'' "s/gwrestart/$GW_RESTART/g"           $hydro_namelist_path
 sed -i'' "s/outputgw/$output_gw/g"             $hydro_namelist_path
+
+echo -e "\thydro.namelist path: $hydro_namelist_path\n"
 
 exit

@@ -74,5 +74,13 @@ sed -i'' "s/temptimeschemeoption/$TEMP_TIME_SCHEME_OPTION/g"                    
 sed -i'' "s/glacieroption/$GLACIER_OPTION/g"                                      $namelist_hrldas_path
 sed -i'' "s/surfaceresistanceoption/$SURFACE_RESISTANCE_OPTION/g"                 $namelist_hrldas_path
 
+echo -e "\n\tSIMULATION PARAMETERS"
+echo -e   "\t---------------------"
+echo -e "\t  Start year:   $year"
+echo -e "\t  Start month:  $mn"
+echo -e "\t  Start day:    $dy"
+echo -e "\t  Start hour:   $hr"
+echo -e "\t  Sim hours:    $sim_hours\n\n"
+echo -e "\tnamelist.hrldas path: $namelist_hrldas_path\n"
 
 exit

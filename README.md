@@ -24,7 +24,7 @@ sequence of six commands described in the section, [VI. Main Simulation Sequence
 be repeated for different input arguments to vary, routing configurations, domains, forcing types, time periods, etc.  Exploring beyond the
 commands you may want to experiment with modifying default parameter values for variables of interest found in the two input namelist files,
 `hydro.namelist` and `namelist.hrldas`.
-<br><br>
+<br><br><br>
 
 ## II. Manifest
 ```bash
@@ -59,7 +59,8 @@ WRF_HYDRO-R2/
 │   └── WRF-HydroV5TechnicalDescription_update512019_0.pdf
 └── wrf_hydro_nwm_public/
 ```
-<br>
+<br><br>
+
 
 ## III. Build
 In a terminal follow these steps to download the repository, set it up, and build the WRF-Hydro/NWM executable,
@@ -117,7 +118,7 @@ wh_clean_nwm                                                   # clean out previ
 wh_build                                                       # try building NWM executable again
 ```
 [Return to top](#WRF_HYDRO-R2)
-<br>
+<br><br><br>
 
 
 
@@ -142,7 +143,7 @@ wh_list_dom
           8:   13316500  -  Little Salmon River at Riggins ID
 ```
 [Return to top](#WRF_HYDRO-R2)
-<br>
+<br><br><br>
 
 
 ## V. Routing options
@@ -163,7 +164,7 @@ wh_list_rto
           7:     lsm_ovr_chl      -  NoahMP LSM + Overland surface flow routing + Channel routing
 ```
 [Return to top](#WRF_HYDRO-R2)
-<br>
+<br><br><br>
 
 
 ## VI. Main Simulation Sequence
@@ -191,7 +192,7 @@ you have the opportunity now, once everything else is ready to run, to make any 
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
 [Return to top](#WRF_HYDRO-R2)
-<br><br><br>
+<br><br><br><br>
 
 
 ## VII. Function Reference List
@@ -217,12 +218,12 @@ wh_list_dom                                            # list wrf-hydro cutout d
 wh_list_rto                                            # list routing/physics options
 ```
 [Return to top](#WRF_HYDRO-R2)
-<br>
+<br><br>
 
 
 ## VIII. Appendix
-* <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
-* <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
+* <sup><a name="1">1</a></sup> [Github: NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
+* <sup><a name="2">2</a></sup> [Github: NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
 * [NCAR RAL: WRF-Hydro Home Page](https://ral.ucar.edu/projects/wrf_hydro/overview)
 * [NOAA OWP: National Water Model](https://water.noaa.gov/about/nwm)

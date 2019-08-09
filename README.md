@@ -23,7 +23,7 @@ WRF-Hydro/NWM executable. This complete process is described below in the [III. 
 sequence of six commands described in the section, [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence).  These commands can easily
 be repeated for different input arguments to vary, routing configurations, domains, forcing types, time periods, etc.  Exploring beyond the
 commands you may want to experiment with modifying default parameter values for variables of interest found in the two input namelist files,
-`hydro.namelist` and `namelist.hrldas`.
+`hydro.namelist` and `namelist.hrldas`.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 
@@ -76,7 +76,7 @@ wh_build                                                     # build NWM-offline
 ```
 <br>
 After issuing the last command, the model will be compiling for rougly a couple minutes.  When the command prompt returns, look at the end of the text output right above it and read below to determine whether it was successful or not.
-<br>
+<br><br><br>
 
 #### SUCCESSFUL BUILD
 Sample output at the end of a successful build by username, `auser`, looks like the following
@@ -111,7 +111,7 @@ WRFIO_NCD_LARGE_FILE_SUPPORT=1
 <br>
 
 *NOTE: as shown above, both the build log and executable location are listed at the end of the build output.* 
-<br>
+<br><br><br>
 
 #### UNSUCCESSFUL BUILD: TROUBLESHOOTING
 If you did not see the success message like above, and instead received a 'BUILD UNSUCCESSFUL' message, try these steps to resolve it and build again.  First, look at the build log file to locate the error.  Once you've done that, apply the necessary fix.  If you've completed that, you just need to clean out the build directory, then try building again as below,
@@ -205,8 +205,7 @@ job in a SLURM script (`submit`) in the run directory.  Also, just before it ret
 print out the command (starting with `sbatch`) needed to submit the job to the scheduler.  This is done so
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
-Repeat those steps to continue to do different simulations.
-
+Repeat those steps to continue to do different simulations.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 

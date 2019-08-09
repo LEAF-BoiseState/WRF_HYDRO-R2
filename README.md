@@ -137,11 +137,9 @@ the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes 
 ## IV. Idaho NWM Cut-outs
 Currently provided cut-outs from the National Water Model and their reference numbers can be displayed 
 by calling
-
 ```bash
-wh_list_dom
+wh_list_domain
 ```
-
 ```bash
 	NUM:   Gauge ID  -  Description
 	----------------------------------------------------

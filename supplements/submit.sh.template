@@ -4,8 +4,8 @@
 #SBATCH -t queuetime             # requested runtime (hh:mm:ss)
 #SBATCH -n numcores              # cores
 #SBATCH -J jobname
-#SBATCH -o rundir/jobname.out    # output
-#SBATCH -e rundir/jobname.err    # error 
+#SBATCH -o rundir/OUTPUT/jobname.out    # output
+#SBATCH -e rundir/OUTPUT/jobname.err    # error 
 
 # parameters
 RUN_DIR=rundir
@@ -25,7 +25,7 @@ cd $RUN_DIR
 echo "In run directory: $(pwd)"
 
 # run mpi job
-mpirun ./wrf_hydro_NoahMP.exe &> ./jobname.log
+mpirun ./wrf_hydro_NoahMP.exe &> ./OUTPUT/jobname.log
 
 run_status=$?
 if [ $run_status -ne 0 ]; then

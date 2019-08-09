@@ -74,7 +74,6 @@ source funcs/wrf_hydro_run.sh                                # load function def
 wh_sub_mod                                                   # initialize / update submodules
 wh_build_nwm                                                 # build NWM-offline executable
 ```
-<br>
 After issuing the last command, the model will be compiling for rougly a couple minutes.  When the command prompt returns, look at the end of the text output right above it and read below to determine whether it was successful or not.
 <br><br><br>
 
@@ -108,14 +107,11 @@ WRFIO_NCD_LARGE_FILE_SUPPORT=1
     Executable: /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/Run/wrf_hydro_NoahMP.exe
     Log file:   /home/auser/LEAF/WRF_HYDRO-R2/wrf_hydro_nwm_public/trunk/NDHMS/WH_R2_noahMP_compile.log
 ```
-<br>
-
 *NOTE: as shown above, both the build log and executable location are listed at the end of the build output.* 
 <br><br><br>
 
 #### UNSUCCESSFUL BUILD: TROUBLESHOOTING
 If you did not see the success message like above, and instead received a 'BUILD UNSUCCESSFUL' message, try these steps to resolve it and build again.  First, look at the build log file to locate the error.  Once you've done that, apply the necessary fix.  If you've completed that, you just need to clean out the build directory, then try building again as below,
-
 ```bash
 wh_clean_nwm                                                   # clean out previous NWM build
 wh_build_nwm                                                   # try building NWM executable again
@@ -131,7 +127,7 @@ build results in a new directory being generated called `wrf_hydro_nwm_public/tr
 contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
 which are generated based on the parameters set in `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
 executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
-executed.*NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
+executed.  *NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
 the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes of version control*.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>

@@ -117,6 +117,17 @@ If you did not see the success message like above, and instead received a 'BUILD
 wh_clean_nwm                                                   # clean out previous NWM build
 wh_build                                                       # try building NWM executable again
 ```
+#### Background Information
+The script containing the parameters for building the WRF-Hydro executable is called `setEnvar.sh`, and is
+located in `wrf_hydro_nwm_public/trunk/NDHMS/template`.  The build script starts by making a copy of `setEnvar.sh`
+in the directory `wrf_hydro_nwm_public/trunk/NDHMS`.  Next, the build script calls the compilation script 
+`compile_offline_NoahMP.sh` and supplies `setEnvar.sh` as the one input argument.  As described above, a successful
+build results in a new directory being generated called `wrf_hydro_nwm_public/trunk/NDHMS/Run`.  This directory
+contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
+which are generated based on `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
+executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
+executed.
+
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
 
@@ -191,6 +202,7 @@ print out the command (starting with `sbatch`) needed to submit the job to the s
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
+
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 

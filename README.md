@@ -159,19 +159,17 @@ wh_list_domain
 ## V. Routing options
 The routing options available and their reference numbers can be displayed by calling
 ```bash
-wh_list_rto
+wh_list_routing
 ```
-
 ```bash
-        NUM:     Routing option   -  Description
+        NUM:   Routing Opt. -  Description
         ----------------------------------------------------
-          1:     lsm              -  NoahMP LSM
-          2:     lsm_sub          -  NoahMP LSM + Subsurface routing
-          3:     lsm_ovr          -  NoahMP LSM + Overland surface flow routing
-          4:     lsm_chl          -  NoahMP LSM + Channel routing
-          5:     lsm_res          -  NoahMP LSM + Lake/reservoir routing
-          6:     lsm_gwb          -  NoahMP LSM + Groundwater/baseflow model
-          7:     lsm_ovr_chl      -  NoahMP LSM + Overland surface flow routing + Channel routing
+          0:   LSM          -  NoahMP Land Surface Model [selected by default]
+          1:   SUB          -  Subsurface Flow Routing
+          2:   OVR          -  Overland Flow Routing
+          3:   CHL          -  Channel Routing
+          4:   RES          -  Lakes/Reservoir Routing
+          5:   GWB          -  Groundwater/baseflow Routing
 ```
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
@@ -224,7 +222,7 @@ wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing
 wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
 
 wh_list                                                # list wrf-hydro defined functions
-wh_list_dom                                            # list wrf-hydro cutout domains
+wh_list_domain                                         # list wrf-hydro cutout domains
 wh_list_rto                                            # list routing/physics options
 ```
 [Return to top](#WRF_HYDRO-R2)

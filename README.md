@@ -1,6 +1,6 @@
 # WRF_HYDRO-R2
 *Wrapper repository to automate building, running, and visualization of WRF-Hydro v5 / NWM on BSU's R2 cluster*
-<br><br><br><br>
+<br><br><br>
 
 
 ## Contents
@@ -12,7 +12,7 @@
 * [VI. Main Simulation Sequence](#VI-Main-Simulation-Sequence) - **main command sequence for repeated simulations**
 * [VII. Function Reference List](#VII-Function-Reference-List) - *list of defined commands*
 * [VIII. Appendix](#VIII-Appendix) - *links to supporting documentation*
-<br><br>
+<br><br><br>
 
 
 ## I. Overview
@@ -191,7 +191,6 @@ print out the command (starting with `sbatch`) needed to submit the job to the s
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
-
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 

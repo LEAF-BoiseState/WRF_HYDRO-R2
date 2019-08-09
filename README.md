@@ -199,7 +199,13 @@ job in a SLURM script (`submit`) in the run directory.  Also, just before it ret
 print out the command (starting with `sbatch`) needed to submit the job to the scheduler.  This is done so
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
-Repeat those steps to continue to do different simulations.<br>
+Repeat those steps to continue to do different simulations.
+<br><br>
+#### Background Information
+The command `wh_hydro_nlist` modifies a template of the file, `hydro.namelist`.  This file contains parameters that
+are read by the model at runtime.  Among other things, it controls the hydrological routing options and their associated
+parameters to be used in the run.  The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`. Among
+other things, it specifies the parameters to be used in the NoahMP LSM and the period of simulation for the run.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 

@@ -116,6 +116,7 @@ If you did not see the success message like above, and instead received a 'BUILD
 wh_clean_nwm                                                   # clean out previous NWM build
 wh_build                                                       # try building NWM executable again
 ```
+[Return to top](#WRF_HYDRO-R2)
 <br>
 
 
@@ -140,6 +141,7 @@ wh_list_dom
           7:   13258500  -  Weiser River near Cambridge ID
           8:   13316500  -  Little Salmon River at Riggins ID
 ```
+[Return to top](#WRF_HYDRO-R2)
 <br>
 
 
@@ -160,6 +162,7 @@ wh_list_rto
           6:     lsm_gwb          -  NoahMP LSM + Groundwater/baseflow model
           7:     lsm_ovr_chl      -  NoahMP LSM + Overland surface flow routing + Channel routing
 ```
+[Return to top](#WRF_HYDRO-R2)
 <br>
 
 
@@ -187,6 +190,7 @@ print out the command (starting with `sbatch`) needed to submit the job to the s
 you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 Repeat those steps to continue to do different simulations.
+[Return to top](#WRF_HYDRO-R2)
 <br><br><br>
 
 
@@ -212,6 +216,7 @@ wh_list                                                # list wrf-hydro defined 
 wh_list_dom                                            # list wrf-hydro cutout domains
 wh_list_rto                                            # list routing/physics options
 ```
+[Return to top](#WRF_HYDRO-R2)
 <br>
 
 
@@ -219,6 +224,8 @@ wh_list_rto                                            # list routing/physics op
 * <sup><a name="1">1</a></sup> [NCAR National Water Model](https://github.com/NCAR/wrf_hydro_nwm_public)          
 * <sup><a name="2">2</a></sup> [NCAR rwrfhydro](https://github.com/NCAR/rwrfhydro)
 * <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
+* [NCAR RAL: WRF-Hydro Home Page](https://ral.ucar.edu/projects/wrf_hydro/overview)
+* [NOAA OWP: National Water Model](https://water.noaa.gov/about/nwm)
 <br>
 
 [Return to top](#WRF_HYDRO-R2)

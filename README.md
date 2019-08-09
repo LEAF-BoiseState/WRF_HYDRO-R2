@@ -244,7 +244,7 @@ Ex. - `72`.
 
 ###### wh_job
 `<queue_name>` - name of R2 queue to use.  Everyone has access to `defq` (general purpose), 
-and `short` (testing).<br>
+and `shortq` (testing).<br>
 Ex. - `defq`.
 <br>
 `<minutes>` - wallclock time for job to run in minutes (1-59).<br>

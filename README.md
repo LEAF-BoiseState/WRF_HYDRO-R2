@@ -72,7 +72,7 @@ git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # go into repository
 source funcs/wrf_hydro_run.sh                                # load function definitions
 wh_sub_mod                                                   # initialize / update submodules
-wh_build                                                     # build NWM-offline executable
+wh_build_nwm                                                 # build NWM-offline executable
 ```
 <br>
 After issuing the last command, the model will be compiling for rougly a couple minutes.  When the command prompt returns, look at the end of the text output right above it and read below to determine whether it was successful or not.
@@ -118,7 +118,7 @@ If you did not see the success message like above, and instead received a 'BUILD
 
 ```bash
 wh_clean_nwm                                                   # clean out previous NWM build
-wh_build                                                       # try building NWM executable again
+wh_build_nwm                                                   # try building NWM executable again
 ```
 <br>
 
@@ -131,7 +131,8 @@ build results in a new directory being generated called `wrf_hydro_nwm_public/tr
 contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
 which are generated based on the parameters set in `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
 executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
-executed.<br>
+executed.*NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
+the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes of version control*.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
 
@@ -219,7 +220,7 @@ wh_list
 wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
 
 wh_sub_mod                                             # init/update submodules
-wh_build                                               # compile the wrf-hydro/nwm executable
+wh_build_nwm                                           # compile the wrf-hydro/nwm executable
 wh_clean_nwm                                           # clean NWM repo build
 
 wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory

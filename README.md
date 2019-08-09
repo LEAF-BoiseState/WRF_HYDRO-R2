@@ -184,14 +184,15 @@ the repository
 ```bash
 source funcs/wrf_hydro_run.sh                                # load function definitions
 ```
-Once that is done for a session, you can proceed with doing runs.  These five core commands are
+Once that is done for a session, you can proceed with doing runs.  These six core commands are
 the sequence you should follow,
 ```bash
-wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+wh_run_dir      <run_id>                                   # create run directory, copy exe + aux files
+wh_domain       <run_id> <domain_id>                       # copy cutout to DOMAIN/
+wh_forcing      <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING/
+wh_hydro_nlist  <run_id> [<0 ... 5>]                       # create hydro.namelist w routing opts
+wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours> # create namelist.hrldas w simulation period
+wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job submit script
 ```
 The last command above, `wh_run_job`, will set the simulation times as well as information for a batch
 job in a SLURM script (`submit`) in the run directory.  Also, just before it returns the command prompt, it will

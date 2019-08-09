@@ -210,21 +210,22 @@ A list of the available commands can be displayed by entering `wh_list`, the out
 wh_list
 ```
 ```bash
-wh_dev      <queue_name> <minutes>                     # slurm request interactive compute session
+  wh_dev          <queue_name> <minutes>                      # slurm request interactive compute session
 
-wh_sub_mod                                             # init/update submodules
-wh_build_nwm                                           # compile the wrf-hydro/nwm executable
-wh_clean_nwm                                           # clean NWM repo build
+  wh_sub_mod                                                  # init/update submodules
+  wh_build_nwm                                                # compile wrf-hydro/nwm executable
+  wh_clean_nwm                                                # clean out nwm build
 
-wh_run_dir  <run_id>                                   # create wrf-hydro run (parent) directory
-wh_run_dom  <run_id> <domain_id>                       # create DOMAIN from cutout in run dir
-wh_run_rto  <run_id> <routing_opt>                     # copy exe + associated files to run dir
-wh_run_frc  <run_id> <input_dir> <geogrid_file>        # subset + regrid forcing to FORCING
-wh_run_job  <run_id> <yyyy> <mm> <dd> <hh> <sim_days>  # set namelist sim time and submit job
+  wh_run_dir      <run_id>                                    # create run directory, copy exe + aux files
+  wh_domain       <run_id> <domain_id>                        # copy cutout to DOMAIN/
+  wh_forcing      <run_id> <input_dir> <geogrid_file>         # subset + regrid forcing files to FORCING/
+  wh_hydro_nlist  <run_id> <routing_opts>                     # create hydro.namelist w routing options
+  wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours>  # create namelist.hrldas w simulation period
+  wh_job          <run_id> <queue_name> <minutes> <cores>     # create slurm batch submit script
 
-wh_list                                                # list wrf-hydro defined functions
-wh_list_domain                                         # list wrf-hydro cutout domains
-wh_list_rto                                            # list routing/physics options
+  wh_list                                                     # list wrf-hydro defined functions
+  wh_list_domain                                              # list wrf-hydro cutout domains
+  wh_list_routing                                             # list routing/physics options
 ```
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>

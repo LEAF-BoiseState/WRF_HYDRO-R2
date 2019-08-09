@@ -146,12 +146,9 @@ function wh_run_dir() {
     fi
     echo -e "\tDirectory: $run_dir_path.\n"
     if [ -d $run_dir_path/OUTPUT ]; then
-        echo -e "\nRemoving output directory, $run_dir_path/OUTPUT."
         rm -rf $run_dir_path/OUTPUT
     fi
-    echo -e "\nCreating new output directory..."
     mkdir -p $run_dir_path/OUTPUT
-    echo -e "\tDirectory: $run_dir_path/OUTPUT.\n"
 
     cp $WH_R2_REPO/build/env_nwm_r2.sh   $run_dir_path
     cp $NWM_BUILD_RUN_DIR/*              $run_dir_path

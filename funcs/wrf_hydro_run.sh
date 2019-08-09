@@ -133,7 +133,7 @@ function wh_run_dir() {
     fi
     if [ ! -d $NWM_BUILD_DIR/Run ]; then
         echo -e "NWM build executable directory, $NWM_BUILD_DIR/Run, does not exist."
-        echo -e "Run, wh_build, then re-run, wh_run_dir.\n"
+        echo -e "Run, wh_build_nwm, then re-run, wh_run_dir.\n"
         return
     fi
     local run_id="$1"

@@ -204,7 +204,9 @@ Repeat those steps to continue to do different simulations.
 #### Background Information
 The command `wh_hydro_nlist` modifies a template of the file, `hydro.namelist`.  This file contains parameters that
 are read by the model at runtime.  Among other things, it controls the hydrological routing options and their associated
-parameters to be used in the run.  The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`. Among
+parameters to be used in the run.  As input, it takes the run ID, as well as any combination of the available
+routing options: `0 1 2 3 4 5` (Note, 0 - NoahMP LSM is always selected by default, you may list the 0 or leave it
+out). The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`. Among
 other things, it specifies the parameters to be used in the NoahMP LSM and the period of simulation for the run.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>

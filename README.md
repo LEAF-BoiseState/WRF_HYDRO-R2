@@ -202,7 +202,7 @@ you have the opportunity now, once everything else is ready to run, to make any 
 running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
 The output from the run will by found in a sub-directory, `OUTPUT/`, of the run directory (the `OUTPUT/` directory
 is created as part of the `wh_run_dir` command).
-<br>
+<br><br>
 
 #### Input Args
 ###### wh_run_dir

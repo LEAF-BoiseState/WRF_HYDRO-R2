@@ -29,7 +29,8 @@ source $REPO_BUILD_DIR/env_nwm_r2.sh
 echo -e "\nChange directory to build dir, $BUILD_DIR.."
 cd $BUILD_DIR
 cp -v $BUILD_DIR/template/setEnvar.sh .
-sed -i 's/SPATIAL_SOIL=0/SPATIAL_SOIL=1/g'           setEnvar.sh  # SPATIAL_SOIL=1
+sed -i 's/SPATIAL_SOIL=0/SPATIAL_SOIL=1/g'           setEnvar.sh  # 1: Spatially varying soil
+sed -i 's/HYDRO_D=0/HYDRO_D=1/g'                     setEnvar.sh  # 1: Debug info
 ###sed -i 's/WRF_HYDRO_NUDGING=0/WRF_HYDRO_NUDGING=1/g' setEnvar.sh  # WRF_HYDRO_NUDGING=1 
 
 # build

@@ -127,8 +127,8 @@ build results in a new directory being generated called `wrf_hydro_nwm_public/tr
 contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
 which are generated based on the parameters set in `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
 executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
-executed.  *NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
-the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes of version control*.<br>
+executed.  *NOTE: In addition to cleaning out the build location to try another build, the command* `wh_clean_nwm` *returns
+the* `wrf_hydro_nwm_public` *repo to it's original, unmodified state for purposes of version control*.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
 
@@ -195,11 +195,11 @@ wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours> # create namelist.hrl
 wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job submit script
 ```
 You can repeat those sequence of commands to continue to do different simulations.  The last command above, 
-`wh_job`, will set the simulation times as well as information for a batch
-job in a SLURM script (`submit`) in the run directory.  Also, just before it returns the command prompt, it will
-print out the command (starting with `sbatch`) needed to submit the job to the scheduler.  This is done so
-you have the opportunity now, once everything else is ready to run, to make any adjustments, if any, before
-running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
+`wh_job`, will create a SLURM script (`submit`) for a batch job in the run directory.  Also, just before it 
+returns the command prompt, it will print out the command (starting with `sbatch`) needed to submit the 
+job to the scheduler.  This is done so you have the opportunity now, once everything else is ready to run, 
+to make any adjustments, if any, before running it.  If not, simply copy and paste that command to run it 
+and your job will be added to the queue.
 <br><br>
 
 #### Input Args

@@ -197,7 +197,7 @@ wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job su
 You can repeat those sequence of commands to continue to do different simulations.  The last command above, 
 `wh_job`, will create a SLURM script (`submit`) for a batch job in the run directory.  Also, just before it 
 returns the command prompt, it will print out the command (starting with `sbatch`) needed to submit the 
-job to the scheduler.  This is done so you have the opportunity now, once everything else is ready to run, 
+job to the scheduler.  This is done so you have the opportunity once everything else is ready to run 
 to make any adjustments, if any, before running it.  If not, simply copy and paste that command to run it 
 and your job will be added to the queue.
 <br><br>
@@ -264,9 +264,6 @@ the run.<br>
 
 ## VII. Function Reference List
 A list of the available commands can be displayed by entering `wh_list`, the output of which is below
-```bash
-wh_list
-```
 ```bash
   wh_dev          <queue_name> <minutes>                      # slurm request interactive compute session
 

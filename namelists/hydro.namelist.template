@@ -158,7 +158,7 @@ GWBASESWCRT = gwbaseswcrt
 !!!gwbasmskfil = "./DOMAIN/GWBASINS.nc"
 
 ! Groundwater bucket parameter file (e.g.: "GWBUCKPARM.nc")
-!GWBUCKPARM_file = "./DOMAIN/GWBUCKPARM.nc"
+GWBUCKPARM_file = "./DOMAIN/GWBUCKPARM.nc"
 
 ! User defined mapping, such NHDPlus: 0=no (default), 1=yes
 UDMP_OPT = 0

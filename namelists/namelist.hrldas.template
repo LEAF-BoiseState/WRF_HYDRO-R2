@@ -3,7 +3,7 @@
  HRLDAS_SETUP_FILE = "./DOMAIN/wrfinput_d01.nc"
  INDIR = "./FORCING"
  SPATIAL_FILENAME = "./DOMAIN/soil_properties.nc"
- OUTDIR = "./OUTPUT"
+ OUTDIR = "./"
 
  START_YEAR  = startyear
  START_MONTH = startmonth

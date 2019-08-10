@@ -145,10 +145,6 @@ function wh_run_dir() {
         mkdir -p $run_dir_path
     fi
     echo -e "\tDirectory: $run_dir_path.\n"
-    if [ -d $run_dir_path/OUTPUT ]; then
-        rm -rf $run_dir_path/OUTPUT
-    fi
-    mkdir -p $run_dir_path/OUTPUT
 
     cp $WH_R2_REPO/build/env_nwm_r2.sh   $run_dir_path
     cp $NWM_BUILD_RUN_DIR/*              $run_dir_path

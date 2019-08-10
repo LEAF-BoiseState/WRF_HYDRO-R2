@@ -127,8 +127,8 @@ build results in a new directory being generated called `wrf_hydro_nwm_public/tr
 contains the executable, `wrf_hydro_NoahMP.exe`, as well as the two namelist files, `hydro.namelist` and `namelist.hrldas`,
 which are generated based on the parameters set in `setEnvar.sh`.  The run directory also contains several other auxiliary files needed by the
 executable at runtime.  A copy of this entire directory is made when the command `wh_run_dir` (described below) is 
-executed.  *NOTE: In addition to cleaning out the build location to try another build, the command `wh_clean_nwm` returns
-the `wrf_hydro_nwm_public` repo to it's original, unmodified state for purposes of version control*.<br>
+executed.  *NOTE: In addition to cleaning out the build location to try another build, the command* `wh_clean_nwm` *returns
+the* `wrf_hydro_nwm_public` *repo to it's original, unmodified state for purposes of version control*.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
 
@@ -185,7 +185,7 @@ the repository
 source funcs/wrf_hydro_run.sh                                # load function definitions
 ```
 Once that is done for a session, you can proceed with doing runs.  These six core commands are
-the sequence you should follow,
+the sequence you should follow, 
 ```bash
 wh_run_dir      <run_id>                                   # create run directory, copy exe + aux files
 wh_domain       <run_id> <domain_id>                       # copy cutout to DOMAIN/
@@ -194,29 +194,76 @@ wh_hydro_nlist  <run_id> [<0 ... 5>]                       # create hydro.nameli
 wh_hrldas_nlist <run_id> <yyyy> <mm> <dd> <hh> <sim_hours> # create namelist.hrldas w simulation period
 wh_job          <run_id> <queue_name> <minutes> <cores>    # create batch job submit script
 ```
-The last command above, `wh_run_job`, will set the simulation times as well as information for a batch
-job in a SLURM script (`submit`) in the run directory.  Also, just before it returns the command prompt, it will
-print out the command (starting with `sbatch`) needed to submit the job to the scheduler.  This is done so
-you have the opportunity now, once everything else is ready to run, to make any adjustments if any before
-running it.  If not, simply copy and paste that command to run it and your job will be added to the queue.
-Repeat those steps to continue to do different simulations.
+You can repeat those sequence of commands to continue to do different simulations.  The last command above, 
+`wh_job`, will create a SLURM script (`submit`) for a batch job in the run directory.  Also, just before it 
+returns the command prompt, it will print out the command (starting with `sbatch`) needed to submit the 
+job to the scheduler.  This is done so you have the opportunity once everything else is ready to run 
+to make any adjustments, if any, before running it.  If not, simply copy and paste that command to run it 
+and your job will be added to the queue.
 <br><br>
+
+#### Input Args
+###### wh_run_dir
+`<run_id>` - any unique string to distinquish the run directory created in `/scratch`.<br>
+Ex. - `test000`.
+<br>
+
+###### wh_domain
+`<domain_id>` - number identifier listed in the left-most column of the output from the command
+`wh_list_domain`.<br>
+Ex. - `4`
+<br>
+
+###### wh_forcing
+`<input_dir>` - the full path to a directory containing WRF output files (wrfout's).<br>
+Ex. - `/scratch/auser/WRF_Runs/June_2010/d01`.
+<br>
+`<geogrid_file>` - the full path to a geogrid file specifying the cutout domain. This file
+will be located in the `DOMAIN/` sub-directory of the run directory, after you have issued
+the prevous command, `wh_forcing`.<br>
+Ex. - `/scratch/auser/WH_SIM_test000/DOMAIN/geo_em.d01.nc`.
+<br>
+
+###### wh_hydro_nlist
+`[<0 ... 5>]` - any combination of the available routing options: `0 1 2 3 4 5` (Note, 0 - NoahMP LSM is always 
+selected by default, you may list the 0 or leave it out).<br>
+Ex. - `1 3 4`
+<br>
+
+###### wh_hrldas_nlist
+`<yyyy> <mm> <dd> <hh>` - the year, month, day, and hour start time.  These values are contained in the file name
+of the first chronological file located in the `FORCING/` directory after you have run, `wh_forcing`.<br>
+Ex. - `2010 06 02 00`.
+<br>
+`<sim_hours>` - number of simulation hours to run.  This will be the difference in hours of the first forcing
+file and the last.  The forcing files are found in the `FORCING/` directory after running, `wh_forcing`.<br>
+Ex. - `72`.
+<br>
+
+###### wh_job
+`<queue_name>` - name of R2 queue to use.  Everyone has access to `defq` (general purpose), 
+and `shortq` (testing).<br>
+Ex. - `defq`.
+<br>
+`<minutes>` - wallclock time for job to run in minutes (1-59).<br>
+Ex. - `15`.
+<br>
+`<cores>` - number of cores to request to run the batch job.<br>
+Ex. - `4`.
+<br><br>
+
 #### Background Information
 The command `wh_hydro_nlist` modifies a template of the file, `hydro.namelist`.  This file contains parameters that
 are read by the model at runtime.  Among other things, it controls the hydrological routing options and their associated
-parameters to be used in the run.  As input, it takes the run ID, as well as any combination of the available
-routing options: `0 1 2 3 4 5` (Note, 0 - NoahMP LSM is always selected by default, you may list the 0 or leave it
-out). The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`. Among
-other things, it specifies the parameters to be used in the NoahMP LSM and the period of simulation for the run.<br>
+parameters to be used in the run.  The command `wh_hrldas_nlist` modifies a template of the file, `namelist.hrldas`.
+  Among other things, it specifies the parameters to be used in the NoahMP LSM and the period of simulation for 
+the run.<br>
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br><br>
 
 
 ## VII. Function Reference List
 A list of the available commands can be displayed by entering `wh_list`, the output of which is below
-```bash
-wh_list
-```
 ```bash
   wh_dev          <queue_name> <minutes>                      # slurm request interactive compute session
 

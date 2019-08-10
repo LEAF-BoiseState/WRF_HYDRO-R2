@@ -65,7 +65,7 @@ DLWR_varname    = "GLW"
 VEGFRA_varname  = "VEGFRA"
 LAI_varname     = "LAI"
 HGT_varname     = "HGT"
-  
+SNWHGT_varname  = "SNOWH"  
 
 ;--------------------------------------------------------------------------------
 ; Read in source and destination grid netCDF files
@@ -112,7 +112,7 @@ ncout->lon    = dlon2d   ;output lon
 ;--------------------------------------------------------------------------------
 ;  Processing...no further mods should be required...
 ;--------------------------------------------------------------------------------
-do v=1,12
+do v=1,13
    if (v.eq.1) then
       var = src_file->$T_varname$
    end if
@@ -148,6 +148,9 @@ do v=1,12
    end if
    if (v.eq.12) then
       var = src_file->$HGT_varname$
+   end if
+   if (v.eq.13) then
+      var = src_file->$SNWHGT_varname$
    end if
    ;;printVarSummary(var)      
 
@@ -216,6 +219,9 @@ do v=1,12
 	  ncout->LAI    = loop_field_var
    else if (v.eq.12) then
 	  ncout->HGT    = loop_field_var
+   else if (v.eq.13) then
+	  ncout->SNOWH  = loop_field_var
+   end if
    end if
    end if
    end if

@@ -40,6 +40,8 @@
 #                       XLONG      longitude wrf grid              degree_east
 #                       Times      time steps                      date/time
 #
+#                       SNOWH      snow height                     m
+#
 # 
 # NOTE:   Formula for rain buckets, bucket value is 100.0 mm.
 #          * RAINNC = RAINNC + I_RAINNC * 100.0
@@ -51,7 +53,7 @@
 RAINNC_BUCKET_FLAG="true"   # true  = combine RAINNC and I_RAINNC
                             # false = RAINNC and I_RAINNC left alone
 NC_SUFFIX=".nc"             # set NC_SUFFIX="", if none desired
-LSM_VARS="Times,XLAT,XLONG,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI,HGT"
+LSM_VARS="Times,XLAT,XLONG,PSFC,U10,V10,T2,Q2,RAINC,RAINNC,I_RAINNC,SWDOWN,GLW,VEGFRA,LAI,SNOWH,HGT"
 
 
 

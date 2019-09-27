@@ -73,7 +73,6 @@ git clone https://github.com/LEAF-BoiseState/WRF_HYDRO-R2    # clone repository
 cd WRF_HYDRO-R2                                              # change directory into cloned repository
 source funcs/wrf_hydro_run.sh                                # load function definitions
 wh_sub_mod                                                   # initialize / update submodules
-wh_build_nwm                                                 # build NWM-offline executable
 ```
 [Return to top](#WRF_HYDRO-R2)
 <br><br><br>
@@ -262,6 +261,7 @@ A list of the available commands can be displayed by entering `wh_list`, the out
 * <sup><a name="3">3</a></sup> [WRF-Hydro V5 Technical Description](https://github.com/LEAF-BoiseState/WRF_HYDRO-R2/blob/master/supplements/WRF-HydroV5TechnicalDescription_update512019_0.pdf)
 * [NCAR RAL: WRF-Hydro Home Page](https://ral.ucar.edu/projects/wrf_hydro/overview)
 * [NOAA OWP: National Water Model](https://water.noaa.gov/about/nwm)
+* __Acknowledgement/Citation__ - Matt Masarik.  (*For research based on runs generated using this repository please cite in Acknowledgements.*)
 <br>
 
 [Return to top](#WRF_HYDRO-R2)
